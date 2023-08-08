@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 12:23:47 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/08 13:50:06 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/08 17:17:13 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	envp_to_list(char **envp, t_env **env)
 	while (envp[i])
 	{
 		split = ft_split(envp[i], '=');
-		if(split && split[0] && split[1])
+		if (split && split[0] && split[1])
 			*env = add_env(*env, split[0], split[1]);
 		ft_free_array(split);
 		i++;

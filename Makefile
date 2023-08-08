@@ -31,7 +31,7 @@ OBJ_DIR		= bin
 
 #_/=\_/=\_/=\_/=\_/=\_/=\_/=\_/=\_/=\_/=\_ FILES _/=\_/=\_/=\_/=\_/=\_/=\_/=\_/=\_/=\_/=\_
 NAME		= minishell
-_FILES		= main envp
+_FILES		= main envp signals
 OBJS		= $(_FILES:%=%.o)
 TARGET		= $(addprefix $(OBJ_DIR)/, $(OBJS))
 
@@ -44,7 +44,7 @@ $(NAME): $(OBJ_DIR) $(TARGET)
 	$(MAKE) $(MK) -C $(LIBFT_PATH)
 
 	echo "[$(CYAN) Linking $(RESET)] $(GREEN)*$(RESET)"
-	$(CC) $(CFLAGS) $(TARGET) -o $(NAME) -I $(DEPS) -lncurses -lreadline $(LIBFT)
+	$(CC) $(CFLAGS) $(TARGET) -o $(NAME) -I $(DEPS) -lreadline $(LIBFT)
 
 	echo "$(GREEN)Done.$(RESET)"
 

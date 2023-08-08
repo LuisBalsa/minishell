@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:04:57 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/08 13:50:47 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/08 17:14:27 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,9 @@
 # define AND 5
 # define OR 6
 
-# define MAXARGS 10
+# define MAXARGS 20
+
+extern int	g_exit;
 
 typedef struct s_env
 {
@@ -101,12 +103,16 @@ typedef struct s_or
 typedef struct s_shell
 {
 	char	*line;
+	char	*prompt;
 	t_env	*env;
 	t_cmd	*cmd;
+	int		status;
 }		t_shell;
 
 t_env	*add_env(t_env *env, char *key, char *value);
 void	envp_to_list(char **envp, t_env **env);
 void	envp_destroy(t_env *env);
+
+void	sig_handler(int sig);
 
 #endif

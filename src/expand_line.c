@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 18:45:50 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/09 10:48:53 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/09 13:06:31 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,18 @@ static void	expand(char *key, int i, int j, t_shell *shell)
 {
 	char	*tmp;
 	char	*tmp2;
+	char	*tmp3;
 
 	tmp = ft_substr(shell->line, 0, i);
 	tmp2 = ft_substr(shell->line, j, ft_strlen(shell->line) - j + 1);
-//	free(shell->line);
+	tmp3 = shell->line;
+	free(tmp3);
 	shell->line = ft_strjoin(tmp, key);
-//	free(tmp);
+	free(tmp);
 	tmp = shell->line;
 	shell->line = ft_strjoin(shell->line, tmp2);
-//	free(tmp);
-//	free(tmp2);
+	free(tmp);
+	free(tmp2);
 }
 
 static void	tilde_to_expand(char *tmp, t_shell *shell)
@@ -59,7 +61,10 @@ static void	expand_tilde(t_shell *shell)
 			squote = !squote;
 		if (*tmp == '~' && !dquote && !squote
 			&& (tmp == shell->line || *(tmp - 1) == ' '))
-			tilde_to_expand(tmp, shell);
+			{
+				tilde_to_expand(tmp, shell);
+				tmp = shell->line;
+			}
 		tmp++;
 	}
 	if (dquote || squote)

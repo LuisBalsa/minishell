@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 12:23:47 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/08 17:17:13 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/08 21:09:43 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,20 @@ void	envp_destroy(t_env *env)
 		free(env);
 		env = tmp;
 	}
+}
+
+char	*get_env(char *key, t_shell *shell)
+{
+	t_env	*tmp;
+
+	tmp = shell->env;
+	while (tmp)
+	{
+		if (!ft_strcmp(tmp->key, key))
+			return (tmp->value);
+		tmp = tmp->next;
+	}
+	return (NULL);
 }
 
 t_env	*add_env(t_env *env, char *key, char *value)

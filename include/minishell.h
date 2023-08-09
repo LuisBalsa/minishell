@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:04:57 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/08 17:14:27 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/09 08:31:24 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,10 @@
 # define PROMPT_BEGIN "\033[97m┎─── \033[4m\033[1m\033[96m"
 # define PROMPT_END "\n\033[0m\033[97m┖─❯ \033[0m"
 
+# define STOP 0
+# define CONTINUE 1
+# define RESTORE 2
+
 # define EXEC 1
 # define REDIR 2
 # define PIPE 3
@@ -41,6 +45,9 @@
 # define OR 6
 
 # define MAXARGS 20
+
+# define ERROR_TITLE "minishell: "
+# define ERROR_QUOTE "unclosed quotes"
 
 extern int	g_exit;
 
@@ -104,6 +111,8 @@ typedef struct s_shell
 {
 	char	*line;
 	char	*prompt;
+	char	*ps;
+	char	*es;
 	t_env	*env;
 	t_cmd	*cmd;
 	int		status;
@@ -112,7 +121,12 @@ typedef struct s_shell
 t_env	*add_env(t_env *env, char *key, char *value);
 void	envp_to_list(char **envp, t_env **env);
 void	envp_destroy(t_env *env);
+char	*get_env(char *key, t_shell *shell);
 
 void	sig_handler(int sig);
+
+void	print_error(char *msg, int status, t_shell *shell);
+
+void	expand_line(t_shell *shell);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:12:03 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/08 17:27:12 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/09 10:52:00 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,18 +41,23 @@ static int	not_only_spaces(char *line)
 	return (0);
 }
 
-static int	run_comand_line(t_shell *shell)
+static int	run_command_line(t_shell *shell)
 {
+	shell->status = CONTINUE;
 	shell->prompt = get_prompt();
 	shell->line = readline(shell->prompt);
 	free(shell->prompt);
 	if (!shell->line)
-		shell->status = 0;
+		shell->status = STOP;
 	if (not_only_spaces(shell->line))
 	{
 		add_history(shell->line);
-/* 		parse(shell);
-		run_cmd(shell);
+		expand_line(shell);
+		if (shell->status == CONTINUE)
+			ft_printf("%s\n", shell->line);
+/* 			parse(shell);
+		if (shell->status == CONTINUE)
+			run_cmd(shell);
 		free_cmd(shell->cmd); */
 	}
 	free(shell->line);
@@ -62,21 +67,10 @@ static int	run_comand_line(t_shell *shell)
 static void	init_shell(t_shell *shell, char **envp)
 {
 	g_exit = 0;
-	shell->status = 1;
+	shell->status = CONTINUE;
 	envp_to_list(envp, &shell->env);
 	signal(SIGINT, sig_handler);
 	signal(SIGQUIT, SIG_IGN);
-}
-
-void	print_shell_env(t_env *env)
-{
-	while (env)
-	{
-		ft_putstr_fd(env->key, 1);
-		ft_putstr_fd("=", 1);
-		ft_putendl_fd(env->value, 1);
-		env = env->next;
-	}
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -86,8 +80,7 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	init_shell(&shell, envp);
-	print_shell_env(shell.env);
-	while (run_comand_line(&shell))
+	while (run_command_line(&shell))
 		;
 	rl_clear_history();
 	envp_destroy(shell.env);

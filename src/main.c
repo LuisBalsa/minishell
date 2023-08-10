@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:12:03 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/10 12:35:48 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/10 20:31:13 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,25 +53,49 @@ static int	run_command_line(t_shell *shell)
 	if (not_only_spaces(shell->line))
 	{
 		add_history(shell->line);
-		expand_line(shell);
-		if (shell->status == CONTINUE)
+		if (expand_line(shell))
 			ft_printf("%s\n", shell->line);
-/* 			parser(shell);
-		if (shell->status == CONTINUE)
-			run_cmd(shell);
+/* 			if (parser(shell))
+				if (run_cmd(shell))
 		free_cmd(shell->cmd); */
 	}
 	free(shell->line);
 	return (shell->status);
 }
 
+static void	print_envp_sorted(t_shell *shell)
+{
+	t_env	*tmp;
+	int		i;
+
+	i = 0;
+	tmp = shell->env;
+	while (i < shell->envp_size)
+	{
+		while (tmp)
+		{
+			if (tmp->index == i)
+			{
+				ft_printf("%s=%s\n", tmp->key, tmp->value);
+				break ;
+			}
+			tmp = tmp->next;
+		}
+		tmp = shell->env;
+		i++;
+	}
+}
+
 static void	init_shell(t_shell *shell, char **envp)
 {
 	g_exit = 0;
 	shell->status = CONTINUE;
-	envp_to_list(envp, &shell->env);
+	shell->cmd = NULL;
+	shell->envp_size = 0;
+	envp_to_list(envp, shell);
 	signal(SIGINT, sig_handler);
 	signal(SIGQUIT, SIG_IGN);
+	print_envp_sorted(shell);
 }
 
 int	main(int argc, char **argv, char **envp)

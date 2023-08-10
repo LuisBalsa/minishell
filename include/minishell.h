@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:04:57 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/10 12:33:15 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/10 20:29:31 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ typedef struct s_env
 {
 	char			*key;
 	char			*value;
+	int				visible;
+	int				index;
 	struct s_env	*next;
 }					t_env;
 
@@ -121,17 +123,18 @@ typedef struct s_shell
 	t_env	*env;
 	t_cmd	*cmd;
 	int		status;
+	int		envp_size;
 }		t_shell;
 
-t_env	*add_env(t_env *env, char *key, char *value);
-void	envp_to_list(char **envp, t_env **env);
+t_env	*add_env(t_shell *shell, char *key, char *value);
+void	envp_to_list(char **envp, t_shell *shell);
 void	envp_destroy(t_env *env);
 char	*get_env(char *key, t_shell *shell);
 
 void	sig_handler(int sig);
 
-void	print_error(char *msg, int status, int exit, t_shell *shell);
+int		print_error(char *msg, int exit);
 
-void	expand_line(t_shell *shell);
+int		expand_line(t_shell *shell);
 
 #endif

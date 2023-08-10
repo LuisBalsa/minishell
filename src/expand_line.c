@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 18:45:50 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/10 13:03:01 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/10 15:05:54 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static int	point_to_expand(int point, char *tmp, t_shell *shell)
 	return (0);
 }
 
-static void	expand_tilde(t_shell *shell)
+static int	expand_tilde(t_shell *shell)
 {
 	int		dquote;
 	int		squote;
@@ -78,10 +78,12 @@ static void	expand_tilde(t_shell *shell)
 			&& (tmp == shell->line || *(tmp - 1) == ' '))
 			if (point_to_expand(tmp - shell->line, tmp, shell))
 				tmp = shell->line;
-		tmp++;
+		if (*tmp)
+			tmp++;
 	}
 	if (dquote || squote)
-		print_error(ERROR_QUOTE, RESTORE, EXIT_FAILURE, shell);
+		return (print_error(ERROR_QUOTE, 2));
+	return (0);
 }
 
 static void	expand_env(t_shell *shell)
@@ -102,12 +104,16 @@ static void	expand_env(t_shell *shell)
 		if (*tmp == '$' && !ft_strchr(SPACES, *(tmp + 1)) && !squote)
 			if (point_to_expand(tmp - shell->line, tmp, shell))
 				tmp = shell->line;
-		tmp++;
+		if (*tmp)
+			tmp++;
 	}
 }
 
-void	expand_line(t_shell *shell)
+int	expand_line(t_shell *shell)
 {
-	expand_tilde(shell);
+	if (expand_tilde(shell))
+		return (0);
 	expand_env(shell);
+//	trim_quotes(shell);
+	return (1);
 }

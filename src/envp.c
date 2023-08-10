@@ -6,11 +6,40 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 12:23:47 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/08 21:09:43 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/10 21:16:38 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
+void	sort_envp(t_shell *shell)
+{
+	t_env	*tmp;
+	t_env	*max;
+	char	*max_key;
+	int		i;
+
+	i = shell->envp_size;
+	while (i--)
+	{
+		tmp = shell->env;
+		max = NULL;
+		max_key = "";
+		while (tmp)
+		{
+			if (ft_strcmp(tmp->key, max_key) > 0 && tmp->index == 0)
+			{
+				max = tmp;
+				max_key = tmp->key;
+			}
+			tmp = tmp->next;
+		}
+		if (max)
+			max->index = i + 1;
+	}
+}
+
+
 
 void	envp_destroy(t_env *env)
 {
@@ -40,7 +69,7 @@ char	*get_env(char *key, t_shell *shell)
 	return (NULL);
 }
 
-t_env	*add_env(t_env *env, char *key, char *value)
+t_env	*add_env(t_shell *shell, char *key, char *value)
 {
 	t_env	*new;
 	t_env	*tmp;
@@ -48,31 +77,34 @@ t_env	*add_env(t_env *env, char *key, char *value)
 	new = malloc(sizeof(t_env));
 	if (!new)
 		return (NULL);
+	shell->envp_size++;
 	new->key = ft_strdup(key);
 	new->value = ft_strdup(value);
+	new->index = 0;
 	new->next = NULL;
-	if (!env)
+	if (!shell->env)
 		return (new);
-	tmp = env;
+	tmp = shell->env;
 	while (tmp->next)
 		tmp = tmp->next;
 	tmp->next = new;
-	return (env);
+	return (shell->env);
 }
 
-void	envp_to_list(char **envp, t_env **env)
+void	envp_to_list(char **envp, t_shell *shell)
 {
 	int		i;
 	char	**split;
 
-	*env = NULL;
+	shell->env = NULL;
 	i = 0;
 	while (envp[i])
 	{
 		split = ft_split(envp[i], '=');
 		if (split && split[0] && split[1])
-			*env = add_env(*env, split[0], split[1]);
+			shell->env = add_env(shell, split[0], split[1]);
 		ft_free_array(split);
 		i++;
 	}
+	sort_envp(shell);
 }

@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:04:57 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/10 03:23:14 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/10 12:33:15 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,13 @@
 
 # define MAXARGS 20
 
-# define SPACES " \t"
+# define SPACES " \t\n\v\f\r"
 
 # define ERROR_TITLE "minishell: "
 # define ERROR_QUOTE "unclosed quotes"
+# define ERROR_PIPE "syntax error near unexpected token `|'"
+# define ERROR_REDIR "syntax error near unexpected token `newline'"
+# define ERROR_SINTAX "syntax error"
 
 extern int	g_exit;
 
@@ -127,7 +130,7 @@ char	*get_env(char *key, t_shell *shell);
 
 void	sig_handler(int sig);
 
-void	print_error(char *msg, int status, t_shell *shell);
+void	print_error(char *msg, int status, int exit, t_shell *shell);
 
 void	expand_line(t_shell *shell);
 

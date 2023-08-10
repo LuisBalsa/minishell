@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:12:03 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/10 01:09:39 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/10 12:35:48 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static int	run_command_line(t_shell *shell)
 		expand_line(shell);
 		if (shell->status == CONTINUE)
 			ft_printf("%s\n", shell->line);
-/* 			parse(shell);
+/* 			parser(shell);
 		if (shell->status == CONTINUE)
 			run_cmd(shell);
 		free_cmd(shell->cmd); */

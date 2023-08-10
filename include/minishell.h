@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:04:57 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/09 08:31:24 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/10 03:23:14 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@
 # define OR 6
 
 # define MAXARGS 20
+
+# define SPACES " \t"
 
 # define ERROR_TITLE "minishell: "
 # define ERROR_QUOTE "unclosed quotes"

@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 15:38:49 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/08 19:40:25 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/10 02:30:43 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ int		ft_isprint(int c);
 int		ft_isspace(int c);
 size_t	ft_strlen(const char *s);
 size_t	ft_strclen(const char *s, char c);
+size_t	ft_strchrlen(const char *str, char *set);
 void	*ft_memset(void *s, int c, size_t n);
 void	ft_bzero(void *s, size_t n);
 void	*ft_memcpy(void *dest, const void *src, size_t n);

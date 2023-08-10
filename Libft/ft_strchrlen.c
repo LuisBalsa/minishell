@@ -1,25 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signals.c                                          :+:      :+:    :+:   */
+/*   ft_strchrlen.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/08 17:04:28 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/10 01:12:40 by luide-so         ###   ########.fr       */
+/*   Created: 2023/06/19 17:48:49 by luide-so          #+#    #+#             */
+/*   Updated: 2023/08/10 02:28:19 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "libft.h"
 
-void	sig_handler(int sig)
+size_t	ft_strchrlen(const char *str, char *set)
 {
-	if (sig == SIGINT)
-	{
-		g_exit = 130;
-		write(1, "\n", 1);
-//		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_forced_update_display();
-	}
+	size_t	i;
+
+	i = 0;
+	while (str && str[i] && !ft_strchr(set, str[i]))
+		i++;
+	return (i);
 }

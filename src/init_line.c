@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 11:07:22 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/11 14:22:17 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/11 14:52:27 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,12 +50,14 @@ static int	syntax_error(t_shell *shell)
 	return (0);
 }
 
-void	pipe_continuation(t_shell *shell)
+static void	pipe_continuation(t_shell *shell)
 {
 	char	*tmp;
 	char	*tmp2;
 
-	if (shell->line[ft_strlen(shell->line) - 1] == '|')
+	if (shell->line[ft_strlen(shell->line) - 1] == '|'
+		|| ft_strcmp(shell->line + ft_strlen(shell->line) - 2, "||") == 0
+		|| ft_strcmp(shell->line + ft_strlen(shell->line) - 2, "&&") == 0)
 	{
 		tmp = readline("> ");
 		tmp2 = ft_strjoin(shell->line, tmp);

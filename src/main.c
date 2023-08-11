@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:12:03 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/10 20:31:13 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/11 11:44:22 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,33 +27,15 @@ static char	*get_prompt(void)
 	return (cwd);
 }
 
-static int	not_only_spaces(char *line)
-{
-	int	i;
-
-	i = 0;
-	while (line && line[i])
-	{
-		if (!ft_isspace(line[i]))
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
 static int	run_command_line(t_shell *shell)
 {
-	shell->status = CONTINUE;
+	shell->status = STOP;
 	shell->prompt = get_prompt();
 	shell->line = readline(shell->prompt);
 	rl_set_prompt(shell->prompt);
 	free(shell->prompt);
-	if (!shell->line)
-		shell->status = STOP;
-	if (not_only_spaces(shell->line))
+	if (shell->line && init_line(shell) && expand_line(shell))
 	{
-		add_history(shell->line);
-		if (expand_line(shell))
 			ft_printf("%s\n", shell->line);
 /* 			if (parser(shell))
 				if (run_cmd(shell))
@@ -89,7 +71,6 @@ static void	print_envp_sorted(t_shell *shell)
 static void	init_shell(t_shell *shell, char **envp)
 {
 	g_exit = 0;
-	shell->status = CONTINUE;
 	shell->cmd = NULL;
 	shell->envp_size = 0;
 	envp_to_list(envp, shell);

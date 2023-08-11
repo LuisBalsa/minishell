@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 18:45:50 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/10 15:05:54 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/11 12:21:25 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,6 @@ int	expand_line(t_shell *shell)
 	if (expand_tilde(shell))
 		return (0);
 	expand_env(shell);
-//	trim_quotes(shell);
+//	trim_line(shell);
 	return (1);
 }

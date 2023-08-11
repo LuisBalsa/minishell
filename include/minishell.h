@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:04:57 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/10 20:29:31 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/11 11:22:37 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@
 
 # define STOP 0
 # define CONTINUE 1
-# define RESTORE 2
 
 # define EXEC 1
 # define REDIR 2
@@ -134,6 +133,8 @@ char	*get_env(char *key, t_shell *shell);
 void	sig_handler(int sig);
 
 int		print_error(char *msg, int exit);
+
+int		init_line(t_shell *shell);
 
 int		expand_line(t_shell *shell);
 

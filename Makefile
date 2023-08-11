@@ -31,7 +31,7 @@ OBJ_DIR		= bin
 
 #_/=\_/=\_/=\_/=\_/=\_/=\_/=\_/=\_/=\_/=\_ FILES _/=\_/=\_/=\_/=\_/=\_/=\_/=\_/=\_/=\_/=\_
 NAME		= minishell
-_FILES		= main envp signals expand_line error
+_FILES		= main envp signals init_line expand_line error
 OBJS		= $(_FILES:%=%.o)
 TARGET		= $(addprefix $(OBJ_DIR)/, $(OBJS))
 

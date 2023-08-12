@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:04:57 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/11 11:22:37 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/12 04:14:02 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@
 # define MAXARGS 20
 
 # define SPACES " \t\n\v\f\r"
+# define OPERATORS "|><&()"
 
 # define ERROR_TITLE "minishell: "
 # define ERROR_QUOTE "unclosed quotes"
@@ -118,7 +119,7 @@ typedef struct s_shell
 	char	*line;
 	char	*prompt;
 	char	*ps;
-	char	*es;
+	int		line_len;
 	t_env	*env;
 	t_cmd	*cmd;
 	int		status;
@@ -131,11 +132,13 @@ void	envp_destroy(t_env *env);
 char	*get_env(char *key, t_shell *shell);
 
 void	sig_handler(int sig);
+void	pipe_continuation_signal(int sig);
 
 int		print_error(char *msg, int exit);
 
 int		init_line(t_shell *shell);
-
 int		expand_line(t_shell *shell);
+int		expand(char *key, int i, int j, t_shell *shell);
+void	trim_line(t_shell *shell);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:12:03 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/11 11:44:22 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/12 03:20:11 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,21 @@ static char	*get_prompt(void)
 	return (cwd);
 }
 
+void	print_args(t_shell *shell)
+{
+	int		i;
+
+	i = 0;
+	while (i < shell->line_len)
+	{
+		if (shell->line[i])
+			ft_printf("%s::\n", shell->line + i);
+		while (i <= shell->line_len && shell->line[i])
+			i++;
+		i++;
+	}
+}
+
 static int	run_command_line(t_shell *shell)
 {
 	shell->status = STOP;
@@ -34,9 +49,12 @@ static int	run_command_line(t_shell *shell)
 	shell->line = readline(shell->prompt);
 	rl_set_prompt(shell->prompt);
 	free(shell->prompt);
+	if (!shell->line)
+		g_exit = 0;
 	if (shell->line && init_line(shell) && expand_line(shell))
 	{
-			ft_printf("%s\n", shell->line);
+		trim_line(shell);
+		print_args(shell);
 /* 			if (parser(shell))
 				if (run_cmd(shell))
 		free_cmd(shell->cmd); */
@@ -72,6 +90,7 @@ static void	init_shell(t_shell *shell, char **envp)
 {
 	g_exit = 0;
 	shell->cmd = NULL;
+	shell->line = NULL;
 	shell->envp_size = 0;
 	envp_to_list(envp, shell);
 	signal(SIGINT, sig_handler);

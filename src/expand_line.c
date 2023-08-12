@@ -6,30 +6,11 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 18:45:50 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/11 12:21:25 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/12 04:14:38 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-
-static int	expand(char *key, int i, int j, t_shell *shell)
-{
-	char	*tmp;
-	char	*tmp2;
-	char	*tmp3;
-
-	tmp = ft_substr(shell->line, 0, i);
-	tmp2 = ft_substr(shell->line, j, ft_strlen(shell->line) - j + 1);
-	tmp3 = shell->line;
-	free(tmp3);
-	shell->line = ft_strjoin(tmp, key);
-	free(tmp);
-	tmp = shell->line;
-	shell->line = ft_strjoin(shell->line, tmp2);
-	free(tmp);
-	free(tmp2);
-	return (1);
-}
 
 static int	point_to_expand(int point, char *tmp, t_shell *shell)
 {
@@ -75,7 +56,7 @@ static int	expand_tilde(t_shell *shell)
 		if (*tmp == '\'' && !dquote)
 			squote = !squote;
 		if (*tmp == '~' && !dquote && !squote
-			&& (tmp == shell->line || *(tmp - 1) == ' '))
+			&& (tmp == shell->line || ft_strchr(SPACES, *(tmp - 1))))
 			if (point_to_expand(tmp - shell->line, tmp, shell))
 				tmp = shell->line;
 		if (*tmp)
@@ -109,11 +90,41 @@ static void	expand_env(t_shell *shell)
 	}
 }
 
+static void	expand_space_operators(t_shell *sh)
+{
+	int		dquote;
+	int		squote;
+	char	*tmp;
+
+	dquote = 0;
+	squote = 0;
+	tmp = sh->line - 1;
+	while (*(++tmp))
+	{
+		if (*tmp == '"' && !squote)
+			dquote = !dquote;
+		if (*tmp == '\'' && !dquote)
+			squote = !squote;
+		if (ft_strchr(OPERATORS, *tmp) && !dquote && !squote)
+		{
+			if (tmp != sh->line && !ft_strchr(" |><&()", *(tmp - 1)))
+			{
+				if (expand(" ", tmp - sh->line, tmp - sh->line, sh))
+					tmp = sh->line - 1;
+			}
+			else if (!ft_strchr(" |><&()", *(tmp + 1)))
+				if (expand(" ", tmp - sh->line + 1, tmp - sh->line + 1, sh))
+					tmp = sh->line - 1;
+		}
+	}
+}
+
 int	expand_line(t_shell *shell)
 {
 	if (expand_tilde(shell))
 		return (0);
 	expand_env(shell);
-//	trim_line(shell);
+	expand_space_operators(shell);
+	shell->line_len = ft_strlen(shell->line);
 	return (1);
 }

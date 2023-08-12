@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 11:07:22 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/11 14:52:27 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/12 04:03:09 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,15 +42,15 @@ static int	syntax_error(t_shell *shell)
 	if (shell->line[0] == ';')
 		return (print_error("syntax error near unexpected token `;'", 2));
 	if (shell->line[0] == '<')
-		return (print_error("syntax error near unexpected token `<'", 2));
+		return (print_error("syntax error near unexpected token `newline'", 2));
 	if (shell->line[0] == '>')
-		return (print_error("syntax error near unexpected token `>'", 2));
+		return (print_error("syntax error near unexpected token `newline'", 2));
 	if (shell->line[0] == '&')
 		return (print_error("syntax error near unexpected token `&'", 2));
 	return (0);
 }
 
-static void	pipe_continuation(t_shell *shell)
+static int	pipe_continuation(t_shell *shell)
 {
 	char	*tmp;
 	char	*tmp2;
@@ -60,6 +60,8 @@ static void	pipe_continuation(t_shell *shell)
 		|| ft_strcmp(shell->line + ft_strlen(shell->line) - 2, "&&") == 0)
 	{
 		tmp = readline("> ");
+		if (!tmp)
+			return (shell->status = STOP, g_exit = 2, 1);
 		tmp2 = ft_strjoin(shell->line, tmp);
 		free(shell->line);
 		trim_spaces(&tmp2);
@@ -67,6 +69,7 @@ static void	pipe_continuation(t_shell *shell)
 		free(tmp);
 		pipe_continuation(shell);
 	}
+	return (0);
 }
 
 int	init_line(t_shell *shell)
@@ -77,8 +80,8 @@ int	init_line(t_shell *shell)
 	trim_spaces(&shell->line);
 	if (syntax_error(shell))
 		return (add_history(shell->line), 0);
-	pipe_continuation(shell);
+	if (pipe_continuation(shell))
+		return (add_history(shell->line), 0);
 	add_history(shell->line);
-	shell->es = shell->line + ft_strlen(shell->line);
 	return (1);
 }

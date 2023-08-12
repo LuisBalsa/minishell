@@ -1,25 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signals.c                                          :+:      :+:    :+:   */
+/*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/08 17:04:28 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/11 22:08:51 by luide-so         ###   ########.fr       */
+/*   Created: 2023/08/12 04:13:24 by luide-so          #+#    #+#             */
+/*   Updated: 2023/08/12 04:13:36 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-void	sig_handler(int sig)
+int	expand(char *key, int i, int j, t_shell *shell)
 {
-	if (sig == SIGINT)
-	{
-		g_exit = 130;
-		write(1, "\n", 1);
-//		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_forced_update_display();
-	}
+	char	*tmp;
+	char	*tmp2;
+	char	*tmp3;
+
+	tmp = ft_substr(shell->line, 0, i);
+	tmp2 = ft_substr(shell->line, j, ft_strlen(shell->line) - j + 1);
+	tmp3 = shell->line;
+	free(tmp3);
+	shell->line = ft_strjoin(tmp, key);
+	free(tmp);
+	tmp = shell->line;
+	shell->line = ft_strjoin(shell->line, tmp2);
+	free(tmp);
+	free(tmp2);
+	return (1);
 }

@@ -6,58 +6,63 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 10:48:06 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/11 11:05:32 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/12 02:13:59 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-static int	add_null(char *tmp, int i, int j, t_shell *shell)
+static void	trim_quotes(char *s, int squote, int dquote, t_shell *shell)
 {
-	char	*tmp2;
-	char	*tmp3;
+	int		i;
 
-	tmp2 = ft_substr(shell->line, 0, i);
-	tmp3 = ft_substr(shell->line, j, ft_strlen(shell->line) - j + 1);
-	free(shell->line);
-	shell->line = ft_strjoin(tmp2, tmp);
-	free(tmp2);
-	tmp2 = shell->line;
-	shell->line = ft_strjoin(shell->line, tmp3);
-	free(tmp2);
-	free(tmp3);
-	return (1);
+	i = -1;
+	while (++i < shell->line_len)
+	{
+		if ((s[i] == '"' || s[i] == '\'') && !squote && !dquote)
+		{
+			dquote = (s[i] == '"');
+			squote = (s[i] == '\'');
+			if (!i || !s[i - 1])
+				s[i] = '\0';
+			else
+				memmove(&s[i], &s[i + 1], shell->line_len - i);
+		}
+		else if ((s[i] == '"' && dquote) || (s[i] == '\'' && squote))
+		{
+			dquote -= (s[i] == '"');
+			squote -= (s[i] == '\'');
+			if (!s[i + 1])
+				s[i] = '\0';
+			else
+				memmove(&s[i], &s[i + 1], shell->line_len - i);
+		}
+	}
 }
 
+static void	trim_spaces(char *line)
+{
+	char	*tmp;
+	int		squote;
+	int		dquote;
+
+	dquote = 0;
+	squote = 0;
+	tmp = line;
+	while (*tmp)
+	{
+		if (*tmp == '"' && !squote)
+			dquote = !dquote;
+		if (*tmp == '\'' && !dquote)
+			squote = !squote;
+		if (*tmp == ' ' && !dquote && !squote)
+			*tmp = '\0';
+		tmp++;
+	}
+}
 
 void	trim_line(t_shell *shell)
 {
-	char	*tmp;
-
-	tmp = shell->line;
-	shell->line = ft_strtrim(shell->line, SPACES);
-	free(tmp);
-	shell->es = shell->line + ft_strlen(shell->line);
-	while (shell->line < shell->es)
-	{
-		if (*shell->line == '\'' || *shell->line == '\"')
-		{
-			shell->es = ft_strchr(shell->line + 1, *shell->line);
-			if (!shell->es)
-				shell->es = shell->line + ft_strlen(shell->line);
-			shell->line++;
-		}
-		else if (*shell->line == '\\')
-		{
-			shell->line++;
-			if (*shell->line == '\0')
-				break ;
-		}
-		else if (*shell->line == '$')
-		{
-			if (point_to_expand(shell->line - shell->line, shell->line, shell))
-				continue ;
-		}
-		shell->line++;
-	}
+	trim_spaces(shell->line);
+	trim_quotes(shell->line, 0, 0, shell);
 }

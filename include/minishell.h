@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:04:57 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/14 12:41:27 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/14 19:00:01 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,15 @@
 
 # define STOP 0
 # define CONTINUE 1
+# define RESTORE 2
 
-# define EXEC 1
-# define REDIR 2
-# define PIPE 3
-# define BLOCK 4
-# define AND 5
-# define OR 6
+# define EXEC 300
+# define REDIR 301
+# define PIPE 302
+# define AND 303
+# define HERE_DOC 304
+# define OR_OP 305
+# define APPEND 306
 
 # define MAXARGS 20
 
@@ -49,14 +51,8 @@
 # define OPERATORS "|><&()"
 # define TILDE_EXP "|><&();/ \t\n\v\f\r"
 
-# define HERE_DOC 1000
-# define APPEND 1001
-# define OR_OP 1002
-
 # define ERROR_TITLE "minishell: "
 # define ERROR_QUOTE "unclosed quotes"
-# define ERROR_PIPE "syntax error near unexpected token `|'"
-# define ERROR_REDIR "syntax error near unexpected token `newline'"
 # define ERROR_SINTAX "syntax error"
 
 extern int	g_exit;
@@ -79,45 +75,30 @@ typedef struct s_exec
 {
 	int		type;
 	char	*argv[MAXARGS];
-	char	*eargv[MAXARGS];
 }		t_exec;
 
 typedef struct s_redir
 {
 	int		type;
 	char	*file;
-	char	*efile;
 	int		mode;
 	int		fd;
 }		t_redir;
 
-typedef struct s_pipe
+typedef struct s_here
 {
 	int		type;
-	t_cmd	*left;
-	t_cmd	*right;
-}		t_pipe;
+	char	*eof;
+	int		mode;
+	int		fd;
+}		t_here;
 
-typedef struct s_block
+typedef struct s_lr
 {
 	int		type;
 	t_cmd	*left;
 	t_cmd	*right;
-}		t_block;
-
-typedef struct s_and
-{
-	int		type;
-	t_cmd	*left;
-	t_cmd	*right;
-}		t_and;
-
-typedef struct s_or
-{
-	int		type;
-	t_cmd	*left;
-	t_cmd	*right;
-}		t_or;
+}		t_lr;
 
 typedef struct s_shell
 {
@@ -140,12 +121,24 @@ char	*get_env(char *key, t_shell *shell);
 void	sig_handler(int sig);
 void	pipe_continuation_signal(int sig);
 
-int		print_error(char *msg, int exit);
+int		print_error(t_shell *shell, char *msg, int exit);
+int		print_error_syntax(t_shell *shell, char *msg, int exit);
 
 int		init_line(t_shell *shell);
 int		expand_line(t_shell *shell);
 int		expand(char *key, int i, int j, t_shell *shell);
 int		expand_free(char *key, int i, int j, t_shell *shell);
 void	trim_line(t_shell *shell);
+
+int		parser(t_shell *shell);
+int		peek(t_shell *shell, char *op, int mode);
+int		gettoken(t_shell *shell, char *token);
+
+t_cmd	*or_cmd(t_cmd *left, t_cmd *right);
+t_cmd	*and_cmd(t_cmd *left, t_cmd *right);
+t_cmd	*pipe_cmd(t_cmd *left, t_cmd *right);
+t_cmd	*redir_cmd(char *file, int mode, int fd);
+t_cmd	*here_cmd(char *eof);
+t_cmd	*exec_cmd(void);
 
 #endif

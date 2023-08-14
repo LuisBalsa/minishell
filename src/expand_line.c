@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 18:45:50 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/12 04:14:38 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/13 13:21:10 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static int	point_to_expand(int point, char *tmp, t_shell *shell)
 			return (expand(get_env("OLDPWD", shell), point, point + 2, shell));
 	}
 	else if (*tmp == '$' && tmp[1] == '?')
-		return (expand(ft_itoa(shell->status), point, point + 2, shell));
+		return (expand_free(ft_itoa(g_exit), point, point + 2, shell));
 	else if (*tmp == '$' && (ft_isalpha(tmp[1]) || tmp[1] == '_'))
 	{
 		len = 1;

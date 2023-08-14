@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 11:07:22 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/12 04:03:09 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/13 17:57:35 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,16 +37,29 @@ void	trim_spaces(char **line)
 
 static int	syntax_error(t_shell *shell)
 {
+	int		dquote;
+	int		squote;
+	char	*tmp;
+
+	dquote = 0;
+	squote = 0;
+	tmp = shell->line - 1;
 	if (shell->line[0] == '|')
 		return (print_error("syntax error near unexpected token `|'", 2));
 	if (shell->line[0] == ';')
 		return (print_error("syntax error near unexpected token `;'", 2));
-	if (shell->line[0] == '<')
-		return (print_error("syntax error near unexpected token `newline'", 2));
-	if (shell->line[0] == '>')
-		return (print_error("syntax error near unexpected token `newline'", 2));
 	if (shell->line[0] == '&')
 		return (print_error("syntax error near unexpected token `&'", 2));
+	while (*++tmp)
+	{
+		if (*tmp == '"' && !squote)
+			dquote = !dquote;
+		if (*tmp == '\'' && !dquote)
+			squote = !squote;
+		if (*tmp == '&' && !dquote && !squote)
+			if (*(tmp + 1) != '&' && *(tmp - 1) != '&')
+				return (print_error("no support for single &", 2));
+	}
 	return (0);
 }
 

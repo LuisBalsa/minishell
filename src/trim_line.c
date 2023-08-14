@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 10:48:06 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/12 02:13:59 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/13 11:44:06 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static void	trim_spaces(char *line)
 			dquote = !dquote;
 		if (*tmp == '\'' && !dquote)
 			squote = !squote;
-		if (*tmp == ' ' && !dquote && !squote)
+		if (ft_strchr(SPACES, *tmp) && !squote && !dquote)
 			*tmp = '\0';
 		tmp++;
 	}

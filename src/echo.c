@@ -6,7 +6,7 @@
 /*   By: achien-k <achien-k@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 12:05:22 by achien-k          #+#    #+#             */
-/*   Updated: 2023/08/14 13:18:35 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/08/14 13:21:37 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ void	ft_echo(t_exec exec)
 		ft_putchar_fd('\n', STDOUT_FILENO);
 }
 /*
+//cc -o echo echo.c ../Libft_obj/libft.a -g
 int	main(int argc, char **argv)
 {
 	t_exec	exec;

@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 18:45:50 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/13 13:21:10 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/14 12:41:37 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@ static int	point_to_expand(int point, char *tmp, t_shell *shell)
 
 	if (*tmp == '~')
 	{
-		if (!tmp[1] || ft_strchr(" /", tmp[1]))
+		if (!tmp[1] || ft_strchr(TILDE_EXP, tmp[1]))
 			return (expand(get_env("HOME", shell), point, point + 1, shell));
-		else if (tmp[1] == '+' && (!tmp[2] || ft_strchr(" /", tmp[2])))
+		else if (tmp[1] == '+' && (!tmp[2] || ft_strchr(TILDE_EXP, tmp[2])))
 			return (expand(get_env("PWD", shell), point, point + 2, shell));
-		else if (tmp[1] == '-' && (!tmp[2] || ft_strchr(" /", tmp[2])))
+		else if (tmp[1] == '-' && (!tmp[2] || ft_strchr(TILDE_EXP, tmp[2])))
 			return (expand(get_env("OLDPWD", shell), point, point + 2, shell));
 	}
 	else if (*tmp == '$' && tmp[1] == '?')

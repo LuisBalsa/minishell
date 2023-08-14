@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:04:57 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/14 00:39:02 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/14 12:41:27 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@
 
 # define SPACES " \t\n\v\f\r"
 # define OPERATORS "|><&()"
+# define TILDE_EXP "|><&();/ \t\n\v\f\r"
 
 # define HERE_DOC 1000
 # define APPEND 1001

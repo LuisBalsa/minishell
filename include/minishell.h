@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:04:57 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/14 19:00:01 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/15 01:59:45 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@
 # define OR_OP 305
 # define APPEND 306
 
-# define MAXARGS 20
+# define MAXARGS 50
 
 # define SPACES " \t\n\v\f\r"
 # define OPERATORS "|><&()"
@@ -80,6 +80,7 @@ typedef struct s_exec
 typedef struct s_redir
 {
 	int		type;
+	t_cmd	*cmd;
 	char	*file;
 	int		mode;
 	int		fd;
@@ -88,6 +89,7 @@ typedef struct s_redir
 typedef struct s_here
 {
 	int		type;
+	t_cmd	*cmd;
 	char	*eof;
 	int		mode;
 	int		fd;
@@ -132,13 +134,16 @@ void	trim_line(t_shell *shell);
 
 int		parser(t_shell *shell);
 int		peek(t_shell *shell, char *op, int mode);
-int		gettoken(t_shell *shell, char *token);
+int		gettoken(t_shell *shell, char **token);
+t_cmd	*parseline(t_shell *shell);
+
+void	free_cmd(t_cmd *cmd);
 
 t_cmd	*or_cmd(t_cmd *left, t_cmd *right);
 t_cmd	*and_cmd(t_cmd *left, t_cmd *right);
 t_cmd	*pipe_cmd(t_cmd *left, t_cmd *right);
-t_cmd	*redir_cmd(char *file, int mode, int fd);
-t_cmd	*here_cmd(char *eof);
+t_cmd	*redir_cmd(t_cmd *cmd, char *file, int mode, int fd);
+t_cmd	*here_cmd(t_cmd *cmd, char *eof);
 t_cmd	*exec_cmd(void);
 
 #endif

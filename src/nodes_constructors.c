@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 14:53:28 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/15 01:14:26 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/15 12:55:18 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,9 @@ t_cmd	*redir_cmd(t_cmd *cmd, char *file, int mode, int fd)
 
 t_cmd	*pipe_cmd(t_cmd *left, t_cmd *right)
 {
-	t_lr	*cmd;
+	t_pipe	*cmd;
 
-	cmd = (t_lr *)ft_calloc(1, sizeof(t_lr));
+	cmd = (t_pipe *)ft_calloc(1, sizeof(t_pipe));
 	cmd->type = PIPE;
 	cmd->left = left;
 	cmd->right = right;
@@ -45,24 +45,26 @@ t_cmd	*exec_cmd(void)
 	return ((t_cmd *)cmd);
 }
 
-t_cmd	*and_cmd(t_cmd *left, t_cmd *right)
+t_cmd	*and_cmd(t_cmd *left, t_cmd *right, t_cmd *next)
 {
-	t_lr	*cmd;
+	t_lrn	*cmd;
 
-	cmd = (t_lr *)ft_calloc(1, sizeof(t_lr));
+	cmd = (t_lrn *)ft_calloc(1, sizeof(t_lrn));
 	cmd->type = AND;
 	cmd->left = left;
 	cmd->right = right;
+	cmd->next = next;
 	return ((t_cmd *)cmd);
 }
 
-t_cmd	*or_cmd(t_cmd *left, t_cmd *right)
+t_cmd	*or_cmd(t_cmd *left, t_cmd *right, t_cmd *next)
 {
-	t_lr	*cmd;
+	t_lrn	*cmd;
 
-	cmd = (t_lr *)ft_calloc(1, sizeof(t_lr));
+	cmd = (t_lrn *)ft_calloc(1, sizeof(t_lrn));
 	cmd->type = OR_OP;
 	cmd->left = left;
 	cmd->right = right;
+	cmd->next = next;
 	return ((t_cmd *)cmd);
 }

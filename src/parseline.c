@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/13 12:52:02 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/15 01:52:09 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/15 13:01:34 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ static t_cmd	*parsepipeline(t_shell *shell)
 {
 	t_cmd	*cmd;
 
+	ft_printf("parsepipeline:\n");
 	cmd = parseexec(shell);
 	if (cmd && peek(shell, "|", 1))
 	{
@@ -111,15 +112,16 @@ t_cmd	*parseline(t_shell *shell)
 	t_cmd	*cmd;
 	int		type;
 
+	ft_printf("parseline:\n");
 	cmd = parsepipeline(shell);
 	if (cmd && peek(shell, "&|", 2))
 	{
-		ft_printf("parseline token:\n");
+		ft_printf("parseline token for && or ||:\n");
 		type = gettoken(shell, NULL);
 		if (type == OR_OP)
-			cmd = or_cmd(cmd, parseline(shell));
+			cmd = or_cmd(cmd, parsepipeline(shell), parseline(shell));
 		else if (type == '&')
-			cmd = and_cmd(cmd, parseline(shell));
+			cmd = and_cmd(cmd, parsepipeline(shell), parseline(shell));
 	}
 	return (cmd);
 }

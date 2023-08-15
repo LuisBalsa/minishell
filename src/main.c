@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:12:03 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/15 00:20:33 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/15 21:58:45 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,9 @@ static int	run_command_line(t_shell *shell)
 	{
 		trim_line(shell);
 		print_args(shell);
-		parser(shell);
-		//	run_cmd(shell);
+		if (parser(shell) && shell->status == CONTINUE)
+			shell->status = CONTINUE;
+			//run_cmd(shell, shell->cmd);
 		free_cmd(shell->cmd);
 	}
 	free(shell->line);
@@ -93,8 +94,7 @@ static void	init_shell(t_shell *shell, char **envp)
 	shell->line = NULL;
 	shell->envp_size = 0;
 	envp_to_list(envp, shell);
-	signal(SIGINT, sig_handler);
-	signal(SIGQUIT, SIG_IGN);
+	sig_handler(SIGRESTORE);
 	print_envp_sorted(shell);
 }
 

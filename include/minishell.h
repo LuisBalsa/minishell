@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:04:57 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/15 01:59:45 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/15 22:46:54 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,11 @@
 # define ERROR_QUOTE "unclosed quotes"
 # define ERROR_SINTAX "syntax error"
 
+# define SIGRESTORE 1
+# define SIGHEREDOC 2
+# define SIGCHILD 3
+# define SIGSLASH 4
+
 extern int	g_exit;
 
 typedef struct s_env
@@ -95,12 +100,20 @@ typedef struct s_here
 	int		fd;
 }		t_here;
 
-typedef struct s_lr
+typedef struct s_lrn
 {
 	int		type;
 	t_cmd	*left;
 	t_cmd	*right;
-}		t_lr;
+	t_cmd	*next;
+}		t_lrn;
+
+typedef struct s_pipe
+{
+	int		type;
+	t_cmd	*left;
+	t_cmd	*right;
+}		t_pipe;
 
 typedef struct s_shell
 {
@@ -123,8 +136,11 @@ char	*get_env(char *key, t_shell *shell);
 void	sig_handler(int sig);
 void	pipe_continuation_signal(int sig);
 
+void	check(int result, t_shell *shell, char *msg, int exit);
+int		check_fork(t_shell *shell);
 int		print_error(t_shell *shell, char *msg, int exit);
 int		print_error_syntax(t_shell *shell, char *msg, int exit);
+void	free_exit(t_shell *shell);
 
 int		init_line(t_shell *shell);
 int		expand_line(t_shell *shell);
@@ -139,8 +155,8 @@ t_cmd	*parseline(t_shell *shell);
 
 void	free_cmd(t_cmd *cmd);
 
-t_cmd	*or_cmd(t_cmd *left, t_cmd *right);
-t_cmd	*and_cmd(t_cmd *left, t_cmd *right);
+t_cmd	*or_cmd(t_cmd *left, t_cmd *right, t_cmd *next);
+t_cmd	*and_cmd(t_cmd *left, t_cmd *right, t_cmd *next);
 t_cmd	*pipe_cmd(t_cmd *left, t_cmd *right);
 t_cmd	*redir_cmd(t_cmd *cmd, char *file, int mode, int fd);
 t_cmd	*here_cmd(t_cmd *cmd, char *eof);

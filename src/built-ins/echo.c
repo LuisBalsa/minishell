@@ -6,11 +6,11 @@
 /*   By: achien-k <achien-k@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 12:05:22 by achien-k          #+#    #+#             */
-/*   Updated: 2023/08/14 13:21:37 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/08/16 12:32:16 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "../../include/minishell.h"
 
 //General function in Adam's Libft
 int	ft_contains_only(char *str, char *characters)
@@ -43,7 +43,7 @@ int	echo_flag(t_exec exec, int *arg)
 	return (flag);
 }
 
-void	ft_echo(t_exec exec)
+void	ms_echo(t_exec exec)
 {
 	int	i;
 	int	flag;
@@ -75,6 +75,6 @@ int	main(int argc, char **argv)
 	while (argv[j])
 		exec.argv[++i] = argv[j++];
 	exec.argv[i + 1] = 0;
-	ft_echo(exec);
+	ms_echo(exec);
 	return (0);
 }*/

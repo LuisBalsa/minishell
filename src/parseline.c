@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/13 12:52:02 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/15 13:01:34 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/18 00:45:08 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,8 @@ static t_cmd	*parseredir(t_cmd *cmd, t_shell *shell)
 	int		type;
 	char	*token;
 
-	while (peek(shell, "<>", 1))
+	while (peek(shell, "<>", 1) || peek(shell, "<>", 2))
 	{
-		ft_printf("redir sao dois tokens:\n");
 		type = gettoken(shell, NULL);
 		if (gettoken(shell, &token) != 'a')
 		{
@@ -47,7 +46,6 @@ static t_cmd	*parseblock(t_shell *shell)
 		print_error(shell, "parsblock", 2);
 		return (NULL);
 	}
-	ft_printf("parsblock primeiro token:\n");
 	gettoken(shell, NULL);
 	cmd = parseline(shell);
 	if (!peek(shell, ")", 1))
@@ -57,7 +55,6 @@ static t_cmd	*parseblock(t_shell *shell)
 	}
 	if (!cmd)
 		return (NULL);
-	ft_printf("parsblock segundo token:\n");
 	gettoken(shell, NULL);
 	return (parseredir(cmd, shell));
 }
@@ -78,7 +75,6 @@ static t_cmd	*parseexec(t_shell *shell)
 	ret = parseredir(ret, shell);
 	while (!peek(shell, "|&)", 1) && !peek(shell, "|&", 2))
 	{
-		ft_printf("parseexec token:\n");
 		type = gettoken(shell, &token);
 		if (!type)
 			break ;
@@ -96,11 +92,9 @@ static t_cmd	*parsepipeline(t_shell *shell)
 {
 	t_cmd	*cmd;
 
-	ft_printf("parsepipeline:\n");
 	cmd = parseexec(shell);
 	if (cmd && peek(shell, "|", 1))
 	{
-		ft_printf("parsepipeline token:\n");
 		gettoken(shell, NULL);
 		cmd = pipe_cmd(cmd, parsepipeline(shell));
 	}
@@ -112,11 +106,9 @@ t_cmd	*parseline(t_shell *shell)
 	t_cmd	*cmd;
 	int		type;
 
-	ft_printf("parseline:\n");
 	cmd = parsepipeline(shell);
 	if (cmd && peek(shell, "&|", 2))
 	{
-		ft_printf("parseline token for && or ||:\n");
 		type = gettoken(shell, NULL);
 		if (type == OR_OP)
 			cmd = or_cmd(cmd, parsepipeline(shell), parseline(shell));

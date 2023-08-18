@@ -6,23 +6,45 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 17:32:04 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/15 22:43:12 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/18 00:40:33 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include	"../include/minishell.h"
+
+static void	fork_exec_pipe(t_shell *shell, t_cmd *cmd, int *fd, int std)
+{
+	int		pid;
+
+	pid = fork();
+	check(pid, shell, "fork error", 127);
+	if (pid == 0)
+	{
+		sig_handler(SIGCHILD);
+		g_exit = 127;
+		check(dup2(fd[std], std), shell, "dup2 error", 127);
+//		check(close(fd[!std]), shell, "close error", 127);
+		run_cmd(shell, cmd);
+		exit(g_exit);
+	}
+	else
+	{
+		check(close(fd[std]), shell, "close error", 127);
+		waitpid(pid, &g_exit, 0);
+		if (WIFEXITED(g_exit))
+			g_exit = WEXITSTATUS(g_exit);
+		else if (WIFSIGNALED(g_exit))
+			g_exit = WTERMSIG(g_exit) + 128;
+	}
+}
 
 static void	run_pipe(t_shell *shell, t_pipe *cmd)
 {
 	int		fd[2];
 
 	check(pipe(fd), shell, "pipe error", 127);
-	close(fd[0]);
-	dup2(fd[1], STDOUT_FILENO);
-	run_cmd(shell, cmd->left);
-	close(fd[1]);
-	dup2(fd[0], STDOUT_FILENO);
-	run_cmd(shell, cmd->right);
+	fork_exec_pipe(shell, cmd->left, fd, STDOUT_FILENO);
+	fork_exec_pipe(shell, cmd->right, fd, STDIN_FILENO);
 }
 
 static void	run_and(t_shell *shell, t_lrn *cmd)
@@ -45,16 +67,16 @@ static void	run_or(t_shell *shell, t_lrn *cmd)
 
 void	run_cmd(t_shell *shell, t_cmd *cmd)
 {
-	if (shell->cmd->type == EXEC)
-		run_exec(shell, (t_exec *)shell->cmd);
-	else if (shell->cmd->type == REDIR)
-		run_redir(shell, (t_redir *)shell->cmd);
-	else if (shell->cmd->type == HERE_DOC)
-		run_heredoc(shell, (t_here *)shell->cmd);
-	else if (shell->cmd->type == PIPE)
-		run_pipe(shell, (t_pipe *)shell->cmd);
-	else if (shell->cmd->type == AND)
-		run_and(shell, (t_lrn *)shell->cmd);
-	else if (shell->cmd->type == OR_OP)
-		run_or(shell, (t_lrn *)shell->cmd);
+	if (cmd->type == EXEC)
+		run_exec(shell, (t_exec *)cmd);
+	else if (cmd->type == REDIR)
+		run_redir(shell, (t_redir *)cmd);
+	else if (cmd->type == HERE_DOC)
+		run_heredoc(shell, (t_here *)cmd);
+	else if (cmd->type == PIPE)
+		run_pipe(shell, (t_pipe *)cmd);
+	else if (cmd->type == AND)
+		run_and(shell, (t_lrn *)cmd);
+	else if (cmd->type == OR_OP)
+		run_or(shell, (t_lrn *)cmd);
 }

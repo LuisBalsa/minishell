@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:12:03 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/15 21:58:45 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/18 00:47:28 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,21 +27,6 @@ static char	*get_prompt(void)
 	return (cwd);
 }
 
-void	print_args(t_shell *shell)
-{
-	int		i;
-
-	i = 0;
-	while (i < shell->line_len)
-	{
-		if (shell->line[i])
-			ft_printf("%s::\n", shell->line + i);
-		while (i <= shell->line_len && shell->line[i])
-			i++;
-		i++;
-	}
-}
-
 static int	run_command_line(t_shell *shell)
 {
 	shell->status = STOP;
@@ -54,10 +39,8 @@ static int	run_command_line(t_shell *shell)
 	if (shell->line && init_line(shell) && expand_line(shell))
 	{
 		trim_line(shell);
-		print_args(shell);
 		if (parser(shell) && shell->status == CONTINUE)
-			shell->status = CONTINUE;
-			//run_cmd(shell, shell->cmd);
+			run_cmd(shell, shell->cmd);
 		free_cmd(shell->cmd);
 	}
 	free(shell->line);

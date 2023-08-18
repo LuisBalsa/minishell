@@ -6,13 +6,13 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 18:45:50 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/14 19:01:52 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/17 00:22:17 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-static int	point_to_expand(int point, char *tmp, t_shell *shell)
+static int	point_to_expand(int point, char *tmp, t_shell *sh)
 {
 	char	*key;
 	int		len;
@@ -20,21 +20,21 @@ static int	point_to_expand(int point, char *tmp, t_shell *shell)
 	if (*tmp == '~')
 	{
 		if (!tmp[1] || ft_strchr(TILDE_EXP, tmp[1]))
-			return (expand(get_env("HOME", shell), point, point + 1, shell));
+			return (expand(get_env("HOME", sh), point, point + 1, &sh->line));
 		else if (tmp[1] == '+' && (!tmp[2] || ft_strchr(TILDE_EXP, tmp[2])))
-			return (expand(get_env("PWD", shell), point, point + 2, shell));
+			return (expand(get_env("PWD", sh), point, point + 2, &sh->line));
 		else if (tmp[1] == '-' && (!tmp[2] || ft_strchr(TILDE_EXP, tmp[2])))
-			return (expand(get_env("OLDPWD", shell), point, point + 2, shell));
+			return (expand(get_env("OLDPWD", sh), point, point + 2, &sh->line));
 	}
 	else if (*tmp == '$' && tmp[1] == '?')
-		return (expand_free(ft_itoa(g_exit), point, point + 2, shell));
+		return (expand_free(ft_itoa(g_exit), point, point + 2, &sh->line));
 	else if (*tmp == '$' && (ft_isalpha(tmp[1]) || tmp[1] == '_'))
 	{
 		len = 1;
 		while (ft_isalnum(tmp[len]) || tmp[len] == '_')
 			len++;
 		key = ft_substr(tmp, 1, len - 1);
-		expand(get_env(key, shell), point, point + len, shell);
+		expand(get_env(key, sh), point, point + len, &sh->line);
 		return (free(key), 1);
 	}
 	return (0);
@@ -90,15 +90,13 @@ static void	expand_env(t_shell *shell)
 	}
 }
 
-static void	expand_space_operators(t_shell *sh)
+static void	expand_space_operators(t_shell *sh, char *tmp)
 {
 	int		dquote;
 	int		squote;
-	char	*tmp;
 
 	dquote = 0;
 	squote = 0;
-	tmp = sh->line - 1;
 	while (*(++tmp))
 	{
 		if (*tmp == '"' && !squote)
@@ -109,11 +107,12 @@ static void	expand_space_operators(t_shell *sh)
 		{
 			if (tmp != sh->line && !ft_strchr(" |><&()", *(tmp - 1)))
 			{
-				if (expand(" ", tmp - sh->line, tmp - sh->line, sh))
+				if (expand(" ", tmp - sh->line, tmp - sh->line, &sh->line))
 					tmp = sh->line - 1;
 			}
 			else if (!ft_strchr(" |><&()", *(tmp + 1)))
-				if (expand(" ", tmp - sh->line + 1, tmp - sh->line + 1, sh))
+				if (expand(" ", tmp - sh->line + 1,
+						tmp - sh->line + 1, &sh->line))
 					tmp = sh->line - 1;
 		}
 	}
@@ -124,7 +123,7 @@ int	expand_line(t_shell *shell)
 	if (expand_tilde(shell))
 		return (0);
 	expand_env(shell);
-	expand_space_operators(shell);
+	expand_space_operators(shell, shell->line - 1);
 	shell->line_len = ft_strlen(shell->line);
 	return (1);
 }

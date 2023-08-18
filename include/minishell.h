@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:04:57 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/15 22:46:54 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/17 23:43:40 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@
 # define SIGRESTORE 1
 # define SIGHEREDOC 2
 # define SIGCHILD 3
-# define SIGSLASH 4
+# define SIGIGNORE 4
 
 extern int	g_exit;
 
@@ -144,8 +144,8 @@ void	free_exit(t_shell *shell);
 
 int		init_line(t_shell *shell);
 int		expand_line(t_shell *shell);
-int		expand(char *key, int i, int j, t_shell *shell);
-int		expand_free(char *key, int i, int j, t_shell *shell);
+int		expand(char *key, int i, int j, char **line);
+int		expand_free(char *key, int i, int j, char **line);
 void	trim_line(t_shell *shell);
 
 int		parser(t_shell *shell);
@@ -161,5 +161,10 @@ t_cmd	*pipe_cmd(t_cmd *left, t_cmd *right);
 t_cmd	*redir_cmd(t_cmd *cmd, char *file, int mode, int fd);
 t_cmd	*here_cmd(t_cmd *cmd, char *eof);
 t_cmd	*exec_cmd(void);
+
+void	run_cmd(t_shell *shell, t_cmd *cmd);
+void	run_exec(t_shell *shell, t_exec *cmd);
+void	run_redir(t_shell *shell, t_redir *cmd);
+void	run_heredoc(t_shell *shell, t_here *here);
 
 #endif

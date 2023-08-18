@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 17:04:28 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/15 22:48:50 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/17 23:56:03 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ static void	sig_here_doc(int sig)
 	(void)sig;
 	ft_putstr_fd("\n", STDERR_FILENO);
 	g_exit = 130;
+	exit(130);
 }
 
 static void	sig_back_slash(int sig)
@@ -56,7 +57,7 @@ void	sig_handler(int sig)
 		signal(SIGINT, sig_back_slash);
 		signal(SIGQUIT, sig_back_slash);
 	}
-	if (sig == SIGSLASH)
+	if (sig == SIGIGNORE)
 	{
 		signal(SIGINT, SIG_IGN);
 		signal(SIGQUIT, SIG_IGN);

@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 12:10:13 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/15 01:46:06 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/18 00:46:16 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ int	gettoken(t_shell *sh, char **token)
 	if (token)
 		*token = sh->ps;
 	type = gettoken_type(sh);
-	ft_printf("type: %d\n", type);
 	if (type == 'a')
 		while (sh->ps < sh->es && *sh->ps && !ft_strchr(OPERATORS, *sh->ps))
 			sh->ps++;
@@ -74,9 +73,6 @@ int	parser(t_shell *shell)
 	shell->ps = shell->line;
 	shell->es = shell->line + shell->line_len;
 	shell->cmd = parseline(shell);
-	ft_printf("cmd: %d\n", shell->cmd->type);
-	ft_printf("status: %d\n", shell->status);
-	ft_printf("ps: %s\n", shell->ps);
 	peek(shell, "", 0);
 	if (shell->ps != shell->es && shell->status != 2)
 		return (!print_error_syntax(shell, shell->ps, 2));

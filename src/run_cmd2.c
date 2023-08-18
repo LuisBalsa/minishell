@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 11:29:10 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/18 01:17:17 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/18 02:24:54 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,27 +27,18 @@ static int	is_builtin(char *argv)
 
 static void	check_execve(t_shell *shell, char *path)
 {
-	if (ft_strchr(path, '/'))
-	{
-		ft_putstr_fd("minishell: ", STDERR_FILENO);
-		ft_putstr_fd(path, STDERR_FILENO);
-		ft_putendl_fd(": No such file or directory", STDERR_FILENO);
-		g_exit = 127;
-	}
-	else if (!access(path, F_OK | X_OK))
-	{
-		ft_putstr_fd("minishell: ", STDERR_FILENO);
-		ft_putstr_fd(path, STDERR_FILENO);
+	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	ft_putstr_fd(path, STDERR_FILENO);
+	if (!access(path, F_OK) && access(path, X_OK))
 		ft_putendl_fd(": Permission denied", STDERR_FILENO);
-		g_exit = 126;
-	}
+	else if (!access(path, F_OK))
+		ft_putendl_fd(": Is a directory", STDERR_FILENO);
+	else if (ft_strchr(path, '/'))
+		ft_putendl_fd(": No such file or directory", STDERR_FILENO);
 	else
-	{
-		ft_putstr_fd("minishell: ", STDERR_FILENO);
-		ft_putstr_fd(path, STDERR_FILENO);
 		ft_putendl_fd(": command not found", STDERR_FILENO);
-		g_exit = 127;
-	}
+	g_exit = 127
+		- ((!access(path, F_OK) && access(path, X_OK)) || !access(path, F_OK));
 	free(path);
 	free_exit(shell);
 }

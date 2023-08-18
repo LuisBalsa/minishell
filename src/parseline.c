@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/13 12:52:02 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/18 00:45:08 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/18 02:43:57 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static t_cmd	*parseredir(t_cmd *cmd, t_shell *shell)
 	int		type;
 	char	*token;
 
-	while (peek(shell, "<>", 1) || peek(shell, "<>", 2))
+	if (peek(shell, "<>", 1) || peek(shell, "<>", 2))
 	{
 		type = gettoken(shell, NULL);
 		if (gettoken(shell, &token) != 'a')
@@ -25,6 +25,7 @@ static t_cmd	*parseredir(t_cmd *cmd, t_shell *shell)
 			print_error_syntax(shell, token, 2);
 			return (cmd);
 		}
+		cmd = parseredir(cmd, shell);
 		if (type == '<')
 			cmd = redir_cmd(cmd, token, O_RDONLY, 0);
 		else if (type == '>')

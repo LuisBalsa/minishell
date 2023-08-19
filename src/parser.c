@@ -6,11 +6,40 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 12:10:13 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/18 00:46:16 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/19 19:38:31 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
+static void	trim_quotes_and_advance(char **ps, t_shell *shell)
+{
+	char	*tmp;
+	int		squote;
+	int		dquote;
+
+	dquote = 0;
+	squote = 0;
+	tmp = *ps;
+	while (*tmp && (!ft_strchr(OPERATORS, *tmp) || squote || dquote))
+	{
+		if ((*tmp == '"' || *tmp == '\'') && !squote && !dquote)
+		{
+			dquote = (*tmp == '"');
+			squote = (*tmp == '\'');
+			memmove(tmp, tmp + 1, shell->line_len - (tmp - shell->line));
+		}
+		else if ((*tmp == '"' && dquote) || (*tmp == '\'' && squote))
+		{
+			dquote -= (*tmp == '"');
+			squote -= (*tmp == '\'');
+			memmove(tmp, tmp + 1, shell->line_len - (tmp - shell->line));
+		}
+		else
+			tmp++;
+	}
+	*ps = tmp;
+}
 
 static int	gettoken_type(t_shell *shell)
 {
@@ -34,7 +63,7 @@ static int	gettoken_type(t_shell *shell)
 	}
 	else if (*shell->ps && !ft_strchr(OPERATORS, *shell->ps))
 		type = 'a';
-	if (*shell->ps)
+	if (*shell->ps && type != 'a')
 		shell->ps += (type == HERE_DOC || type == APPEND || type == OR_OP
 				|| *shell->ps == '&') + 1;
 	return (type);
@@ -50,8 +79,7 @@ int	gettoken(t_shell *sh, char **token)
 		*token = sh->ps;
 	type = gettoken_type(sh);
 	if (type == 'a')
-		while (sh->ps < sh->es && *sh->ps && !ft_strchr(OPERATORS, *sh->ps))
-			sh->ps++;
+		trim_quotes_and_advance(&sh->ps, sh);
 	while (sh->ps < sh->es && !*sh->ps)
 		sh->ps++;
 	return (type);

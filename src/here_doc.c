@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 15:42:13 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/19 22:10:50 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/19 23:57:08 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,13 @@ static void	expand_heredoc(t_shell *shell, char **line)
 	}
 }
 
-static void	heredoc(t_shell *shell, t_here *here)
+static void	heredoc_reader(t_shell *shell, t_here *here)
 {
 	char	*line;
 	int		fd;
 
-	dup2(here->fd, STDIN_FILENO);
+	dup2(here->fdin, STDIN_FILENO);
+	dup2(here->fdout, STDOUT_FILENO);
 	fd = open("here_doc", here->mode, 0644);
 	while (1)
 	{
@@ -65,19 +66,33 @@ static void	heredoc(t_shell *shell, t_here *here)
 		free(line);
 	}
 	close(fd);
+	free_exit(shell);
 }
 
 void	run_heredoc(t_shell *shell, t_here *here)
 {
 	int	fd;
 	int	original_fd;
+	int	pid;
 
 	original_fd = dup(STDIN_FILENO);
-	heredoc(shell, here);
+	pid = check_fork();
+	if (pid == 0)
+	{
+		sig_handler(SIGHEREDOC);
+		heredoc_reader(shell, here);
+	}
+	sig_handler(SIGIGNORE);
+	waitpid(pid, &g_exit, 0);
+	if (WIFEXITED(g_exit))
+		g_exit = WEXITSTATUS(g_exit);
+	else if (WIFSIGNALED(g_exit))
+		g_exit = WTERMSIG(g_exit) + 128;
 	fd = open("here_doc", O_RDONLY);
 	dup2(fd, STDIN_FILENO);
 	close(fd);
-	run_cmd(shell, here->cmd);
+	if (g_exit != 130)
+		run_cmd(shell, here->cmd);
 	dup2(original_fd, STDIN_FILENO);
 	unlink("here_doc");
 }
@@ -92,7 +107,8 @@ t_cmd	*here_cmd(t_cmd *cmd, char *eof)
 	here->type = HERE_DOC;
 	here->eof = eof;
 	here->mode = O_WRONLY | O_CREAT | O_TRUNC;
-	here->fd = dup(STDIN_FILENO);
+	here->fdin = dup(STDIN_FILENO);
+	here->fdout = dup(STDOUT_FILENO);
 	if (cmd->type == EXEC)
 		here->cmd = cmd;
 	else

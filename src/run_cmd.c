@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 17:32:04 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/19 22:35:14 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/20 00:21:11 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ static void	fork_exec_pipe(t_shell *shell, t_cmd *cmd, int *fd, int std)
 	check(pid, "fork error", 127);
 	if (pid == 0)
 	{
-		sig_handler(SIGCHILD);
 		g_exit = 127;
 		check(dup2(fd[std], std), "dup2 error", 127);
 		run_cmd(shell, cmd);
@@ -43,7 +42,8 @@ static void	run_pipe(t_shell *shell, t_pipe *cmd)
 
 	check(pipe(fd), "pipe error", 127);
 	fork_exec_pipe(shell, cmd->left, fd, STDOUT_FILENO);
-	fork_exec_pipe(shell, cmd->right, fd, STDIN_FILENO);
+	if (g_exit != 130)
+		fork_exec_pipe(shell, cmd->right, fd, STDIN_FILENO);
 }
 
 static void	run_and(t_shell *shell, t_lrn *cmd)

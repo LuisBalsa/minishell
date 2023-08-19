@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:04:57 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/19 22:32:25 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/19 22:57:04 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,8 @@ typedef struct s_here
 	t_cmd	*cmd;
 	char	*eof;
 	int		mode;
-	int		fd;
+	int		fdin;
+	int		fdout;
 }		t_here;
 
 typedef struct s_lrn

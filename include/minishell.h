@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:04:57 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/17 23:43:40 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/19 12:31:22 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@
 # define ERROR_TITLE "minishell: "
 # define ERROR_QUOTE "unclosed quotes"
 # define ERROR_SINTAX "syntax error"
+# define ERROR_HERE_DOC "unexpected EOF while looking for matching `"
 
 # define SIGRESTORE 1
 # define SIGHEREDOC 2
@@ -166,5 +167,9 @@ void	run_cmd(t_shell *shell, t_cmd *cmd);
 void	run_exec(t_shell *shell, t_exec *cmd);
 void	run_redir(t_shell *shell, t_redir *cmd);
 void	run_heredoc(t_shell *shell, t_here *here);
+
+void	run_builtin(t_shell *shell, t_exec *cmd);
+void	ms_echo(t_exec exec);
+void	ms_pwd(t_exec *cmd);
 
 #endif

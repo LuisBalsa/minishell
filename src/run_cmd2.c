@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 11:29:10 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/18 02:24:54 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/19 12:03:47 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,8 +97,8 @@ void	run_exec(t_shell *shell, t_exec *cmd)
 			g_exit = 128 + WTERMSIG(g_exit);
 		sig_handler(SIGRESTORE);
 	}
-/* 	else
-		run_builtin(shell, cmd); */
+	else
+		run_builtin(shell, cmd);
 }
 
 void	run_redir(t_shell *shell, t_redir *cmd)

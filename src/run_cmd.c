@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 17:32:04 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/18 11:56:12 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/19 10:03:15 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ static void	fork_exec_pipe(t_shell *shell, t_cmd *cmd, int *fd, int std)
 		sig_handler(SIGCHILD);
 		g_exit = 127;
 		check(dup2(fd[std], std), shell, "dup2 error", 127);
-//		check(close(fd[!std]), shell, "close error", 127);
 		run_cmd(shell, cmd);
 		exit(g_exit);
 	}

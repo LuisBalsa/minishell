@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 15:42:13 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/17 00:31:15 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/19 12:37:29 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,7 @@ static void	heredoc(t_shell *shell, t_here *here)
 		line = readline("> ");
 		if (!line)
 		{
-			ft_printf("minishell: warning: here-document\
-				delimited by end-of-file (wanted `%s')\n", here->eof);
+			ft_printf(ERROR_TITLE ERROR_HERE_DOC "%s'\n", here->eof);
 			break ;
 		}
 		if (ft_strcmp(line, here->eof) == 0)
@@ -70,12 +69,16 @@ static void	heredoc(t_shell *shell, t_here *here)
 void	run_heredoc(t_shell *shell, t_here *here)
 {
 	int	fd;
+	int	original_fd;
 
+	original_fd = dup(STDIN_FILENO);
 	heredoc(shell, here);
 	fd = open("here_doc", O_RDONLY);
 	dup2(fd, STDIN_FILENO);
 	close(fd);
 	run_cmd(shell, here->cmd);
+	dup2(original_fd, STDIN_FILENO);
+	unlink("here_doc");
 }
 
 t_cmd	*here_cmd(t_cmd *cmd, char *eof)

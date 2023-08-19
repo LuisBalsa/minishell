@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 18:45:50 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/19 19:35:09 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/19 22:25:01 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ static int	expand_tilde(t_shell *shell)
 			tmp++;
 	}
 	if (dquote || squote)
-		return (print_error(shell, ERROR_QUOTE, 2));
+		return (print_error(shell, ERROR_QUOTE, NULL, 2));
 	return (0);
 }
 

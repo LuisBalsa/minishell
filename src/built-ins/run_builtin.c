@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/18 20:43:31 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/18 22:53:43 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/19 22:33:23 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ void	run_builtin(t_shell *shell, t_exec *cmd)
 {
 	(void)shell;
 
+	g_exit = 0;
 	if (!ft_strcmp(cmd->argv[0], "echo"))
 		ms_echo(*cmd);
 /* 	else if (!ft_strcmp(cmd->argv[0], "cd"))

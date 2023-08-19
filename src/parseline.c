@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/13 12:52:02 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/19 09:56:12 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/19 22:24:34 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,14 +43,14 @@ static t_cmd	*parseblock(t_shell *shell)
 
 	if (!peek(shell, "(", 1))
 	{
-		print_error(shell, "parsblock", 2);
+		print_error(shell, "parsblock", NULL, 2);
 		return (NULL);
 	}
 	gettoken(shell, NULL);
 	cmd = parseline(shell);
 	if (!peek(shell, ")", 1))
 	{
-		print_error(shell, "open parenthesis not suported", 2);
+		print_error(shell, "open parenthesis not suported", NULL, 2);
 		return (cmd);
 	}
 	if (!cmd)
@@ -82,7 +82,7 @@ static t_cmd	*parseexec(t_shell *shell)
 			return (print_error_syntax(shell, token, 2), ret);
 		cmd->argv[argc++] = token;
 		if (argc >= MAXARGS)
-			return (print_error(shell, "too many arguments", 2), ret);
+			return (print_error(shell, "too many arguments", NULL, 2), ret);
 		ret = parseredir(ret, shell);
 	}
 	return (ret);

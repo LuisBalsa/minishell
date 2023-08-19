@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 11:29:10 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/19 12:03:47 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/19 22:37:51 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void	run_exec(t_shell *shell, t_exec *cmd)
 	if (!is_builtin(cmd->argv[0]))
 	{
 		sig_handler(SIGCHILD);
-		pid = check_fork(shell);
+		pid = check_fork();
 		if (pid == 0)
 		{
 			path = get_path(shell, cmd->argv[0]);
@@ -108,9 +108,10 @@ void	run_redir(t_shell *shell, t_redir *cmd)
 
 	original_fd = dup(cmd->fd);
 	fd = open(cmd->file, cmd->mode, 0644);
-	check(fd, shell, "open error", 1);
-	check(dup2(fd, cmd->fd), shell, "dup2 error", 1);
-	check(close(fd), shell, "close error", 1);
+	if (fd == -1)
+		print_error(shell, cmd->file, strerror(errno), 1);
+	dup2(fd, cmd->fd);
+	close(fd);
 	run_cmd(shell, cmd->cmd);
-	check(dup2(original_fd, cmd->fd), shell, "dup2 error", 1);
+	check(dup2(original_fd, cmd->fd), "dup2 error", 1);
 }

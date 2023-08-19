@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 17:32:04 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/19 10:03:15 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/19 22:35:14 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,18 @@ static void	fork_exec_pipe(t_shell *shell, t_cmd *cmd, int *fd, int std)
 	int		pid;
 
 	pid = fork();
-	check(pid, shell, "fork error", 127);
+	check(pid, "fork error", 127);
 	if (pid == 0)
 	{
 		sig_handler(SIGCHILD);
 		g_exit = 127;
-		check(dup2(fd[std], std), shell, "dup2 error", 127);
+		check(dup2(fd[std], std), "dup2 error", 127);
 		run_cmd(shell, cmd);
 		exit(g_exit);
 	}
 	else
 	{
-		check(close(fd[std]), shell, "close error", 127);
+		check(close(fd[std]), "close error", 127);
 		waitpid(pid, &g_exit, 0);
 		if (WIFEXITED(g_exit))
 			g_exit = WEXITSTATUS(g_exit);
@@ -41,7 +41,7 @@ static void	run_pipe(t_shell *shell, t_pipe *cmd)
 {
 	int		fd[2];
 
-	check(pipe(fd), shell, "pipe error", 127);
+	check(pipe(fd), "pipe error", 127);
 	fork_exec_pipe(shell, cmd->left, fd, STDOUT_FILENO);
 	fork_exec_pipe(shell, cmd->right, fd, STDIN_FILENO);
 }

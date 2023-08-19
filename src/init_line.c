@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 11:07:22 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/16 13:31:04 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/19 22:25:38 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ static int	syntax_error(t_shell *shell)
 			squote = !squote;
 		if (*tmp == '&' && !dquote && !squote)
 			if (*(tmp + 1) != '&' && *(tmp - 1) != '&')
-				return (print_error(shell, "no support for single &", 2));
+				return (print_error(shell, "no support for single &", NULL, 2));
 	}
 	return (0);
 }

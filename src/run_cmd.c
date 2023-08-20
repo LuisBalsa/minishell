@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 17:32:04 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/20 00:21:11 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/21 00:07:03 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,19 +49,17 @@ static void	run_pipe(t_shell *shell, t_pipe *cmd)
 static void	run_and(t_shell *shell, t_lrn *cmd)
 {
 	run_cmd(shell, cmd->left);
-	if (g_exit)
+	if (!g_exit)
 		run_cmd(shell, cmd->right);
-	else
-		run_cmd(shell, cmd->next);
+	run_cmd(shell, cmd->next);
 }
 
 static void	run_or(t_shell *shell, t_lrn *cmd)
 {
 	run_cmd(shell, cmd->left);
-	if (!g_exit)
+	if (g_exit)
 		run_cmd(shell, cmd->right);
-	else
-		run_cmd(shell, cmd->next);
+	run_cmd(shell, cmd->next);
 }
 
 void	run_cmd(t_shell *shell, t_cmd *cmd)

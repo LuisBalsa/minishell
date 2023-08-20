@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/13 12:52:02 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/19 22:24:34 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/20 23:45:18 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,9 +111,9 @@ t_cmd	*parseline(t_shell *shell)
 	{
 		type = gettoken(shell, NULL);
 		if (type == OR_OP)
-			cmd = or_cmd(cmd, parsepipeline(shell), parseline(shell));
+			cmd = or_cmd(cmd, parseline(shell), parsepipeline(shell));
 		else if (type == '&')
-			cmd = and_cmd(cmd, parsepipeline(shell), parseline(shell));
+			cmd = and_cmd(cmd, parseline(shell), parsepipeline(shell));
 	}
 	return (cmd);
 }

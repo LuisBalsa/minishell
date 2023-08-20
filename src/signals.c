@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 17:04:28 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/20 00:28:59 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/20 21:37:00 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,15 +23,14 @@ static void	sig_here_doc(int sig)
 
 static void	sig_back_slash(int sig)
 {
-	(void)sig;
 	if (sig == SIGINT)
 		ft_putstr_fd("\n", 1);
 	else if (sig == SIGQUIT)
 		ft_putendl_fd("Quit (core dumped)\n", 1);
 	g_exit = 128 + sig - (sig == SIGQUIT);
-	ft_putstr_fd("\n", 2);
 //	exit(g_exit);
 }
+
 
 static void	sigrestore(int sig)
 {

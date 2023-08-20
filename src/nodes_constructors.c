@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 14:53:28 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/19 21:36:28 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/20 23:53:41 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ t_cmd	*exec_cmd(void)
 	return ((t_cmd *)cmd);
 }
 
-t_cmd	*and_cmd(t_cmd *left, t_cmd *right, t_cmd *next)
+t_cmd	*and_cmd(t_cmd *left, t_cmd *next, t_cmd *right)
 {
 	t_lrn	*cmd;
 
@@ -72,7 +72,7 @@ t_cmd	*and_cmd(t_cmd *left, t_cmd *right, t_cmd *next)
 	return ((t_cmd *)cmd);
 }
 
-t_cmd	*or_cmd(t_cmd *left, t_cmd *right, t_cmd *next)
+t_cmd	*or_cmd(t_cmd *left, t_cmd *next, t_cmd *right)
 {
 	t_lrn	*cmd;
 

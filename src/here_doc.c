@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 15:42:13 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/21 04:09:36 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/21 04:49:58 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,11 @@ static void	expand_heredoc(t_shell *shell, char **line)
 	}
 }
 
-static void	heredoc_reader(t_shell *shell, t_here *here)
+static void	heredoc_reader(t_shell *shell, t_here *here, int fd)
 {
 	char	*line;
-	int		fd;
 
+	sig_handler(SIGHEREDOC);
 	fd = open("here_doc", here->mode, 0644);
 	dup2(here->fdin, STDIN_FILENO);
 	dup2(here->fdout, STDOUT_FILENO);
@@ -66,6 +66,7 @@ static void	heredoc_reader(t_shell *shell, t_here *here)
 		free(line);
 	}
 	close(fd);
+	free_exit(shell);
 }
 
 void	run_heredoc(t_shell *shell, t_here *here)
@@ -75,13 +76,9 @@ void	run_heredoc(t_shell *shell, t_here *here)
 
 	pid = check_fork();
 	if (pid == 0)
-	{
-		sig_handler(SIGHEREDOC);
-		heredoc_reader(shell, here);
-		free_exit(shell);
-	}
+		heredoc_reader(shell, here, 0);
 	sig_handler(SIGIGNORE);
-	waitpid(pid, &g_exit, 0);
+	waitpid(pid, &g_exit, WUNTRACED);
 	sig_handler(SIGRESTORE);
 	fd = open("here_doc", O_RDONLY);
 	dup2(fd, STDIN_FILENO);

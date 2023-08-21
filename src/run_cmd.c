@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 17:32:04 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/21 04:13:41 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/21 04:50:02 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static void	fork_exec_pipe(t_shell *shell, t_cmd *cmd, int *fd, int std)
 	else
 	{
 		check(close(fd[std]), "close error", 127);
-		waitpid(pid, &g_exit, 0);
+		waitpid(pid, &g_exit, WUNTRACED);
 		if (WIFEXITED(g_exit))
 			g_exit = WEXITSTATUS(g_exit);
 		else if (WIFSIGNALED(g_exit))
@@ -43,7 +43,7 @@ static void	run_pipe(t_shell *shell, t_pipe *cmd)
 	check(pipe(fd), "pipe error", 127);
 	sig_handler(SIGIGNORE);
 	fork_exec_pipe(shell, cmd->left, fd, STDOUT_FILENO);
-	if (g_exit != 130)
+	if (g_exit != 130 && g_exit != 131)
 		fork_exec_pipe(shell, cmd->right, fd, STDIN_FILENO);
 	sig_handler(SIGRESTORE);
 }

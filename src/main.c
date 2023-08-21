@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:12:03 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/20 23:39:00 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/21 04:10:24 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ static int	run_command_line(t_shell *shell)
 	return (shell->status);
 }
 
-static void	print_envp_sorted(t_shell *shell)
+/* static void	print_envp_sorted(t_shell *shell)
 {
 	t_env	*tmp;
 	int		i;
@@ -68,7 +68,7 @@ static void	print_envp_sorted(t_shell *shell)
 		tmp = shell->env;
 		i++;
 	}
-}
+} */
 
 static void	init_shell(t_shell *shell, char **envp)
 {
@@ -78,7 +78,6 @@ static void	init_shell(t_shell *shell, char **envp)
 	shell->envp_size = 0;
 	envp_to_list(envp, shell);
 	sig_handler(SIGRESTORE);
-	print_envp_sorted(shell);
 }
 
 int	main(int argc, char **argv, char **envp)

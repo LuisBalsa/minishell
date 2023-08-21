@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 17:32:04 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/21 00:07:03 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/21 04:13:41 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,11 @@ static void	run_pipe(t_shell *shell, t_pipe *cmd)
 	int		fd[2];
 
 	check(pipe(fd), "pipe error", 127);
+	sig_handler(SIGIGNORE);
 	fork_exec_pipe(shell, cmd->left, fd, STDOUT_FILENO);
 	if (g_exit != 130)
 		fork_exec_pipe(shell, cmd->right, fd, STDIN_FILENO);
+	sig_handler(SIGRESTORE);
 }
 
 static void	run_and(t_shell *shell, t_lrn *cmd)

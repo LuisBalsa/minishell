@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 15:42:13 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/19 23:57:08 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/21 04:09:36 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,9 @@ static void	heredoc_reader(t_shell *shell, t_here *here)
 	char	*line;
 	int		fd;
 
+	fd = open("here_doc", here->mode, 0644);
 	dup2(here->fdin, STDIN_FILENO);
 	dup2(here->fdout, STDOUT_FILENO);
-	fd = open("here_doc", here->mode, 0644);
 	while (1)
 	{
 		line = readline("> ");
@@ -66,34 +66,34 @@ static void	heredoc_reader(t_shell *shell, t_here *here)
 		free(line);
 	}
 	close(fd);
-	free_exit(shell);
 }
 
 void	run_heredoc(t_shell *shell, t_here *here)
 {
 	int	fd;
-	int	original_fd;
 	int	pid;
 
-	original_fd = dup(STDIN_FILENO);
 	pid = check_fork();
 	if (pid == 0)
 	{
 		sig_handler(SIGHEREDOC);
 		heredoc_reader(shell, here);
+		free_exit(shell);
 	}
 	sig_handler(SIGIGNORE);
 	waitpid(pid, &g_exit, 0);
-	if (WIFEXITED(g_exit))
-		g_exit = WEXITSTATUS(g_exit);
-	else if (WIFSIGNALED(g_exit))
-		g_exit = WTERMSIG(g_exit) + 128;
+	sig_handler(SIGRESTORE);
 	fd = open("here_doc", O_RDONLY);
 	dup2(fd, STDIN_FILENO);
 	close(fd);
-	if (g_exit != 130)
+	if (WIFEXITED(g_exit))
+	{
 		run_cmd(shell, here->cmd);
-	dup2(original_fd, STDIN_FILENO);
+		g_exit = WEXITSTATUS(g_exit);
+	}
+	else if (WIFSIGNALED(g_exit))
+		g_exit = WTERMSIG(g_exit) + 128;
+	dup2(here->fdin, STDIN_FILENO);
 	unlink("here_doc");
 }
 
@@ -106,7 +106,7 @@ t_cmd	*here_cmd(t_cmd *cmd, char *eof)
 	here = (t_here *)ft_calloc(1, sizeof(t_here));
 	here->type = HERE_DOC;
 	here->eof = eof;
-	here->mode = O_WRONLY | O_CREAT | O_TRUNC;
+	here->mode = O_WRONLY | O_CREAT | O_APPEND;
 	here->fdin = dup(STDIN_FILENO);
 	here->fdout = dup(STDOUT_FILENO);
 	if (cmd->type == EXEC)

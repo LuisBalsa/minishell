@@ -1,27 +1,86 @@
 
 #include "../../include/minishell.h"
-#include <string.h>
+#include <stdio.h>
 
-bool	change_env(t_shell *shell, char *key, char *value);
-
-//has to print env, ordered, but adding exported variables, even if they dont
-//have a value. env should show all that have value.
-static void	put_export(t_shell *shell)
+// first two functions should be in a different file, as they are used by cd
+bool	equal_str(const char *s1, const char *s2)
 {
-
+	if (ft_strcmp(s1, s2) == 0)
+		return (true);
+	else
+		return (false);
 }
 
-static bool	valid_var(char *var)
+bool	change_env(t_shell *shell, char *key, char *value)
 {
-	int	i;
-
-	if (!ft_isalpha(var[0]) && var[0] != '_')
-		return (false);
-	i = 0;
-	while (var[++i])
+	t_env	*tmp;
+	
+	tmp = shell->env;
+	while (tmp)
 	{
-		if (!ft_isalnum(var[i]) && var[i] != '_')
+		if (equal_str(key, tmp->key))
+		{
+			free(tmp->value);
+			tmp->value = ft_strdup(value);
+			return (true);
+		}
+		tmp = tmp->next;
+	}
+	return (false);
+}
+
+static void	print_envp_sorted(t_shell *shell, int export)
+{
+	t_env	*tmp;
+	int		i;
+
+	i = 0;
+	tmp = shell->env;
+	while (i++ < shell->envp_size)
+	{
+		while (tmp)
+		{
+			if (tmp->index == i)
+			{
+				if (!export && !tmp->visible)
+					break ;
+				ft_printf("declare -x %s=\"%s\"\n", tmp->key, tmp->value);
+				break ;
+			}
+			tmp = tmp->next;
+		}
+		tmp = shell->env;
+	}
+}
+
+static bool	valid_var(t_shell *shell, char **split, char *arg)
+{
+	int		i;
+	char	*err;
+
+	if (!ft_isalpha(split[0][0]) && split[0][0] != '_')
+	{
+		ft_free_array(split);
+		err = ft_strjoin(arg, ": not a valid identifier");
+		/*print_error(shell, "export", err, 2);*/
+		ft_putstr_fd("export: ", STDERR_FILENO);
+		ft_putstr_fd(err, STDERR_FILENO);
+		free(err);
+		return (false);
+	}
+	i = 0;
+	while (split[0][++i])
+	{
+		if (!ft_isalnum(split[0][i]) && split[0][i] != '_')
+		{
+			ft_free_array(split);
+			err = ft_strjoin(arg, ": not a valid identifier");
+			/*print_error(shell, "export", err, 2);*/
+			ft_putstr_fd("export: ", STDERR_FILENO);
+			ft_putstr_fd(err, STDERR_FILENO);
+			free(err);
 			return (false);
+		}
 	}
 	return (true);
 }
@@ -30,17 +89,10 @@ static void	env_export(t_shell *shell, char *arg)
 {
 	char	**split;
 	char	*value;
-	char	*err;
 
 	split = ft_split(arg, '=');
-	if (!valid_var(split[0]))
-	{
-		ft_free_array(split);
-		err = ft_strjoin(arg, ": not a valid identifier");
-		print_error(shell, "export", err, 2);
-		free(err);
+	if (!valid_var(shell, split, arg))
 		return ;
-	}
 	if (ft_strchr(arg, '='))
 		value = ft_strdup(ft_strchr(arg, '=') + 1);
 	else
@@ -48,34 +100,58 @@ static void	env_export(t_shell *shell, char *arg)
 	if (get_env(split[0], shell))
 		change_env(shell, split[0], value);
 	else
-		add_env(shell, split[0], value);
+		if (ft_strchr(arg,'='))
+			add_env(shell, split[0], value, 1);
+		else
+			add_env(shell, split[0], value, 0);
 	ft_free_array(split);
 	if (value)
 		free(value);
 }
 
-void	export(t_shell *shell, t_exec *cmd)
+void	ms_export(t_shell *shell, t_exec *cmd)
 {
 	int		i;
 
 	if (!cmd->argv[1])
-		put_export(shell);
+		print_envp_sorted(shell, 1);
 	else
 	{
 		i = 0;
 		while (cmd->argv[++i])
 			env_export(shell, cmd->argv[i]);
-	};
+	}
 }
 
-/*int	main(int argc, char **argv)
+static void	init_shell(t_shell *shell, char **envp)
 {
-	char	*value;
+	/*g_exit = 0;*/
+	shell->cmd = NULL;
+	shell->line = NULL;
+	shell->envp_size = 0;
+	envp_to_list(envp, shell);
+}
 
-	if (argc != 2)
-		return (1);
-	value = ft_strtrim(ft_strchr(argv[1], '='), "=");
-	printf("String is %s\nValue is %s\n", argv[1], value);
-	free(value);
+//cc -o export export.c ../envp.c ../libft_obj/libft.a -g
+int	main(int argc, char **argv, char **envp)
+{
+	t_shell shell;
+	t_exec	cmd;
+	int		i = 0;
+	int		j = 1;
+	
+	(void)argc;
+	init_shell(&shell, envp);
+	cmd.argv[i] = "export";
+	while (argv[j])
+		cmd.argv[++i] = argv[j++];
+	cmd.argv[i + 1] = NULL;
+	printf("ENV:\n");
+	print_envp(&shell);
+	printf("\n---------------------\nrunning export...\n");
+	ms_export(&shell, &cmd);
+	printf("\n---------------------\nNEW ENV:\n");
+	print_envp(&shell);
+	envp_destroy(shell.env);
 	return (0);
-}*/
+}

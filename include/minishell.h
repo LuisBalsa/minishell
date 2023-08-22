@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:04:57 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/20 23:41:10 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/22 11:20:53 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@
 # include <sys/stat.h>
 # include <signal.h>
 # include <fcntl.h>
-# include <linux/limits.h>
+/*# include <linux/limits.h>*/
+# include <limits.h>
 # include <dirent.h>
 # include <errno.h>
 # include <readline/readline.h>
@@ -130,7 +131,7 @@ typedef struct s_shell
 	int		envp_size;
 }		t_shell;
 
-t_env	*add_env(t_shell *shell, char *key, char *value);
+t_env	*add_env(t_shell *shell, char *key, char *value, int visible);
 void	envp_to_list(char **envp, t_shell *shell);
 void	envp_destroy(t_env *env);
 char	*get_env(char *key, t_shell *shell);

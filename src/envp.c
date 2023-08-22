@@ -6,11 +6,26 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 12:23:47 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/12 02:14:40 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/22 12:36:42 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
+void	print_envp(t_shell *shell)
+{
+	t_env	*tmp;
+	int		i;
+
+	i = 0;
+	tmp = shell->env;
+	while (tmp)
+	{
+		if (tmp->visible)
+			ft_printf("%s=%s\n", tmp->key, tmp->value);
+		tmp = tmp->next;
+	}
+}
 
 void	sort_envp(t_shell *shell)
 {
@@ -67,7 +82,7 @@ char	*get_env(char *key, t_shell *shell)
 	return (NULL);
 }
 
-t_env	*add_env(t_shell *shell, char *key, char *value)
+t_env	*add_env(t_shell *shell, char *key, char *value, int visible)
 {
 	t_env	*new;
 	t_env	*tmp;
@@ -77,8 +92,12 @@ t_env	*add_env(t_shell *shell, char *key, char *value)
 		return (NULL);
 	shell->envp_size++;
 	new->key = ft_strdup(key);
-	new->value = ft_strdup(value);
+	if (value)
+		new->value = ft_strdup(value);
+	else
+		new->value = NULL;
 	new->index = 0;
+	new->visible = visible;
 	new->next = NULL;
 	if (!shell->env)
 		return (new);
@@ -86,6 +105,7 @@ t_env	*add_env(t_shell *shell, char *key, char *value)
 	while (tmp->next)
 		tmp = tmp->next;
 	tmp->next = new;
+	sort_envp(shell);
 	return (shell->env);
 }
 
@@ -93,14 +113,19 @@ void	envp_to_list(char **envp, t_shell *shell)
 {
 	int		i;
 	char	**split;
+	char	*value;
 
 	shell->env = NULL;
 	i = 0;
 	while (envp[i])
 	{
 		split = ft_split(envp[i], '=');
-		if (split && split[0] && split[1])
-			shell->env = add_env(shell, split[0], split[1]);
+		if (ft_strchr(envp[i], '='))
+			value = ft_strdup(ft_strchr(envp[i], '=') + 1);
+		else
+			value = NULL;
+		if (split && split[0])
+			shell->env = add_env(shell, split[0], value, 1);
 		ft_free_array(split);
 		i++;
 	}

@@ -44,6 +44,8 @@ static void	print_envp_sorted(t_shell *shell, int export)
 			{
 				if (export && tmp->visible)
 					ft_printf("declare -x %s=\"%s\"\n", tmp->key, tmp->value);
+				else if (export && !tmp->visible)
+					ft_printf("declare -x %s\n", tmp->key);
 				break ;
 			}
 			tmp = tmp->next;
@@ -82,7 +84,7 @@ static void	env_export(t_shell *shell, char *arg)
 	if (ft_strchr(arg, '='))
 		value = ft_strdup(ft_strchr(arg, '=') + 1);
 	else
-		value = NULL;
+		value = ft_strdup("");
 	if (get_env(split[0], shell))
 		change_env(shell, split[0], value);
 	else
@@ -91,8 +93,7 @@ static void	env_export(t_shell *shell, char *arg)
 		else
 			add_env(shell, split[0], value, 0);
 	ft_free_array(split);
-	if (value)
-		free(value);
+	free(value);
 }
 
 void	ms_export(t_shell *shell, t_exec *cmd)

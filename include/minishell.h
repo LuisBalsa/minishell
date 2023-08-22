@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:04:57 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/22 11:20:53 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/08/22 22:49:10 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,5 +173,6 @@ void	run_heredoc(t_shell *shell, t_here *here);
 void	run_builtin(t_shell *shell, t_exec *cmd);
 void	ms_echo(t_exec exec);
 void	ms_pwd(t_exec *cmd);
+void	ms_export(t_shell *shell, t_exec *cmd);
 
 #endif

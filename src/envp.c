@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 12:23:47 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/22 12:36:42 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/08/22 23:03:41 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,24 @@
 void	print_envp(t_shell *shell)
 {
 	t_env	*tmp;
-	int		i;
 
-	i = 0;
 	tmp = shell->env;
 	while (tmp)
 	{
 		if (tmp->visible)
 			ft_printf("%s=%s\n", tmp->key, tmp->value);
+		tmp = tmp->next;
+	}
+}
+
+static void	zero_index(t_shell *shell)
+{
+	t_env	*tmp;
+
+	tmp = shell->env;
+	while (tmp)
+	{
+		tmp->index = 0;
 		tmp = tmp->next;
 	}
 }
@@ -34,6 +44,7 @@ void	sort_envp(t_shell *shell)
 	char	*max_key;
 	int		i;
 
+	zero_index(shell);
 	i = shell->envp_size;
 	while (i--)
 	{

@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 15:42:13 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/21 04:49:58 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/22 19:48:05 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,8 @@ static void	heredoc_reader(t_shell *shell, t_here *here, int fd)
 
 void	run_heredoc(t_shell *shell, t_here *here)
 {
-	int	fd;
-	int	pid;
+	int		fd;
+	pid_t	pid;
 
 	pid = check_fork();
 	if (pid == 0)

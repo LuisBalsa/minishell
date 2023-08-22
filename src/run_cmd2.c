@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 11:29:10 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/21 04:49:52 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/22 22:17:43 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ static char	*get_path(t_shell *shell, char *cmd)
 
 void	run_exec(t_shell *shell, t_exec *cmd)
 {
-	int		pid;
+	pid_t	pid;
 	char	*path;
 
 	if (!cmd->argv[0])

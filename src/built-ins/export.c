@@ -14,7 +14,7 @@ bool	equal_str(const char *s1, const char *s2)
 bool	change_env(t_shell *shell, char *key, char *value)
 {
 	t_env	*tmp;
-	
+
 	tmp = shell->env;
 	while (tmp)
 	{
@@ -42,9 +42,8 @@ static void	print_envp_sorted(t_shell *shell, int export)
 		{
 			if (tmp->index == i)
 			{
-				if (!export && !tmp->visible)
-					break ;
-				ft_printf("declare -x %s=\"%s\"\n", tmp->key, tmp->value);
+				if (export && tmp->visible)
+					ft_printf("declare -x %s=\"%s\"\n", tmp->key, tmp->value);
 				break ;
 			}
 			tmp = tmp->next;
@@ -53,34 +52,21 @@ static void	print_envp_sorted(t_shell *shell, int export)
 	}
 }
 
-static bool	valid_var(t_shell *shell, char **split, char *arg)
+static bool	valid_var(t_shell *shell, char *arg)
 {
 	int		i;
-	char	*err;
 
-	if (!ft_isalpha(split[0][0]) && split[0][0] != '_')
-	{
-		ft_free_array(split);
-		err = ft_strjoin(arg, ": not a valid identifier");
-		/*print_error(shell, "export", err, 2);*/
-		ft_putstr_fd("export: ", STDERR_FILENO);
-		ft_putstr_fd(err, STDERR_FILENO);
-		free(err);
-		return (false);
-	}
 	i = 0;
-	while (split[0][++i])
+	while (arg[i])
 	{
-		if (!ft_isalnum(split[0][i]) && split[0][i] != '_')
+		if (!ft_isalnum(arg[i]) && arg[i] != '_')
 		{
-			ft_free_array(split);
-			err = ft_strjoin(arg, ": not a valid identifier");
-			/*print_error(shell, "export", err, 2);*/
-			ft_putstr_fd("export: ", STDERR_FILENO);
-			ft_putstr_fd(err, STDERR_FILENO);
-			free(err);
+			print_error(shell, arg, ": not a valid identifier", 2);
 			return (false);
 		}
+		i++;
+		if (arg[i] == '=')
+			break ;
 	}
 	return (true);
 }
@@ -90,9 +76,9 @@ static void	env_export(t_shell *shell, char *arg)
 	char	**split;
 	char	*value;
 
-	split = ft_split(arg, '=');
-	if (!valid_var(shell, split, arg))
+	if (!valid_var(shell, arg))
 		return ;
+	split = ft_split(arg, '=');
 	if (ft_strchr(arg, '='))
 		value = ft_strdup(ft_strchr(arg, '=') + 1);
 	else
@@ -123,9 +109,9 @@ void	ms_export(t_shell *shell, t_exec *cmd)
 	}
 }
 
-static void	init_shell(t_shell *shell, char **envp)
+/* static void	init_shell(t_shell *shell, char **envp)
 {
-	/*g_exit = 0;*/
+	g_exit = 0;
 	shell->cmd = NULL;
 	shell->line = NULL;
 	shell->envp_size = 0;
@@ -139,7 +125,7 @@ int	main(int argc, char **argv, char **envp)
 	t_exec	cmd;
 	int		i = 0;
 	int		j = 1;
-	
+
 	(void)argc;
 	init_shell(&shell, envp);
 	cmd.argv[i] = "export";
@@ -154,4 +140,4 @@ int	main(int argc, char **argv, char **envp)
 	print_envp(&shell);
 	envp_destroy(shell.env);
 	return (0);
-}
+} */

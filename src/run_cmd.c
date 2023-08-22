@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 17:32:04 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/21 04:50:02 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/22 23:03:58 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static void	fork_exec_pipe(t_shell *shell, t_cmd *cmd, int *fd, int std)
 {
-	int		pid;
+	pid_t	pid;
 
 	pid = fork();
 	check(pid, "fork error", 127);
@@ -38,13 +38,25 @@ static void	fork_exec_pipe(t_shell *shell, t_cmd *cmd, int *fd, int std)
 
 static void	run_pipe(t_shell *shell, t_pipe *cmd)
 {
+	pid_t	pid;
 	int		fd[2];
 
-	check(pipe(fd), "pipe error", 127);
 	sig_handler(SIGIGNORE);
-	fork_exec_pipe(shell, cmd->left, fd, STDOUT_FILENO);
-	if (g_exit != 130 && g_exit != 131)
-		fork_exec_pipe(shell, cmd->right, fd, STDIN_FILENO);
+	pid = fork();
+	check(pid, "fork error", 127);
+	if (pid == 0)
+	{
+//		sig_handler(SIGCHILD);
+		check(pipe(fd), "pipe error", 127);
+		fork_exec_pipe(shell, cmd->left, fd, STDOUT_FILENO);
+		if (g_exit != 130 && g_exit != 131)
+			fork_exec_pipe(shell, cmd->right, fd, STDIN_FILENO);
+	}
+	waitpid(pid, &g_exit, WUNTRACED);
+	if (WIFEXITED(g_exit))
+		g_exit = WEXITSTATUS(g_exit);
+	else if (WIFSIGNALED(g_exit))
+		g_exit = WTERMSIG(g_exit) + 128;
 	sig_handler(SIGRESTORE);
 }
 

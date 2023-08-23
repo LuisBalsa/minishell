@@ -46,6 +46,8 @@ static void	print_envp_sorted(t_shell *shell, int export)
 					ft_printf("declare -x %s=\"%s\"\n", tmp->key, tmp->value);
 				else if (export && !tmp->visible)
 					ft_printf("declare -x %s\n", tmp->key);
+				else if (!export && tmp->visible)
+					ft_printf("%s=\"%s\"\n", tmp->key, tmp->value);
 				break ;
 			}
 			tmp = tmp->next;
@@ -109,17 +111,17 @@ void	ms_export(t_shell *shell, t_exec *cmd)
 			env_export(shell, cmd->argv[i]);
 	}
 }
-
-/* static void	init_shell(t_shell *shell, char **envp)
+/*
+ static void	init_shell(t_shell *shell, char **envp)
 {
-	g_exit = 0;
+	[>g_exit = 0;<]
 	shell->cmd = NULL;
 	shell->line = NULL;
 	shell->envp_size = 0;
 	envp_to_list(envp, shell);
 }
 
-//cc -o export export.c ../envp.c ../libft_obj/libft.a -g
+[>cc -o export export.c ../envp.c ../libft_obj/libft.a -g<]
 int	main(int argc, char **argv, char **envp)
 {
 	t_shell shell;

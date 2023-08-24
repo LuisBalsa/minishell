@@ -6,11 +6,39 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 12:23:47 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/22 23:03:41 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/24 12:49:33 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
+void	update_envp(t_shell *shell)
+{
+	t_env	*tmp;
+	char	*env;
+	int		i;
+
+	if (shell->envp)
+		ft_free_array(shell->envp);
+	if (!shell->env)
+	{
+		shell->envp = NULL;
+		return ;
+	}
+	shell->envp = ft_calloc(shell->envp_size, sizeof(char *));
+	tmp = shell->env;
+	i = 0;
+	while (tmp)
+	{
+		if (tmp->visible)
+		{
+			env = ft_strjoin(tmp->key, "=");
+			shell->envp[i++] = ft_strjoin(env, tmp->value);
+			free(env);
+		}
+		tmp = tmp->next;
+	}
+}
 
 void	print_envp(t_shell *shell)
 {
@@ -117,7 +145,35 @@ t_env	*add_env(t_shell *shell, char *key, char *value, int visible)
 		tmp = tmp->next;
 	tmp->next = new;
 	sort_envp(shell);
+	update_envp(shell);
 	return (shell->env);
+}
+
+void	rm_env(char *key, t_shell *shell)
+{
+	t_env	*tmp;
+	t_env	*tmp_last;
+
+	tmp = shell->env;
+	tmp_last = tmp;
+	while (tmp)
+	{
+		if (!ft_strcmp(tmp->key, key))
+		{
+			tmp_last->next = tmp->next;
+			if (tmp == shell->env)
+				shell->env = tmp->next;
+			free(tmp->key);
+			free(tmp->value);
+			free(tmp);
+			shell->envp_size--;
+			sort_envp(shell);
+			update_envp(shell);
+			return ;
+		}
+		tmp_last = tmp;
+		tmp = tmp->next;
+	}
 }
 
 void	envp_to_list(char **envp, t_shell *shell)

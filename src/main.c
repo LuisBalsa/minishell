@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:12:03 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/21 04:10:24 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/24 12:53:21 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,8 @@ static void	init_shell(t_shell *shell, char **envp)
 	shell->line = NULL;
 	shell->envp_size = 0;
 	envp_to_list(envp, shell);
+	shell->envp = NULL;
+	update_envp(shell);
 	sig_handler(SIGRESTORE);
 }
 

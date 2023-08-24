@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:04:57 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/22 22:49:10 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/24 12:47:27 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,14 +75,14 @@ typedef struct s_env
 
 typedef struct s_cmd
 {
-	int	type;
-}		t_cmd;
+	int		type;
+}			t_cmd;
 
 typedef struct s_exec
 {
 	int		type;
 	char	*argv[MAXARGS];
-}		t_exec;
+}			t_exec;
 
 typedef struct s_redir
 {
@@ -91,7 +91,7 @@ typedef struct s_redir
 	char	*file;
 	int		mode;
 	int		fd;
-}		t_redir;
+}			t_redir;
 
 typedef struct s_here
 {
@@ -101,7 +101,7 @@ typedef struct s_here
 	int		mode;
 	int		fdin;
 	int		fdout;
-}		t_here;
+}			t_here;
 
 typedef struct s_lrn
 {
@@ -109,14 +109,14 @@ typedef struct s_lrn
 	t_cmd	*left;
 	t_cmd	*right;
 	t_cmd	*next;
-}		t_lrn;
+}			t_lrn;
 
 typedef struct s_pipe
 {
 	int		type;
 	t_cmd	*left;
 	t_cmd	*right;
-}		t_pipe;
+}			t_pipe;
 
 typedef struct s_shell
 {
@@ -129,12 +129,15 @@ typedef struct s_shell
 	t_cmd	*cmd;
 	int		status;
 	int		envp_size;
-}		t_shell;
+	char	**envp;
+}			t_shell;
 
 t_env	*add_env(t_shell *shell, char *key, char *value, int visible);
+void	rm_env(char *key, t_shell *shell);
 void	envp_to_list(char **envp, t_shell *shell);
 void	envp_destroy(t_env *env);
 char	*get_env(char *key, t_shell *shell);
+void	print_envp(t_shell *shell);
 
 void	sig_handler(int sig);
 void	pipe_continuation_signal(int sig);

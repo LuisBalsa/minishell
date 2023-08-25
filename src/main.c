@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:12:03 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/24 12:53:21 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/08/25 19:20:52 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,9 +75,9 @@ static void	init_shell(t_shell *shell, char **envp)
 	g_exit = 0;
 	shell->cmd = NULL;
 	shell->line = NULL;
+	shell->envp = NULL;
 	shell->envp_size = 0;
 	envp_to_list(envp, shell);
-	shell->envp = NULL;
 	update_envp(shell);
 	sig_handler(SIGRESTORE);
 }
@@ -91,7 +91,7 @@ int	main(int argc, char **argv, char **envp)
 	init_shell(&shell, envp);
 	while (run_command_line(&shell))
 		;
-	rl_clear_history();
+	clear_history();
 	envp_destroy(shell.env);
 	ft_putendl_fd("exit", 1);
 	return (g_exit);

@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:04:57 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/24 12:52:22 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/08/28 13:02:07 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,8 @@ typedef struct s_shell
 }			t_shell;
 
 t_env	*add_env(t_shell *shell, char *key, char *value, int visible);
-void	rm_env(char *key, t_shell *shell);
+bool	rm_env(char *key, t_shell *shell);
+bool	mod_env(t_shell *shell, char *target, char *new_value);
 void	envp_to_list(char **envp, t_shell *shell);
 void	envp_destroy(t_env *env);
 char	*get_env(char *key, t_shell *shell);

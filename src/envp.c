@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 12:23:47 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/28 11:47:08 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/08/28 13:02:47 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,7 +149,25 @@ t_env	*add_env(t_shell *shell, char *key, char *value, int visible)
 	return (shell->env);
 }
 
-void	rm_env(char *key, t_shell *shell)
+bool	mod_env(t_shell *shell, char *target, char *new_value)
+{
+	t_env	*tmp;
+	
+	tmp = shell->env;
+	while (tmp)
+	{
+		if (ft_strcmp(target, tmp->key) == 0)
+		{
+			free(tmp->value);
+			tmp->value = ft_strdup(new_value);
+			return (true);
+		}
+		tmp = tmp->next;
+	}
+	return (false);
+}
+
+bool	rm_env(char *key, t_shell *shell)
 {
 	t_env	*tmp;
 	t_env	*tmp_last;
@@ -170,11 +188,12 @@ void	rm_env(char *key, t_shell *shell)
 			shell->envp_size--;
 			sort_envp(shell);
 			update_envp(shell);
-			return ;
+			return (true);
 		}
 		tmp_last = tmp;
 		tmp = tmp->next;
 	}
+	return (false);
 }
 
 void	envp_to_list(char **envp, t_shell *shell)

@@ -6,29 +6,11 @@
 /*   By: achien-k <achien-k@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 12:05:42 by achien-k          #+#    #+#             */
-/*   Updated: 2023/08/28 12:58:37 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/08/28 13:02:25 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-
-bool	env_change(t_shell *shell, char *target, char *new_value)
-{
-	t_env	*tmp;
-	
-	tmp = shell->env;
-	while (tmp)
-	{
-		if (ft_strcmp(target, tmp->key) == 0)
-		{
-			free(tmp->value);
-			tmp->value = ft_strdup(new_value);
-			return (true);
-		}
-		tmp = tmp->next;
-	}
-	return (false);
-}
 
 bool	ms_chdir(t_shell *shell, char *path)
 {
@@ -40,10 +22,10 @@ bool	ms_chdir(t_shell *shell, char *path)
 		free(tmp_pwd);
 		return (false);
 	}
-	env_change(shell, "OLDPWD", tmp_pwd);
+	mod_env(shell, "OLDPWD", tmp_pwd);
 	free(tmp_pwd);
 	tmp_pwd = getcwd(NULL, 0);
-	env_change(shell, "PWD", tmp_pwd);
+	mod_env(shell, "PWD", tmp_pwd);
 	free(tmp_pwd);
 	return (true);
 }

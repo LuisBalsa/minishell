@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 11:29:10 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/22 22:17:43 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/28 18:58:52 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void	run_exec(t_shell *shell, t_exec *cmd)
 		if (pid == 0)
 		{
 			path = get_path(shell, cmd->argv[0]);
-			execve(path, cmd->argv, NULL);
+			execve(path, cmd->argv, shell->envp);
 			check_execve(shell, path);
 		}
 		waitpid(pid, &g_exit, WUNTRACED);

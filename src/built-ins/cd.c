@@ -6,12 +6,13 @@
 /*   By: achien-k <achien-k@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 12:05:42 by achien-k          #+#    #+#             */
-/*   Updated: 2023/08/17 11:56:31 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/08/18 10:51:20 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 #include <stdbool.h>
+#include <string.h>
 
 bool	equal_str(const char *s1, const char *s2)
 {
@@ -58,26 +59,61 @@ bool	ms_chdir(t_shell *shell, char *path)
 	char	*tmp_pwd;
 	char	*tmp_path;
 
-	if (chdir(path) != 0)
-		return (false);
 	tmp_pwd = getcwd(NULL, 0);
 	tmp_path = ft_strdup(path);
+	if (chdir(path) != 0)
+	{
+		free(tmp_pwd);
+		free(tmp_path);
+		return (false);
+	}
 	env_change(shell, "OLDPWD", tmp_pwd);
 	env_change(shell, "PWD", tmp_path);
 	return (true);
+}
+
+void	path_slash(char *cdpath, char **path)
+{
+	char	*tmp;
+
+	if (cdpath[ft_strlen(cdpath) - 1] != '/')
+	{
+		if (*path[0] != '/')
+		{
+			tmp = ft_strjoin("/", *path);
+			free(*path);
+			*path = tmp;
+		}
+		else 
+			return ;
+	}
+	else 
+	{
+		if (*path[0] == '/')
+		{
+			tmp = ft_strdup(*path + 1);
+			free(*path);
+			*path = tmp;
+		}
+		else 
+			return ;
+	}
 }
 
 bool	cdpath(t_shell *shell, char *path)
 {
 	char	**cdpath;
 	char	*tmp;
+	int		i;
 	
-	if (!get_env("CDPATH", shell))
+	if (!get_env("CDPATH", shell) || path[0] == '/')
 		return (false);
 	cdpath = ft_split(get_env("CDPATH", shell), ':');
-	while (*cdpath)
+	i = 0;
+	while (cdpath[i])
 	{
-		tmp = ft_strjoin(*cdpath++, path);
+		path_slash(cdpath[i], &path);
+		tmp = ft_strjoin(cdpath[i++], path);
 		if (ms_chdir(shell, tmp))
 		{
 			ft_free_array(cdpath);
@@ -117,14 +153,13 @@ void	ms_cd(t_shell *shell, t_exec *cmd)
 		}
 	}
 	ft_putchar_fd('\n', STDOUT_FILENO);
-	printf("New dir is %s\n", get_env("PWD", shell));
-	printf("OLDPWD is %s\n", get_env("OLDPWD", shell));
+	/*printf("New dir is %s\n", get_env("PWD", shell));
+	printf("OLDPWD is %s\n", get_env("OLDPWD", shell));*/
 }
 
 /*void	ms_cd(t_shell *shell, t_exec *cmd)
 {
 	char	*err;
-	char	**cdpath;
 	
 	if (cmd->argv[2])
 		print_error(shell, "cd: too many arguments", 2);
@@ -165,14 +200,17 @@ int	main(int argc, char **argv, char **envp)
 	t_exec	cmd;
 	int		i = 0;
 	int		j = 1;
+	char	*cdpath = ft_strdup("~");
 	
 	(void)argc;
 	init_shell(&shell, envp);
+	env_change(&shell, "CDPATH", cdpath);
 	cmd.argv[i] = "pwd";
 	while (argv[j])
 		cmd.argv[++i] = argv[j++];
 	cmd.argv[i + 1] = 0;
 	ms_cd(&shell, &cmd);
 	envp_destroy(shell.env);
+	free(cdpath);
 	return (0);
 }

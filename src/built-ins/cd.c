@@ -6,7 +6,7 @@
 /*   By: achien-k <achien-k@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 12:05:42 by achien-k          #+#    #+#             */
-/*   Updated: 2023/08/28 13:02:25 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/08/28 13:11:34 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,8 @@ bool	cdpath(t_shell *shell, char *path)
 	i = 0;
 	while (cdpath[i])
 	{
-		tmp_path = path_slash(cdpath[i++], &path);
-		tmp = ft_strjoin(tmp_path, path);
+		tmp_path = path_slash(cdpath[i], &path);
+		tmp = ft_strjoin(cdpath[i++], tmp_path);
 		if (ms_chdir(shell, tmp))
 		{
 			ft_free_array(cdpath);
@@ -120,8 +120,8 @@ void	ms_cd(t_shell *shell, t_exec *cmd)
 	}
 	ft_putchar_fd('\n', STDOUT_FILENO);
 }
-
-/*static void	ms_cd_test(t_shell *shell, t_exec *cmd)
+/*
+static void	ms_cd_test(t_shell *shell, t_exec *cmd)
 {
 	char	*err;
 	
@@ -160,18 +160,17 @@ static void	init_shell(t_shell *shell, char **envp)
 	envp_to_list(envp, shell);
 }
 
-//cc -o cd cd.c ../envp.c ../Libft_obj/libft.a -g
 int	main(int argc, char **argv, char **envp)
 {
 	t_shell shell;
 	t_exec	cmd;
 	int		i = 0;
 	int		j = 1;
-	char	*cdpath = ft_strdup("~");
+	char	*cdpath = ft_strdup("/nfs/homes/achien-k");
 	
 	(void)argc;
 	init_shell(&shell, envp);
-	env_change(&shell, "CDPATH", cdpath);
+	mod_env(&shell, "CDPATH", cdpath);
 	cmd.argv[i] = ft_strdup("pwd");
 	while (argv[j])
 		cmd.argv[++i] = ft_strdup(argv[j++]);

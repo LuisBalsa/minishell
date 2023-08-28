@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:12:03 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/25 19:20:52 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/08/28 21:26:42 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,7 @@ int	main(int argc, char **argv, char **envp)
 		;
 	clear_history();
 	envp_destroy(shell.env);
+	ft_free_array(shell.envp);
 	ft_putendl_fd("exit", 1);
 	return (g_exit);
 }

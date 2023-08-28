@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 14:53:28 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/15 12:55:18 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/20 23:53:41 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,28 @@
 t_cmd	*redir_cmd(t_cmd *cmd, char *file, int mode, int fd)
 {
 	t_redir	*redir;
+	t_cmd	*tmp;
+	t_cmd	*tmp2;
 
 	redir = (t_redir *)ft_calloc(1, sizeof(t_redir));
-	redir->cmd = cmd;
 	redir->type = REDIR;
 	redir->file = file;
 	redir->mode = mode;
 	redir->fd = fd;
+	if (cmd->type == EXEC)
+		redir->cmd = cmd;
+	else
+	{
+		tmp = cmd;
+		while (tmp->type != EXEC)
+		{
+			tmp2 = tmp;
+			tmp = ((t_redir *)tmp)->cmd;
+		}
+		((t_redir *)tmp2)->cmd = (t_cmd *)redir;
+		redir->cmd = tmp;
+		return (cmd);
+	}
 	return ((t_cmd *)redir);
 }
 
@@ -45,7 +60,7 @@ t_cmd	*exec_cmd(void)
 	return ((t_cmd *)cmd);
 }
 
-t_cmd	*and_cmd(t_cmd *left, t_cmd *right, t_cmd *next)
+t_cmd	*and_cmd(t_cmd *left, t_cmd *next, t_cmd *right)
 {
 	t_lrn	*cmd;
 
@@ -57,7 +72,7 @@ t_cmd	*and_cmd(t_cmd *left, t_cmd *right, t_cmd *next)
 	return ((t_cmd *)cmd);
 }
 
-t_cmd	*or_cmd(t_cmd *left, t_cmd *right, t_cmd *next)
+t_cmd	*or_cmd(t_cmd *left, t_cmd *next, t_cmd *right)
 {
 	t_lrn	*cmd;
 

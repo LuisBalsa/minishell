@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achien-k <achien-k@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 11:30:53 by achien-k          #+#    #+#             */
-/*   Updated: 2023/08/16 12:32:29 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/08/18 23:09:20 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,15 @@ void	ms_pwd(t_exec *exec)
 		else
 			ft_putstr_fd("pwd: too many arguments", STDERR_FILENO);
 		ft_putchar_fd('\n', STDERR_FILENO);
+		g_exit = 2;
 		return ;
 	}
 	path = getcwd(NULL, 0);
 	if (!path)
+	{
 		ft_putstr_fd("pwd: couldn't retrieve current directory", 2);
-	path = getcwd(NULL, 0);
+		g_exit = 2;
+	}
 	ft_putstr_fd(path, STDOUT_FILENO);
 	ft_putchar_fd('\n', STDOUT_FILENO);
 	free(path);
@@ -41,7 +44,7 @@ int	main(int argc, char **argv)
 	t_exec	exec;
 	int		i = 0;
 	int		j = 1;
-	
+
 	(void)argc;
 	exec.argv[i] = "pwd";
 	while (argv[j])

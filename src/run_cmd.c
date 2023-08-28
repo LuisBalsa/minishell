@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 17:32:04 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/18 00:40:33 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/22 23:03:58 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,23 +14,21 @@
 
 static void	fork_exec_pipe(t_shell *shell, t_cmd *cmd, int *fd, int std)
 {
-	int		pid;
+	pid_t	pid;
 
 	pid = fork();
-	check(pid, shell, "fork error", 127);
+	check(pid, "fork error", 127);
 	if (pid == 0)
 	{
-		sig_handler(SIGCHILD);
 		g_exit = 127;
-		check(dup2(fd[std], std), shell, "dup2 error", 127);
-//		check(close(fd[!std]), shell, "close error", 127);
+		check(dup2(fd[std], std), "dup2 error", 127);
 		run_cmd(shell, cmd);
 		exit(g_exit);
 	}
 	else
 	{
-		check(close(fd[std]), shell, "close error", 127);
-		waitpid(pid, &g_exit, 0);
+		check(close(fd[std]), "close error", 127);
+		waitpid(pid, &g_exit, WUNTRACED);
 		if (WIFEXITED(g_exit))
 			g_exit = WEXITSTATUS(g_exit);
 		else if (WIFSIGNALED(g_exit))
@@ -40,29 +38,42 @@ static void	fork_exec_pipe(t_shell *shell, t_cmd *cmd, int *fd, int std)
 
 static void	run_pipe(t_shell *shell, t_pipe *cmd)
 {
+	pid_t	pid;
 	int		fd[2];
 
-	check(pipe(fd), shell, "pipe error", 127);
-	fork_exec_pipe(shell, cmd->left, fd, STDOUT_FILENO);
-	fork_exec_pipe(shell, cmd->right, fd, STDIN_FILENO);
+	sig_handler(SIGIGNORE);
+	pid = fork();
+	check(pid, "fork error", 127);
+	if (pid == 0)
+	{
+//		sig_handler(SIGCHILD);
+		check(pipe(fd), "pipe error", 127);
+		fork_exec_pipe(shell, cmd->left, fd, STDOUT_FILENO);
+		if (g_exit != 130 && g_exit != 131)
+			fork_exec_pipe(shell, cmd->right, fd, STDIN_FILENO);
+	}
+	waitpid(pid, &g_exit, WUNTRACED);
+	if (WIFEXITED(g_exit))
+		g_exit = WEXITSTATUS(g_exit);
+	else if (WIFSIGNALED(g_exit))
+		g_exit = WTERMSIG(g_exit) + 128;
+	sig_handler(SIGRESTORE);
 }
 
 static void	run_and(t_shell *shell, t_lrn *cmd)
 {
 	run_cmd(shell, cmd->left);
-	if (g_exit)
+	if (!g_exit)
 		run_cmd(shell, cmd->right);
-	else
-		run_cmd(shell, cmd->next);
+	run_cmd(shell, cmd->next);
 }
 
 static void	run_or(t_shell *shell, t_lrn *cmd)
 {
 	run_cmd(shell, cmd->left);
-	if (!g_exit)
+	if (g_exit)
 		run_cmd(shell, cmd->right);
-	else
-		run_cmd(shell, cmd->next);
+	run_cmd(shell, cmd->next);
 }
 
 void	run_cmd(t_shell *shell, t_cmd *cmd)

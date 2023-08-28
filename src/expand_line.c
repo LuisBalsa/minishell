@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 18:45:50 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/17 00:22:17 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/19 22:25:01 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ static int	expand_tilde(t_shell *shell)
 			tmp++;
 	}
 	if (dquote || squote)
-		return (print_error(shell, ERROR_QUOTE, 2));
+		return (print_error(shell, ERROR_QUOTE, NULL, 2));
 	return (0);
 }
 
@@ -71,22 +71,28 @@ static void	expand_env(t_shell *shell)
 {
 	int		dquote;
 	int		squote;
+	int		here;
 	char	*tmp;
 
 	dquote = 0;
 	squote = 0;
-	tmp = shell->line;
-	while (*tmp)
+	here = 0;
+	tmp = shell->line - 1;
+	while (*(++tmp))
 	{
 		if (*tmp == '"' && !squote)
 			dquote = !dquote;
 		if (*tmp == '\'' && !dquote)
 			squote = !squote;
-		if (*tmp == '$' && !ft_strchr(SPACES, *(tmp + 1)) && !squote)
+		if ((*tmp == '<' && *(tmp + 1) == '<') && !dquote && !squote)
+			here = 1;
+		if (here && *tmp != '<' && *tmp != ' ')
+			here = 2;
+		if (*tmp == ' ' && here == 2 && !dquote && !squote)
+			here = 0;
+		if (*tmp == '$' && !ft_strchr(SPACES, *(tmp + 1)) && !squote && !here)
 			if (point_to_expand(tmp - shell->line, tmp, shell))
-				tmp = shell->line;
-		if (*tmp)
-			tmp++;
+				tmp = shell->line - 1;
 	}
 }
 

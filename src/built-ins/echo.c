@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achien-k <achien-k@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 12:05:22 by achien-k          #+#    #+#             */
-/*   Updated: 2023/08/16 12:32:16 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/08/18 22:51:20 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,10 @@ int	echo_flag(t_exec exec, int *arg)
 			if (ft_contains_only(&exec.argv[*arg][1], "n"))
 				flag = 1;
 			else
-				break;
+				break ;
 		}
-		else 
-			break;
+		else
+			break ;
 	}
 	return (flag);
 }
@@ -69,7 +69,7 @@ int	main(int argc, char **argv)
 	t_exec	exec;
 	int		i = 0;
 	int		j = 1;
-	
+
 	(void)argc;
 	exec.argv[i] = "echo";
 	while (argv[j])

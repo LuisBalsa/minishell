@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 15:42:13 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/17 00:31:15 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/22 19:48:05 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,19 +40,20 @@ static void	expand_heredoc(t_shell *shell, char **line)
 	}
 }
 
-static void	heredoc(t_shell *shell, t_here *here)
+static void	heredoc_reader(t_shell *shell, t_here *here, int fd)
 {
 	char	*line;
-	int		fd;
 
+	sig_handler(SIGHEREDOC);
 	fd = open("here_doc", here->mode, 0644);
+	dup2(here->fdin, STDIN_FILENO);
+	dup2(here->fdout, STDOUT_FILENO);
 	while (1)
 	{
 		line = readline("> ");
 		if (!line)
 		{
-			ft_printf("minishell: warning: here-document\
-				delimited by end-of-file (wanted `%s')\n", here->eof);
+			ft_printf(ERROR_TITLE ERROR_HERE_DOC "%s'\n", here->eof);
 			break ;
 		}
 		if (ft_strcmp(line, here->eof) == 0)
@@ -65,28 +66,59 @@ static void	heredoc(t_shell *shell, t_here *here)
 		free(line);
 	}
 	close(fd);
+	free_exit(shell);
 }
 
 void	run_heredoc(t_shell *shell, t_here *here)
 {
-	int	fd;
+	int		fd;
+	pid_t	pid;
 
-	heredoc(shell, here);
+	pid = check_fork();
+	if (pid == 0)
+		heredoc_reader(shell, here, 0);
+	sig_handler(SIGIGNORE);
+	waitpid(pid, &g_exit, WUNTRACED);
+	sig_handler(SIGRESTORE);
 	fd = open("here_doc", O_RDONLY);
 	dup2(fd, STDIN_FILENO);
 	close(fd);
-	run_cmd(shell, here->cmd);
+	if (WIFEXITED(g_exit))
+	{
+		run_cmd(shell, here->cmd);
+		g_exit = WEXITSTATUS(g_exit);
+	}
+	else if (WIFSIGNALED(g_exit))
+		g_exit = WTERMSIG(g_exit) + 128;
+	dup2(here->fdin, STDIN_FILENO);
+	unlink("here_doc");
 }
 
 t_cmd	*here_cmd(t_cmd *cmd, char *eof)
 {
 	t_here	*here;
+	t_cmd	*tmp;
+	t_cmd	*tmp2;
 
 	here = (t_here *)ft_calloc(1, sizeof(t_here));
-	here->cmd = cmd;
 	here->type = HERE_DOC;
 	here->eof = eof;
-	here->mode = O_WRONLY | O_CREAT | O_TRUNC;
-	here->fd = 0;
+	here->mode = O_WRONLY | O_CREAT | O_APPEND;
+	here->fdin = dup(STDIN_FILENO);
+	here->fdout = dup(STDOUT_FILENO);
+	if (cmd->type == EXEC)
+		here->cmd = cmd;
+	else
+	{
+		tmp = cmd;
+		while (tmp->type != EXEC && tmp->type != REDIR)
+		{
+			tmp2 = tmp;
+			tmp = ((t_redir *)tmp)->cmd;
+		}
+		((t_redir *)tmp2)->cmd = (t_cmd *)here;
+		here->cmd = tmp;
+		return (cmd);
+	}
 	return ((t_cmd *)here);
 }

@@ -15,7 +15,7 @@ RM = rm -rf
 AR = ar -rcs
 
 #_/=\_/=\_/=\_/=\_/=\_/=\_/=\_/=\_/=\_/=\_ FLAGS _/=\_/=\_/=\_/=\_/=\_/=\_/=\_/=\_/=\_/=\_
-CFLAGS	= -Wall -Wextra -Werror -g -fsanitize=address
+CFLAGS	= -Wall -Wextra -Werror -g #-fsanitize=address
 MK		= --no-print-directory
 LIBFT	= -L ./Libft_obj -lft
 
@@ -24,15 +24,16 @@ DEPS		= inc
 SRCS		= src
 #SRCS_BONUS	= srcs_bonus
 LIBFT_PATH	= Libft
-#_SUBFOLDERS	= commands debug executor parser signals utils
-VPATH		= $(SRCS) #$(addprefix $(SRCS)/, $(_SUBFOLDERS))
+_SUBFOLDERS	= built-ins
+VPATH		= $(SRCS) $(addprefix $(SRCS)/, $(_SUBFOLDERS))
 OBJ_DIR		= bin
 #OBJ_DIR_BONUS	= objs_bonus
 
 #_/=\_/=\_/=\_/=\_/=\_/=\_/=\_/=\_/=\_/=\_ FILES _/=\_/=\_/=\_/=\_/=\_/=\_/=\_/=\_/=\_/=\_
 NAME		= minishell
 _FILES		= main envp signals init_line expand_line expand trim_line parser parseline \
-			here_doc nodes_constructors free_cmd error_free run_cmd run_cmd2
+			here_doc nodes_constructors free_cmd error_free run_cmd run_cmd2 \
+			run_builtin pwd echo export
 OBJS		= $(_FILES:%=%.o)
 TARGET		= $(addprefix $(OBJ_DIR)/, $(OBJS))
 

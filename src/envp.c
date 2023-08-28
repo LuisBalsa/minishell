@@ -6,11 +6,64 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 12:23:47 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/12 02:14:40 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/24 12:49:33 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
+void	update_envp(t_shell *shell)
+{
+	t_env	*tmp;
+	char	*env;
+	int		i;
+
+	if (shell->envp)
+		ft_free_array(shell->envp);
+	if (!shell->env)
+	{
+		shell->envp = NULL;
+		return ;
+	}
+	shell->envp = ft_calloc(shell->envp_size, sizeof(char *));
+	tmp = shell->env;
+	i = 0;
+	while (tmp)
+	{
+		if (tmp->visible)
+		{
+			env = ft_strjoin(tmp->key, "=");
+			shell->envp[i++] = ft_strjoin(env, tmp->value);
+			free(env);
+		}
+		tmp = tmp->next;
+	}
+}
+
+void	print_envp(t_shell *shell)
+{
+	t_env	*tmp;
+
+	tmp = shell->env;
+	while (tmp)
+	{
+		if (tmp->visible)
+			ft_printf("%s=%s\n", tmp->key, tmp->value);
+		tmp = tmp->next;
+	}
+}
+
+static void	zero_index(t_shell *shell)
+{
+	t_env	*tmp;
+
+	tmp = shell->env;
+	while (tmp)
+	{
+		tmp->index = 0;
+		tmp = tmp->next;
+	}
+}
 
 void	sort_envp(t_shell *shell)
 {
@@ -19,6 +72,7 @@ void	sort_envp(t_shell *shell)
 	char	*max_key;
 	int		i;
 
+	zero_index(shell);
 	i = shell->envp_size;
 	while (i--)
 	{
@@ -67,7 +121,7 @@ char	*get_env(char *key, t_shell *shell)
 	return (NULL);
 }
 
-t_env	*add_env(t_shell *shell, char *key, char *value)
+t_env	*add_env(t_shell *shell, char *key, char *value, int visible)
 {
 	t_env	*new;
 	t_env	*tmp;
@@ -77,8 +131,12 @@ t_env	*add_env(t_shell *shell, char *key, char *value)
 		return (NULL);
 	shell->envp_size++;
 	new->key = ft_strdup(key);
-	new->value = ft_strdup(value);
+	if (value)
+		new->value = ft_strdup(value);
+	else
+		new->value = NULL;
 	new->index = 0;
+	new->visible = visible;
 	new->next = NULL;
 	if (!shell->env)
 		return (new);
@@ -86,21 +144,55 @@ t_env	*add_env(t_shell *shell, char *key, char *value)
 	while (tmp->next)
 		tmp = tmp->next;
 	tmp->next = new;
+	sort_envp(shell);
+	update_envp(shell);
 	return (shell->env);
+}
+
+void	rm_env(char *key, t_shell *shell)
+{
+	t_env	*tmp;
+	t_env	*tmp_last;
+
+	tmp = shell->env;
+	tmp_last = tmp;
+	while (tmp)
+	{
+		if (!ft_strcmp(tmp->key, key))
+		{
+			tmp_last->next = tmp->next;
+			if (tmp == shell->env)
+				shell->env = tmp->next;
+			free(tmp->key);
+			free(tmp->value);
+			free(tmp);
+			shell->envp_size--;
+			sort_envp(shell);
+			update_envp(shell);
+			return ;
+		}
+		tmp_last = tmp;
+		tmp = tmp->next;
+	}
 }
 
 void	envp_to_list(char **envp, t_shell *shell)
 {
 	int		i;
 	char	**split;
+	char	*value;
 
 	shell->env = NULL;
 	i = 0;
 	while (envp[i])
 	{
 		split = ft_split(envp[i], '=');
-		if (split && split[0] && split[1])
-			shell->env = add_env(shell, split[0], split[1]);
+		if (ft_strchr(envp[i], '='))
+			value = ft_strdup(ft_strchr(envp[i], '=') + 1);
+		else
+			value = NULL;
+		if (split && split[0])
+			shell->env = add_env(shell, split[0], value, 1);
 		ft_free_array(split);
 		i++;
 	}

@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:04:57 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/17 23:43:40 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/24 12:52:22 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@
 # include <sys/stat.h>
 # include <signal.h>
 # include <fcntl.h>
-# include <linux/limits.h>
+/*# include <linux/limits.h>*/
+# include <limits.h>
 # include <dirent.h>
 # include <errno.h>
 # include <readline/readline.h>
@@ -54,6 +55,7 @@
 # define ERROR_TITLE "minishell: "
 # define ERROR_QUOTE "unclosed quotes"
 # define ERROR_SINTAX "syntax error"
+# define ERROR_HERE_DOC "unexpected EOF while looking for matching `"
 
 # define SIGRESTORE 1
 # define SIGHEREDOC 2
@@ -73,14 +75,14 @@ typedef struct s_env
 
 typedef struct s_cmd
 {
-	int	type;
-}		t_cmd;
+	int		type;
+}			t_cmd;
 
 typedef struct s_exec
 {
 	int		type;
 	char	*argv[MAXARGS];
-}		t_exec;
+}			t_exec;
 
 typedef struct s_redir
 {
@@ -89,7 +91,7 @@ typedef struct s_redir
 	char	*file;
 	int		mode;
 	int		fd;
-}		t_redir;
+}			t_redir;
 
 typedef struct s_here
 {
@@ -97,8 +99,9 @@ typedef struct s_here
 	t_cmd	*cmd;
 	char	*eof;
 	int		mode;
-	int		fd;
-}		t_here;
+	int		fdin;
+	int		fdout;
+}			t_here;
 
 typedef struct s_lrn
 {
@@ -106,14 +109,14 @@ typedef struct s_lrn
 	t_cmd	*left;
 	t_cmd	*right;
 	t_cmd	*next;
-}		t_lrn;
+}			t_lrn;
 
 typedef struct s_pipe
 {
 	int		type;
 	t_cmd	*left;
 	t_cmd	*right;
-}		t_pipe;
+}			t_pipe;
 
 typedef struct s_shell
 {
@@ -126,19 +129,23 @@ typedef struct s_shell
 	t_cmd	*cmd;
 	int		status;
 	int		envp_size;
-}		t_shell;
+	char	**envp;
+}			t_shell;
 
-t_env	*add_env(t_shell *shell, char *key, char *value);
+t_env	*add_env(t_shell *shell, char *key, char *value, int visible);
+void	rm_env(char *key, t_shell *shell);
 void	envp_to_list(char **envp, t_shell *shell);
 void	envp_destroy(t_env *env);
 char	*get_env(char *key, t_shell *shell);
+void	print_envp(t_shell *shell);
+void	update_envp(t_shell *shell);
 
 void	sig_handler(int sig);
 void	pipe_continuation_signal(int sig);
 
-void	check(int result, t_shell *shell, char *msg, int exit);
-int		check_fork(t_shell *shell);
-int		print_error(t_shell *shell, char *msg, int exit);
+void	check(int result, char *msg, int exit);
+int		check_fork(void);
+int		print_error(t_shell *shell, char *msg, char *msg2, int exit);
 int		print_error_syntax(t_shell *shell, char *msg, int exit);
 void	free_exit(t_shell *shell);
 
@@ -166,5 +173,10 @@ void	run_cmd(t_shell *shell, t_cmd *cmd);
 void	run_exec(t_shell *shell, t_exec *cmd);
 void	run_redir(t_shell *shell, t_redir *cmd);
 void	run_heredoc(t_shell *shell, t_here *here);
+
+void	run_builtin(t_shell *shell, t_exec *cmd);
+void	ms_echo(t_exec exec);
+void	ms_pwd(t_exec *cmd);
+void	ms_export(t_shell *shell, t_exec *cmd);
 
 #endif

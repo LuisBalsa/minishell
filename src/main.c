@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:12:03 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/18 00:47:28 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/25 19:20:52 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ static int	run_command_line(t_shell *shell)
 	return (shell->status);
 }
 
-static void	print_envp_sorted(t_shell *shell)
+/* static void	print_envp_sorted(t_shell *shell)
 {
 	t_env	*tmp;
 	int		i;
@@ -68,17 +68,18 @@ static void	print_envp_sorted(t_shell *shell)
 		tmp = shell->env;
 		i++;
 	}
-}
+} */
 
 static void	init_shell(t_shell *shell, char **envp)
 {
 	g_exit = 0;
 	shell->cmd = NULL;
 	shell->line = NULL;
+	shell->envp = NULL;
 	shell->envp_size = 0;
 	envp_to_list(envp, shell);
+	update_envp(shell);
 	sig_handler(SIGRESTORE);
-	print_envp_sorted(shell);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -90,7 +91,7 @@ int	main(int argc, char **argv, char **envp)
 	init_shell(&shell, envp);
 	while (run_command_line(&shell))
 		;
-	rl_clear_history();
+	clear_history();
 	envp_destroy(shell.env);
 	ft_putendl_fd("exit", 1);
 	return (g_exit);

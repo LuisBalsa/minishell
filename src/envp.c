@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 12:23:47 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/28 11:17:56 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/08/28 11:47:08 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	update_envp(t_shell *shell)
 		shell->envp = NULL;
 		return ;
 	}
-	shell->envp = ft_calloc(shell->envp_size, sizeof(char *));
+	shell->envp = ft_calloc(shell->envp_size + 1, sizeof(char *));
 	tmp = shell->env;
 	i = 0;
 	while (tmp)
@@ -38,7 +38,6 @@ void	update_envp(t_shell *shell)
 		}
 		tmp = tmp->next;
 	}
-	shell->envp[i] = NULL;
 }
 
 void	print_envp(t_shell *shell)

@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 12:23:47 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/24 12:49:33 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/08/28 11:17:56 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ void	update_envp(t_shell *shell)
 		}
 		tmp = tmp->next;
 	}
+	shell->envp[i] = NULL;
 }
 
 void	print_envp(t_shell *shell)
@@ -164,7 +165,8 @@ void	rm_env(char *key, t_shell *shell)
 			if (tmp == shell->env)
 				shell->env = tmp->next;
 			free(tmp->key);
-			free(tmp->value);
+			if (tmp->value)
+				free(tmp->value);
 			free(tmp);
 			shell->envp_size--;
 			sort_envp(shell);
@@ -194,6 +196,8 @@ void	envp_to_list(char **envp, t_shell *shell)
 		if (split && split[0])
 			shell->env = add_env(shell, split[0], value, 1);
 		ft_free_array(split);
+		if (value)
+			free (value);
 		i++;
 	}
 	sort_envp(shell);

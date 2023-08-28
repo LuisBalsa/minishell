@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:04:57 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/28 13:02:07 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/08/28 18:14:02 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@
 # define SPACES " \t\n\v\f\r"
 # define OPERATORS "|><&()"
 # define TILDE_EXP "|><&();/ \t\n\v\f\r"
+# define OP_AND_SP "|><&(); \t\n\v\f\r"
 
 # define ERROR_TITLE "minishell: "
 # define ERROR_QUOTE "unclosed quotes"
@@ -154,6 +155,7 @@ int		init_line(t_shell *shell);
 int		expand_line(t_shell *shell);
 int		expand(char *key, int i, int j, char **line);
 int		expand_free(char *key, int i, int j, char **line);
+void	expand_wildcard(t_shell *shell);
 void	trim_line(t_shell *shell);
 
 int		parser(t_shell *shell);

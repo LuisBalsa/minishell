@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 18:45:50 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/19 22:25:01 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/28 18:13:19 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,7 @@ int	expand_line(t_shell *shell)
 	if (expand_tilde(shell))
 		return (0);
 	expand_env(shell);
+	expand_wildcard(shell);
 	expand_space_operators(shell, shell->line - 1);
 	shell->line_len = ft_strlen(shell->line);
 	return (1);

@@ -6,13 +6,14 @@
 /*   By: achien-k <achien-k@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 12:05:42 by achien-k          #+#    #+#             */
-/*   Updated: 2023/08/18 10:51:20 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/08/28 10:51:33 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 #include <stdbool.h>
 #include <string.h>
+#include <unistd.h>
 
 bool	equal_str(const char *s1, const char *s2)
 {
@@ -126,6 +127,20 @@ bool	cdpath(t_shell *shell, char *path)
 	return (false);
 }
 
+void	hyphen_cd_print(t_shell *shell, char *pwd)
+{
+	char	*str;
+
+	if (pwd[0] != '~')
+		ft_putstr_fd(pwd, STDOUT_FILENO);
+	else
+	{
+		str = ft_strjoin(get_env("HOME", shell), &pwd[1]);
+		ft_putstr_fd(str, STDOUT_FILENO);
+		free(str);
+	};
+}
+
 void	ms_cd(t_shell *shell, t_exec *cmd)
 {
 	char	*err;
@@ -143,7 +158,7 @@ void	ms_cd(t_shell *shell, t_exec *cmd)
 		{
 			if (!ms_chdir(shell, get_env("OLDPWD", shell)))
 				ft_putstr_fd("cd: OLDPWD variable", STDERR_FILENO);
-			ft_putstr_fd(get_env("PWD", shell), STDOUT_FILENO);
+			hyphen_cd_print(shell, get_env("PWD", shell));
 		}
 		else if (!ms_chdir(shell, cmd->argv[1]) && !cdpath(shell, cmd->argv[1]))
 		{
@@ -189,6 +204,7 @@ static void	init_shell(t_shell *shell, char **envp)
 {
 	shell->cmd = NULL;
 	shell->line = NULL;
+	shell->envp = NULL;
 	shell->envp_size = 0;
 	envp_to_list(envp, shell);
 }

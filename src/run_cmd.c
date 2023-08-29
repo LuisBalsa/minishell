@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 17:32:04 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/28 13:46:15 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/29 16:41:23 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,4 +78,6 @@ void	run_cmd(t_shell *shell, t_cmd *cmd)
 		run_and(shell, (t_lrn *)cmd);
 	else if (cmd->type == OR_OP)
 		run_or(shell, (t_lrn *)cmd);
+	else if (cmd->type == BLOCK)
+		run_block(shell, (t_block *)cmd);
 }

@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 23:32:58 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/15 13:30:27 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/29 16:51:39 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ void	free_cmd(t_cmd *cmd)
 		free_here((t_here *)cmd);
 	else if (cmd->type == REDIR)
 		free_redir((t_redir *)cmd);
+	else if (cmd->type == BLOCK)
+		free_block((t_block *)cmd);
 	else
 		free (cmd);
 }

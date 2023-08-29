@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:04:57 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/29 12:56:22 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/08/29 16:51:56 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@
 # define HERE_DOC 304
 # define OR_OP 305
 # define APPEND 306
+# define BLOCK 307
 
 # define MAXARGS 50
 
@@ -119,6 +120,12 @@ typedef struct s_pipe
 	t_cmd	*right;
 }			t_pipe;
 
+typedef struct s_block
+{
+	int		type;
+	t_cmd	*block;
+}			t_block;
+
 typedef struct s_shell
 {
 	char	*line;
@@ -165,6 +172,7 @@ int		gettoken(t_shell *shell, char **token);
 t_cmd	*parseline(t_shell *shell);
 
 void	free_cmd(t_cmd *cmd);
+void	free_block(t_block *block);
 
 t_cmd	*or_cmd(t_cmd *left, t_cmd *right, t_cmd *next);
 t_cmd	*and_cmd(t_cmd *left, t_cmd *right, t_cmd *next);
@@ -172,11 +180,13 @@ t_cmd	*pipe_cmd(t_cmd *left, t_cmd *right);
 t_cmd	*redir_cmd(t_cmd *cmd, char *file, int mode, int fd);
 t_cmd	*here_cmd(t_cmd *cmd, char *eof);
 t_cmd	*exec_cmd(void);
+t_cmd	*block_cmd(t_cmd *cmd);
 
 void	run_cmd(t_shell *shell, t_cmd *cmd);
 void	run_exec(t_shell *shell, t_exec *cmd);
 void	run_redir(t_shell *shell, t_redir *cmd);
 void	run_heredoc(t_shell *shell, t_here *here);
+void	run_block(t_shell *shell, t_block *cmd);
 
 void	run_builtin(t_shell *shell, t_exec *cmd);
 void	ms_echo(t_exec *cmd);

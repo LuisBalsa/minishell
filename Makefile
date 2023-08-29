@@ -32,7 +32,8 @@ OBJ_DIR		= bin
 #_/=\_/=\_/=\_/=\_/=\_/=\_/=\_/=\_/=\_/=\_ FILES _/=\_/=\_/=\_/=\_/=\_/=\_/=\_/=\_/=\_/=\_
 NAME		= minishell
 _FILES		= main envp signals init_line expand_line expand_wildcard expand trim_line parser \
-			parseline here_doc nodes_constructors free_cmd error_free run_cmd run_cmd2 \
+			parseline here_doc nodes_constructors nodes_constructors2 \
+			free_cmd free_cmd2 error_free run_cmd run_cmd2 run_cmd3 \
 			run_builtin pwd echo export cd unset env exit
 OBJS		= $(_FILES:%=%.o)
 TARGET		= $(addprefix $(OBJ_DIR)/, $(OBJS))

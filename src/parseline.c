@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/13 12:52:02 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/20 23:45:18 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/29 16:39:56 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ static t_cmd	*parseblock(t_shell *shell)
 		return (NULL);
 	}
 	gettoken(shell, NULL);
-	cmd = parseline(shell);
+	cmd = block_cmd(parseline(shell));
 	if (!peek(shell, ")", 1))
 	{
 		print_error(shell, "open parenthesis not suported", NULL, 2);

@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 12:05:42 by achien-k          #+#    #+#             */
-/*   Updated: 2023/08/29 12:21:56 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/08/29 16:21:16 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ void	hyphen_cd_print(t_shell *shell, char *pwd)
 	char	*str;
 
 	if (pwd[0] != '~')
-		ft_putstr_fd(pwd, STDOUT_FILENO);
+		ft_putendl_fd(pwd, STDOUT_FILENO);
 	else
 	{
 		str = ft_strjoin(get_env("HOME", shell), &pwd[1]);

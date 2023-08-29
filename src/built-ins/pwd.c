@@ -6,33 +6,28 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 11:30:53 by achien-k          #+#    #+#             */
-/*   Updated: 2023/08/18 23:09:20 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/29 11:49:52 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
 //Add errors from original functions
-void	ms_pwd(t_exec *exec)
+void	ms_pwd(t_shell *shell, t_exec *cmd)
 {
 	char	*path;
 
-	if (exec->argv[1])
+	if (cmd->argv[1])
 	{
-		if (exec->argv[1][0] == '-')
-			ft_putstr_fd("pwd: flags not supported", STDERR_FILENO);
+		if (cmd->argv[1][0] == '-')
+			print_error(shell, cmd->argv[0], "flags not supported", 2);
 		else
-			ft_putstr_fd("pwd: too many arguments", STDERR_FILENO);
-		ft_putchar_fd('\n', STDERR_FILENO);
-		g_exit = 2;
+			print_error(shell, cmd->argv[0], "too many arguments", 2);
 		return ;
 	}
 	path = getcwd(NULL, 0);
 	if (!path)
-	{
-		ft_putstr_fd("pwd: couldn't retrieve current directory", 2);
-		g_exit = 2;
-	}
+		print_error(shell, cmd->argv[0], "couldn't get current directory", 2);
 	ft_putstr_fd(path, STDOUT_FILENO);
 	ft_putchar_fd('\n', STDOUT_FILENO);
 	free(path);
@@ -41,15 +36,15 @@ void	ms_pwd(t_exec *exec)
 //cc -o pwd pwd.c ../Libft_obj/libft.a -g
 int	main(int argc, char **argv)
 {
-	t_exec	exec;
+	t_exec	cmd;
 	int		i = 0;
 	int		j = 1;
 
 	(void)argc;
-	exec.argv[i] = "pwd";
+	cmd.argv[i] = "pwd";
 	while (argv[j])
-		exec.argv[++i] = argv[j++];
-	exec.argv[i + 1] = 0;
-	ms_pwd(&exec);
+		cmd.argv[++i] = argv[j++];
+	cmd.argv[i + 1] = 0;
+	ms_pwd(&cmd);
 	return (0);
 }*/

@@ -6,14 +6,14 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 12:05:22 by achien-k          #+#    #+#             */
-/*   Updated: 2023/08/18 22:51:20 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/29 11:51:34 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
 //General function in Adam's Libft
-int	ft_contains_only(char *str, char *characters)
+static int	ft_contains_only(char *str, char *characters)
 {
 	while (*str)
 	{
@@ -23,16 +23,16 @@ int	ft_contains_only(char *str, char *characters)
 	return (1);
 }
 
-int	echo_flag(t_exec exec, int *arg)
+static int	echo_flag(t_exec *cmd, int *arg_index)
 {
 	int	flag;
 
 	flag = 0;
-	while (exec.argv[++*arg])
+	while (cmd->argv[++*arg_index])
 	{
-		if (exec.argv[*arg][0] == '-')
+		if (cmd->argv[*arg_index][0] == '-')
 		{
-			if (ft_contains_only(&exec.argv[*arg][1], "n"))
+			if (ft_contains_only(&cmd->argv[*arg_index][1], "n"))
 				flag = 1;
 			else
 				break ;
@@ -43,20 +43,20 @@ int	echo_flag(t_exec exec, int *arg)
 	return (flag);
 }
 
-void	ms_echo(t_exec exec)
+void	ms_echo(t_exec *cmd)
 {
 	int	i;
 	int	flag;
 
 	i = 0;
-	flag = echo_flag(exec, &i);
-	if (exec.argv[i])
+	flag = echo_flag(cmd, &i);
+	if (cmd->argv[i])
 	{
-		ft_putstr_fd(exec.argv[i], STDOUT_FILENO);
-		while (exec.argv[++i])
+		ft_putstr_fd(cmd->argv[i], STDOUT_FILENO);
+		while (cmd->argv[++i])
 		{
 			ft_putchar_fd(' ', STDOUT_FILENO);
-			ft_putstr_fd(exec.argv[i], STDOUT_FILENO);
+			ft_putstr_fd(cmd->argv[i], STDOUT_FILENO);
 		}
 	}
 	if (!flag)
@@ -66,15 +66,15 @@ void	ms_echo(t_exec exec)
 //cc -o echo echo.c ../Libft_obj/libft.a -g
 int	main(int argc, char **argv)
 {
-	t_exec	exec;
+	t_exec	cmd;
 	int		i = 0;
 	int		j = 1;
 
 	(void)argc;
-	exec.argv[i] = "echo";
+	cmd.argv[i] = "echo";
 	while (argv[j])
-		exec.argv[++i] = argv[j++];
-	exec.argv[i + 1] = 0;
-	ms_echo(exec);
+		cmd.argv[++i] = argv[j++];
+	cmd.argv[i + 1] = 0;
+	ms_echo(cmd);
 	return (0);
 }*/

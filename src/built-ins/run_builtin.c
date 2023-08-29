@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/18 20:43:31 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/29 11:47:37 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/08/29 12:57:41 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,6 @@ void	run_builtin(t_shell *shell, t_exec *cmd)
 		ms_unset(shell, cmd);
 	else if (!ft_strcmp(cmd->argv[0], "env"))
 		ms_env(shell, cmd);
-/* 	else if (!ft_strcmp(cmd->argv[0], "exit"))
-		ms_exit(shell, cmd); */
+	else if (!ft_strcmp(cmd->argv[0], "exit"))
+		ms_exit(shell, cmd); 
 }

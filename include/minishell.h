@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:04:57 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/29 11:42:06 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/08/29 12:56:22 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,5 +185,6 @@ void	ms_export(t_shell *shell, t_exec *cmd);
 void	ms_cd(t_shell *shell, t_exec *cmd);
 void	ms_unset(t_shell *shell, t_exec *cmd);
 void	ms_env(t_shell *shell, t_exec *cmd);
+void	ms_exit(t_shell *shell, t_exec *cmd);
 
 #endif

@@ -6,12 +6,11 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 09:57:30 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/29 11:19:31 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/08/29 12:22:01 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-#include <stdio.h>
 
 static void	print_envp_sorted(t_shell *shell, int export)
 {

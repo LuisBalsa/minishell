@@ -6,13 +6,12 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 12:05:22 by achien-k          #+#    #+#             */
-/*   Updated: 2023/08/29 11:51:34 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/08/29 12:22:15 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-//General function in Adam's Libft
 static int	ft_contains_only(char *str, char *characters)
 {
 	while (*str)

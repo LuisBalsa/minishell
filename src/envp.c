@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 12:23:47 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/28 13:02:47 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/08/29 11:19:17 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,6 +165,14 @@ bool	mod_env(t_shell *shell, char *target, char *new_value)
 		tmp = tmp->next;
 	}
 	return (false);
+}
+
+void	export_env(t_shell *shell, char *key, char *value, int visible)
+{
+	if (get_env(key, shell))
+		mod_env(shell, key, value);
+	else
+		add_env(shell, key, value, visible);
 }
 
 bool	rm_env(char *key, t_shell *shell)

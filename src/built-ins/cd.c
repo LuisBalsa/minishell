@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 12:05:42 by achien-k          #+#    #+#             */
-/*   Updated: 2023/08/29 09:08:08 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/29 11:20:41 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,10 @@ bool	ms_chdir(t_shell *shell, char *path)
 		free(tmp_pwd);
 		return (false);
 	}
-	mod_env(shell, "OLDPWD", tmp_pwd);
+	export_env(shell, "OLDPWD", tmp_pwd, 1);
 	free(tmp_pwd);
 	tmp_pwd = getcwd(NULL, 0);
-	mod_env(shell, "PWD", tmp_pwd);
+	export_env(shell, "PWD", tmp_pwd, 1);
 	free(tmp_pwd);
 	return (true);
 }
@@ -112,13 +112,15 @@ void	ms_cd(t_shell *shell, t_exec *cmd)
 		else if (ft_strcmp(cmd->argv[1], "-") == 0)
 		{
 			if (!ms_chdir(shell, get_env("OLDPWD", shell)))
+			{
 				print_error(shell, "cd", "OLDPWD variable", 2);
+				return ;
+			}
 			hyphen_cd_print(shell, get_env("PWD", shell));
 		}
 		else if (!ms_chdir(shell, cmd->argv[1]) && !cdpath(shell, cmd->argv[1]))
 			print_error(shell, "cd: no such file or directory", cmd->argv[1], 2);
 	}
-	ft_putchar_fd('\n', STDOUT_FILENO);
 }
 /*
 static void	ms_cd_test(t_shell *shell, t_exec *cmd)

@@ -6,39 +6,12 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 09:57:30 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/29 09:57:33 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/29 11:19:31 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 #include <stdio.h>
-
-// first two functions should be in a different file, as they are used by cd
-bool	equal_str(const char *s1, const char *s2)
-{
-	if (ft_strcmp(s1, s2) == 0)
-		return (true);
-	else
-		return (false);
-}
-
-bool	change_env(t_shell *shell, char *key, char *value)
-{
-	t_env	*tmp;
-
-	tmp = shell->env;
-	while (tmp)
-	{
-		if (equal_str(key, tmp->key))
-		{
-			free(tmp->value);
-			tmp->value = ft_strdup(value);
-			return (true);
-		}
-		tmp = tmp->next;
-	}
-	return (false);
-}
 
 static void	print_envp_sorted(t_shell *shell, int export)
 {
@@ -72,46 +45,29 @@ static bool	valid_var(t_shell *shell, char *arg)
 	int		i;
 
 	i = 0;
-	while (arg[i])
+	if (!ft_isalpha(arg[i]) && arg[i] != '_')
 	{
-		if (!ft_isalnum(arg[i]) && arg[i] != '_')
-		{
-			print_error(shell, arg, ": not a valid identifier", 2);
-			return (false);
-		}
-		i++;
+		print_error(shell, arg, "not a valid identifier", 2);
+		return (false);
+	}
+	while (arg[++i])
+	{
 		if (arg[i] == '=')
 			break ;
+		if (!ft_isalnum(arg[i]) && arg[i] != '_')
+		{
+			print_error(shell, arg, "not a valid identifier", 2);
+			return (false);
+		}
 	}
 	return (true);
-}
-
-static void	env_export(t_shell *shell, char *arg)
-{
-	char	**split;
-	char	*value;
-
-	if (!valid_var(shell, arg))
-		return ;
-	split = ft_split(arg, '=');
-	if (ft_strchr(arg, '='))
-		value = ft_strdup(ft_strchr(arg, '=') + 1);
-	else
-		value = ft_strdup("");
-	if (get_env(split[0], shell))
-		change_env(shell, split[0], value);
-	else
-		if (ft_strchr(arg,'='))
-			add_env(shell, split[0], value, 1);
-		else
-			add_env(shell, split[0], value, 0);
-	ft_free_array(split);
-	free(value);
 }
 
 void	ms_export(t_shell *shell, t_exec *cmd)
 {
 	int		i;
+	char	*value;
+	char	**split;
 
 	if (!cmd->argv[1])
 		print_envp_sorted(shell, 1);
@@ -119,7 +75,20 @@ void	ms_export(t_shell *shell, t_exec *cmd)
 	{
 		i = 0;
 		while (cmd->argv[++i])
-			env_export(shell, cmd->argv[i]);
+		{
+			if (!valid_var(shell, cmd->argv[i]))
+				continue ;
+			if (ft_strchr(cmd->argv[i], '='))
+			{
+				split = ft_split(cmd->argv[i], '=');
+				value = ft_strdup(ft_strchr(cmd->argv[i], '=') + 1);
+				export_env(shell, split[0], value, 1);
+				ft_free_array(split);
+				free(value);
+			}
+			else
+				export_env(shell, cmd->argv[i], "", 0);
+		}
 	}
 }
 /*

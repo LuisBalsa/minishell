@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 09:58:46 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/29 09:58:47 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/29 10:48:08 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,16 @@ static bool	valid_unset_var(t_shell *shell, char *arg)
 	int		i;
 
 	i = 0;
-	if (!ft_isalpha(arg[i] && arg[i] != '_'))
+	if (!ft_isalpha(arg[i]) && arg[i] != '_')
 	{
-		print_error(shell, arg, ": not a valid identifier", 2);
+		print_error(shell, arg, "not a valid identifier", 2);
 		return (false);
 	}
 	while (arg[++i])
 	{
 		if (!ft_isalnum(arg[i]) && arg[i] != '_')
 		{
-			print_error(shell, arg, ": not a valid identifier", 2);
+			print_error(shell, arg, "not a valid identifier", 2);
 			return (false);
 		}
 	}

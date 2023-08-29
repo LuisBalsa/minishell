@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 11:29:10 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/28 18:58:52 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/29 14:35:57 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,8 +109,11 @@ void	run_redir(t_shell *shell, t_redir *cmd)
 	fd = open(cmd->file, cmd->mode, 0644);
 	if (fd == -1)
 		print_error(shell, cmd->file, strerror(errno), 1);
-	dup2(fd, cmd->fd);
-	close(fd);
-	run_cmd(shell, cmd->cmd);
+	else
+	{
+		dup2(fd, cmd->fd);
+		close(fd);
+		run_cmd(shell, cmd->cmd);
+	}
 	check(dup2(original_fd, cmd->fd), "dup2 error", 1);
 }

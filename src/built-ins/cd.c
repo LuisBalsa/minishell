@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achien-k <achien-k@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 12:05:42 by achien-k          #+#    #+#             */
-/*   Updated: 2023/08/28 13:11:34 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/08/29 09:08:08 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,17 +41,17 @@ char	*path_slash(char *cdpath, char **path)
 			tmp = ft_strjoin("/", *path);
 			return (tmp);
 		}
-		else 
+		else
 			return (ft_strdup(cdpath));
 	}
-	else 
+	else
 	{
 		if (*path[0] == '/')
 		{
 			tmp = ft_strdup(*path + 1);
 			return (tmp);
 		}
-		else 
+		else
 			return (ft_strdup(cdpath));
 	}
 }
@@ -62,7 +62,7 @@ bool	cdpath(t_shell *shell, char *path)
 	char	*tmp;
 	char	*tmp_path;
 	int		i;
-	
+
 	if (!get_env("CDPATH", shell) || path[0] == '/')
 		return (false);
 	cdpath = ft_split(get_env("CDPATH", shell), ':');
@@ -95,7 +95,7 @@ void	hyphen_cd_print(t_shell *shell, char *pwd)
 		str = ft_strjoin(get_env("HOME", shell), &pwd[1]);
 		ft_putstr_fd(str, STDOUT_FILENO);
 		free(str);
-	};
+	}
 }
 
 void	ms_cd(t_shell *shell, t_exec *cmd)
@@ -105,7 +105,7 @@ void	ms_cd(t_shell *shell, t_exec *cmd)
 		if (!ms_chdir(shell, get_env("HOME", shell)))
 			print_error(shell, "cd", "HOME variable", 2);
 	}
-	else 
+	else
 	{
 		if (cmd->argv[2])
 			print_error(shell, "cd", "too many arguments", 2);
@@ -124,13 +124,13 @@ void	ms_cd(t_shell *shell, t_exec *cmd)
 static void	ms_cd_test(t_shell *shell, t_exec *cmd)
 {
 	char	*err;
-	
+
 	if (!cmd->argv[1])
 	{
 		if (!ms_chdir(shell, get_env("HOME", shell)))
 			ft_putstr_fd("cd: HOME variable", STDERR_FILENO);
 	}
-	else 
+	else
 	{
 		if (cmd->argv[2])
 			ft_putstr_fd("cd: too many arguments", STDERR_FILENO);
@@ -167,7 +167,7 @@ int	main(int argc, char **argv, char **envp)
 	int		i = 0;
 	int		j = 1;
 	char	*cdpath = ft_strdup("/nfs/homes/achien-k");
-	
+
 	(void)argc;
 	init_shell(&shell, envp);
 	mod_env(&shell, "CDPATH", cdpath);

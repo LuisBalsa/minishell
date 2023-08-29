@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:04:57 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/28 18:14:02 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/29 09:13:25 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,5 +181,6 @@ void	run_builtin(t_shell *shell, t_exec *cmd);
 void	ms_echo(t_exec exec);
 void	ms_pwd(t_exec *cmd);
 void	ms_export(t_shell *shell, t_exec *cmd);
+void	ms_cd(t_shell *shell, t_exec *cmd);
 
 #endif

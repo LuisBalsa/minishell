@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:12:03 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/28 21:26:42 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/29 09:33:31 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,29 +46,6 @@ static int	run_command_line(t_shell *shell)
 	free(shell->line);
 	return (shell->status);
 }
-
-/* static void	print_envp_sorted(t_shell *shell)
-{
-	t_env	*tmp;
-	int		i;
-
-	i = 0;
-	tmp = shell->env;
-	while (i < shell->envp_size)
-	{
-		while (tmp)
-		{
-			if (tmp->index == i)
-			{
-				ft_printf("%s=%s\n", tmp->key, tmp->value);
-				break ;
-			}
-			tmp = tmp->next;
-		}
-		tmp = shell->env;
-		i++;
-	}
-} */
 
 static void	init_shell(t_shell *shell, char **envp)
 {

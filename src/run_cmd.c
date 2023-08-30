@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 17:32:04 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/30 19:18:24 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/31 00:03:23 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,10 @@
 
 static void	fork_exec_pipe(t_shell *shell, t_cmd *cmd, int *fd, int std)
 {
-	if (cmd->type == EXEC)
+	if (cmd->type == EXEC || cmd->type == REDIR || cmd->type == HERE_DOC)
 	{
+		if (cmd->type == HERE_DOC)
+			sig_handler(SIGIGNORE);
 		shell->pid = fork();
 		check(shell->pid, "fork error", 127);
 		if (shell->pid == 0)
@@ -25,6 +27,8 @@ static void	fork_exec_pipe(t_shell *shell, t_cmd *cmd, int *fd, int std)
 			run_cmd(shell, cmd);
 			exit(g_exit);
 		}
+		if (cmd->type == HERE_DOC)
+			wait_children(shell);
 		check(close(fd[std]), "close error", 127);
 	}
 	else
@@ -38,7 +42,7 @@ static void	run_pipe(t_shell *shell, t_pipe *cmd)
 {
 	int		fd[2];
 
-	sig_handler(SIGCHILD);
+	sig_handler(SIGIGNORE);
 	check(pipe(fd), "pipe error", 127);
 	fork_exec_pipe(shell, cmd->left, fd, STDOUT_FILENO);
 	fork_exec_pipe(shell, cmd->right, fd, STDIN_FILENO);

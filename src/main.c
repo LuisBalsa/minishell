@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:12:03 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/30 15:16:19 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/30 15:19:29 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static char	*get_prompt(void)
 
 void	wait_children(t_shell *shell)
 {
-	if (waitpid(shell->pid, NULL, 0) != -1)
+	if (waitpid(shell->pid, &g_exit, 0) != -1)
 	{
 		if (WIFEXITED(g_exit))
 			g_exit = WEXITSTATUS(g_exit);

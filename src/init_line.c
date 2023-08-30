@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 11:07:22 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/19 22:25:38 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/30 15:38:35 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,11 @@ static int	syntax_error(t_shell *shell)
 	tmp = shell->line - 1;
 	if (ft_strchr("|;&", *shell->line))
 		return (print_error_syntax(shell, shell->line, 2));
+	if (shell->line[ft_strlen(shell->line) - 1] == '|'
+		|| ft_strcmp(shell->line + ft_strlen(shell->line) - 2, "||") == 0
+		|| ft_strcmp(shell->line + ft_strlen(shell->line) - 2, "&&") == 0)
+		return (print_error(shell,
+				"Open | or || or && not supported", NULL, 2));
 	while (*++tmp)
 	{
 		if (*tmp == '"' && !squote)
@@ -59,7 +64,7 @@ static int	syntax_error(t_shell *shell)
 	return (0);
 }
 
-static int	pipe_continuation(t_shell *shell)
+/* static int	pipe_continuation(t_shell *shell)
 {
 	char	*tmp;
 	char	*tmp2;
@@ -79,18 +84,18 @@ static int	pipe_continuation(t_shell *shell)
 		pipe_continuation(shell);
 	}
 	return (0);
-}
+} */
 
 int	init_line(t_shell *shell)
 {
 	shell->status = CONTINUE;
 	if (only_spaces(shell->line))
 		return (0);
+	add_history(shell->line);
 	trim_spaces(&shell->line);
 	if (syntax_error(shell))
-		return (add_history(shell->line), 0);
-	if (pipe_continuation(shell))
-		return (add_history(shell->line), 0);
-	add_history(shell->line);
+		return (0);
+/* 	if (pipe_continuation(shell))
+		return (add_history(shell->line), 0); */
 	return (1);
 }

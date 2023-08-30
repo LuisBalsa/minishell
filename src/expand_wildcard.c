@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 13:49:21 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/29 14:36:00 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/30 22:43:53 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,18 +36,23 @@ static bool	match_wildcard(char *pattern, char *text, int squote, int dquote)
 static char	*wildcard_match_joiner(char *match, char *entry)
 {
 	char	*tmp;
+	char	*tmp_entry;
 
+	tmp = ft_strjoin("\"", entry);
+	tmp_entry = ft_strjoin(tmp, "\"");
+	free(tmp);
 	tmp = match;
 	if (match)
 	{
 		match = ft_strjoin(match, " ");
 		free(tmp);
 		tmp = match;
-		match = ft_strjoin(match, entry);
+		match = ft_strjoin(match, tmp_entry);
 		free(tmp);
 	}
 	else
-		match = ft_strdup(entry);
+		match = ft_strdup(tmp_entry);
+	free(tmp_entry);
 	return (match);
 }
 

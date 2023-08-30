@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 15:42:13 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/22 19:48:05 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/30 22:59:20 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ t_cmd	*here_cmd(t_cmd *cmd, char *eof)
 	here->mode = O_WRONLY | O_CREAT | O_APPEND;
 	here->fdin = dup(STDIN_FILENO);
 	here->fdout = dup(STDOUT_FILENO);
-	if (cmd->type == EXEC)
+	if (cmd->type == EXEC || cmd->type == REDIR)
 		here->cmd = cmd;
 	else
 	{

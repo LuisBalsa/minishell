@@ -6,7 +6,7 @@
 /*   By: achien-k <achien-k@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 12:21:23 by achien-k          #+#    #+#             */
-/*   Updated: 2023/08/30 10:45:29 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/08/30 10:51:46 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,8 @@ static bool islonglong(char *str)
 void	ms_exit(t_shell *shell, t_exec *cmd)
 {
 	char	*err;
-	int		i;
 
 	err = NULL;
-	i = 0;
 	if (cmd->argv[1])
 	{
 		if (!islonglong(cmd->argv[1]))
@@ -64,7 +62,12 @@ void	ms_exit(t_shell *shell, t_exec *cmd)
 			free(err);
 		}
 		else
-			g_exit = ft_atoi(cmd->argv[1]) % 255;
+		{
+			if (cmd->argv[1][0] == '-')
+				g_exit = -(ft_atoi(cmd->argv[1]) % 256);
+			else
+				g_exit = ft_atoi(cmd->argv[1]) % 256;
+		}
 	}
 	shell->status = STOP;
 }

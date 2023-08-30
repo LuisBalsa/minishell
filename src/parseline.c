@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/13 12:52:02 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/30 18:28:36 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/30 18:52:53 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,13 +48,13 @@ static t_cmd	*parseblock(t_shell *shell)
 	}
 	gettoken(shell, NULL);
 	cmd = block_cmd(parseline(shell));
-	if (!peek(shell, ")", 1))
+	if (!cmd)
+		return (NULL);
+	if (!peek(shell, ")", 1) && shell->status == CONTINUE)
 	{
 		print_error(shell, "open parenthesis not suported", NULL, 2);
 		return (cmd);
 	}
-	if (!cmd)
-		return (NULL);
 	gettoken(shell, NULL);
 	return (parseredir(cmd, shell));
 }
@@ -108,12 +108,13 @@ t_cmd	*parseline(t_shell *shell)
 	t_cmd	*cmd;
 	int		type;
 
-	if (peek(shell, "|&", 2))
-		return (print_error_syntax(shell, shell->ps, 2), NULL);
+
 	cmd = parsepipeline(shell);
 	if (cmd && peek(shell, "&|", 2))
 	{
 		type = gettoken(shell, NULL);
+		if (peek(shell, "|&", 2))
+			return (print_error_syntax(shell, shell->ps, 2), cmd);
 		if (type == OR_OP)
 			cmd = or_cmd(cmd, parseline(shell), parsepipeline(shell));
 		else if (type == '&')

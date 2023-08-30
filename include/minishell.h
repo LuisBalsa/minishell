@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:04:57 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/30 09:55:30 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/30 12:22:20 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,6 +150,7 @@ void	envp_destroy(t_env *env);
 char	*get_env(char *key, t_shell *shell);
 void	print_envp(t_shell *shell);
 void	update_envp(t_shell *shell);
+void	wait_children(t_shell *shell);
 
 void	sig_handler(int sig);
 void	pipe_continuation_signal(int sig);

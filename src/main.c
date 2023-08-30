@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:12:03 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/30 11:29:21 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/30 12:22:10 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static char	*get_prompt(void)
 	return (cwd);
 }
 
-static void	wait_children(t_shell *shell)
+void	wait_children(t_shell *shell)
 {
 	if (waitpid(shell->pid, NULL, 0) != -1)
 	{

@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:12:03 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/29 09:33:31 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/30 11:29:21 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,20 @@ static char	*get_prompt(void)
 	return (cwd);
 }
 
+static void	wait_children(t_shell *shell)
+{
+	if (waitpid(shell->pid, NULL, 0) != -1)
+	{
+		if (WIFEXITED(g_exit))
+			g_exit = WEXITSTATUS(g_exit);
+		else if (WIFSIGNALED(g_exit))
+			g_exit = WTERMSIG(g_exit) + 128;
+	}
+	while (wait(0) != -1)
+		;
+	sig_handler(SIGRESTORE);
+}
+
 static int	run_command_line(t_shell *shell)
 {
 	shell->status = STOP;
@@ -40,7 +54,10 @@ static int	run_command_line(t_shell *shell)
 	{
 		trim_line(shell);
 		if (parser(shell) && shell->status == CONTINUE)
+		{
 			run_cmd(shell, shell->cmd);
+			wait_children(shell);
+		}
 		free_cmd(shell->cmd);
 	}
 	free(shell->line);

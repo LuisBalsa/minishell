@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 17:04:28 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/29 12:21:11 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/08/30 11:32:46 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ static void	sig_back_slash(int sig)
 		ft_putstr_fd("\n", 1);
 	else if (sig == SIGQUIT)
 		ft_putendl_fd("Quit (core dumped)", 1);
-	g_exit = 128 + sig;
 }
 
 

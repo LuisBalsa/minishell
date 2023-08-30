@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:04:57 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/29 16:51:56 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/30 09:55:30 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,6 +137,7 @@ typedef struct s_shell
 	t_cmd	*cmd;
 	int		status;
 	int		envp_size;
+	int		pid;
 	char	**envp;
 }			t_shell;
 

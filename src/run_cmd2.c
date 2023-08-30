@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 11:29:10 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/29 14:35:57 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/30 11:29:28 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,12 +89,12 @@ void	run_exec(t_shell *shell, t_exec *cmd)
 			execve(path, cmd->argv, shell->envp);
 			check_execve(shell, path);
 		}
-		waitpid(pid, &g_exit, WUNTRACED);
-		sig_handler(SIGRESTORE);
+		waitpid(pid, &g_exit, 0);
 		if (WIFEXITED(g_exit))
 			g_exit = WEXITSTATUS(g_exit);
 		else if (WIFSIGNALED(g_exit))
 			g_exit = 128 + WTERMSIG(g_exit);
+		sig_handler(SIGRESTORE);
 	}
 	else
 		run_builtin(shell, cmd);

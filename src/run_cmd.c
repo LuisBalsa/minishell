@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 17:32:04 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/29 16:41:23 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/30 11:16:48 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,21 @@
 
 static void	fork_exec_pipe(t_shell *shell, t_cmd *cmd, int *fd, int std)
 {
-	pid_t	pid;
-
-	pid = fork();
-	check(pid, "fork error", 127);
-	if (pid == 0)
+	shell->pid = fork();
+	check(shell->pid, "fork error", 127);
+	if (shell->pid == 0)
 	{
-		g_exit = 127;
+//		g_exit = 127;
+		check(close(fd[!std]), "close error", 127);
 		check(dup2(fd[std], std), "dup2 error", 127);
+		check(close(fd[std]), "close error", 127);
 		run_cmd(shell, cmd);
 		exit(g_exit);
 	}
-	else
+/* 	else
 	{
 		check(close(fd[std]), "close error", 127);
-		waitpid(pid, &g_exit, WUNTRACED);
-		if (WIFEXITED(g_exit))
-			g_exit = WEXITSTATUS(g_exit);
-		else if (WIFSIGNALED(g_exit))
-			g_exit = WTERMSIG(g_exit) + 128;
-	}
+	} */
 }
 
 static void	run_pipe(t_shell *shell, t_pipe *cmd)
@@ -43,9 +38,8 @@ static void	run_pipe(t_shell *shell, t_pipe *cmd)
 	sig_handler(SIGCHILD);
 	check(pipe(fd), "pipe error", 127);
 	fork_exec_pipe(shell, cmd->left, fd, STDOUT_FILENO);
-	if (g_exit != 130 && g_exit != 131)
+//	if (g_exit != 130 && g_exit != 131)
 		fork_exec_pipe(shell, cmd->right, fd, STDIN_FILENO);
-	sig_handler(SIGRESTORE);
 }
 
 static void	run_and(t_shell *shell, t_lrn *cmd)

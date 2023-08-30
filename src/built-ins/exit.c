@@ -6,7 +6,7 @@
 /*   By: achien-k <achien-k@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 12:21:23 by achien-k          #+#    #+#             */
-/*   Updated: 2023/08/30 10:51:46 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/08/30 11:55:50 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,12 +62,7 @@ void	ms_exit(t_shell *shell, t_exec *cmd)
 			free(err);
 		}
 		else
-		{
-			if (cmd->argv[1][0] == '-')
-				g_exit = -(ft_atoi(cmd->argv[1]) % 256);
-			else
-				g_exit = ft_atoi(cmd->argv[1]) % 256;
-		}
+			g_exit = ft_atoi(cmd->argv[1]) % 256;
 	}
 	shell->status = STOP;
 }

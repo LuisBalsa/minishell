@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 11:30:53 by achien-k          #+#    #+#             */
-/*   Updated: 2023/08/29 11:49:52 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/08/30 09:59:06 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,7 @@ void	ms_pwd(t_shell *shell, t_exec *cmd)
 	path = getcwd(NULL, 0);
 	if (!path)
 		print_error(shell, cmd->argv[0], "couldn't get current directory", 2);
-	ft_putstr_fd(path, STDOUT_FILENO);
-	ft_putchar_fd('\n', STDOUT_FILENO);
+	ft_putendl_fd(path, STDOUT_FILENO);
 	free(path);
 }
 /*

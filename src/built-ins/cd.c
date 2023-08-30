@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 12:05:42 by achien-k          #+#    #+#             */
-/*   Updated: 2023/08/29 16:21:16 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/30 09:58:06 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ void	hyphen_cd_print(t_shell *shell, char *pwd)
 	else
 	{
 		str = ft_strjoin(get_env("HOME", shell), &pwd[1]);
-		ft_putstr_fd(str, STDOUT_FILENO);
+		ft_putendl_fd(str, STDOUT_FILENO);
 		free(str);
 	}
 }

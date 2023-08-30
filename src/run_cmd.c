@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 17:32:04 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/30 18:12:32 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/30 19:18:24 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ static void	run_pipe(t_shell *shell, t_pipe *cmd)
 
 static void	run_and(t_shell *shell, t_lrn *cmd)
 {
+	sig_handler(SIGCHILD);
 	run_cmd(shell, cmd->left);
 	wait_children(shell);
 	if (!g_exit)
@@ -56,6 +57,7 @@ static void	run_and(t_shell *shell, t_lrn *cmd)
 
 static void	run_or(t_shell *shell, t_lrn *cmd)
 {
+	sig_handler(SIGCHILD);
 	run_cmd(shell, cmd->left);
 	wait_children(shell);
 	if (g_exit)

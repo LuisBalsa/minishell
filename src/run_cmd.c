@@ -6,35 +6,16 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 17:32:04 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/31 04:38:36 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/31 15:06:34 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include	"../include/minishell.h"
 
-static void	fork_exec_pipe(t_shell *shell, t_cmd *cmd, int *fd, int std)
+static void	close_fds(int fd[2])
 {
-	if (cmd->type == EXEC || cmd->type == REDIR || cmd->type == HERE_DOC)
-	{
-		shell->pid = fork();
-		check(shell->pid, "fork error", 127);
-		if (shell->pid == 0)
-		{
-			check(dup2(fd[std], std), "dup2 error", 127);
-			check(close(fd[std]), "close error", 127);
-			run_cmd(shell, cmd);
-			free_exit(shell);
-		}
-		if (cmd->type == HERE_DOC)
-			wait_children(shell);
-		check(close(fd[std]), "close error", 127);
-	}
-	else
-	{
-		check(dup2(fd[std], std), "dup2 error", 127);
-		check(close(fd[std]), "close error", 127);
-		run_cmd(shell, cmd);
-	}
+	check(close(fd[0]), "close error", 127);
+	check(close(fd[1]), "close error", 127);
 }
 
 static void	run_pipe(t_shell *shell, t_pipe *cmd)
@@ -44,8 +25,24 @@ static void	run_pipe(t_shell *shell, t_pipe *cmd)
 	sig_handler(SIGIGNORE);
 	sig_handler(SIGPIPE);
 	check(pipe(fd), "pipe error", 127);
-	fork_exec_pipe(shell, cmd->left, fd, STDOUT_FILENO);
-	fork_exec_pipe(shell, cmd->right, fd, STDIN_FILENO);
+	shell->pid = check_fork();
+	if (shell->pid == 0)
+	{
+		check(dup2(fd[1], STDOUT_FILENO), "dup2 error", 127);
+		close_fds(fd);
+		run_cmd(shell, cmd->left);
+		free_exit(shell);
+	}
+	shell->pid = check_fork();
+	if (shell->pid == 0)
+	{
+		check(dup2(fd[0], STDIN_FILENO), "dup2 error", 127);
+		close_fds(fd);
+		run_cmd(shell, cmd->right);
+		free_exit(shell);
+	}
+	close_fds(fd);
+	wait_children(shell);
 }
 
 static void	run_and(t_shell *shell, t_lrn *cmd)

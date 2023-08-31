@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 17:32:04 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/31 01:39:52 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/31 01:47:13 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ static void	run_or(t_shell *shell, t_lrn *cmd)
 	sig_handler(SIGCHILD);
 	run_cmd(shell, cmd->left);
 	wait_children(shell);
-	if (g_exit && WIFEXITED(g_exit))
+	if (g_exit && g_exit != 130)
 		run_cmd(shell, cmd->right);
 	wait_children(shell);
 	run_cmd(shell, cmd->next);

@@ -6,13 +6,13 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 10:48:06 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/19 19:35:02 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/31 10:42:40 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-static void	trim_spaces(char *line)
+void	trim_line(t_shell *shell)
 {
 	char	*tmp;
 	int		squote;
@@ -20,7 +20,7 @@ static void	trim_spaces(char *line)
 
 	dquote = 0;
 	squote = 0;
-	tmp = line;
+	tmp = shell->line;
 	while (*tmp)
 	{
 		if (*tmp == '"' && !squote)
@@ -31,9 +31,4 @@ static void	trim_spaces(char *line)
 			*tmp = '\0';
 		tmp++;
 	}
-}
-
-void	trim_line(t_shell *shell)
-{
-	trim_spaces(shell->line);
 }

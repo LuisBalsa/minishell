@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 17:04:28 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/30 11:32:46 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/31 04:33:50 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,13 @@ static void	sigrestore(int sig)
 	rl_forced_update_display();
 }
 
+static void	sigpipe_handler(int sig)
+{
+	(void)sig;
+	ft_putendl_fd("pipe error", 2);
+	exit(0);
+}
+
 void	sig_handler(int sig)
 {
 	if (sig == SIGRESTORE)
@@ -62,4 +69,6 @@ void	sig_handler(int sig)
 		signal(SIGINT, SIG_IGN);
 		signal(SIGQUIT, SIG_IGN);
 	}
+	if (sig == SIGPIPE)
+		signal(SIGPIPE, sigpipe_handler);
 }

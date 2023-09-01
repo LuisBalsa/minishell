@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:12:03 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/01 13:37:17 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/01 13:52:35 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,11 @@ void	wait_children(t_shell *shell)
 	}
 	while (wait(0) != -1)
 		;
-	sig_handler(SIGRESTORE);
 }
 
 static int	run_command_line(t_shell *shell)
 {
+	sig_handler(SIGRESTORE);
 	shell->status = STOP;
 	shell->prompt = get_prompt();
 	shell->line = readline(shell->prompt);
@@ -74,7 +74,6 @@ static void	init_shell(t_shell *shell, char **envp)
 	shell->envp_size = 0;
 	envp_to_list(envp, shell);
 	update_envp(shell);
-	sig_handler(SIGRESTORE);
 }
 
 int	main(int argc, char **argv, char **envp)

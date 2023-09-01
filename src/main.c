@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:12:03 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/01 13:52:35 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/01 14:36:51 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ void	wait_children(t_shell *shell)
 	}
 	while (wait(0) != -1)
 		;
+	if (g_exit == 130)
+		shell->status = RESTORE;
 }
 
 static int	run_command_line(t_shell *shell)
@@ -58,6 +60,8 @@ static int	run_command_line(t_shell *shell)
 			sig_handler(SIGPIPE);
 			run_cmd(shell, shell->cmd);
 			wait_children(shell);
+			if (g_exit == 130)
+				ft_putstr_fd("\n", 1);
 		}
 		free_cmd(shell->cmd);
 	}

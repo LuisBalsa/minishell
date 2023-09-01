@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:12:03 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/30 17:47:06 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/01 13:37:17 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ static int	run_command_line(t_shell *shell)
 		trim_line(shell);
 		if (parser(shell) && shell->status == CONTINUE)
 		{
+			sig_handler(SIGPIPE);
 			run_cmd(shell, shell->cmd);
 			wait_children(shell);
 		}

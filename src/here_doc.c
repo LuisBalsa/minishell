@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 15:42:13 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/30 23:12:47 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/08/31 17:13:22 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,22 +74,17 @@ void	run_heredoc(t_shell *shell, t_here *here)
 	int		fd;
 	pid_t	pid;
 
+	sig_handler(SIGIGNORE);
 	pid = check_fork();
 	if (pid == 0)
 		heredoc_reader(shell, here, 0);
-	sig_handler(SIGIGNORE);
-	waitpid(pid, &g_exit, WUNTRACED);
+	wait(NULL);
 	sig_handler(SIGRESTORE);
 	fd = open("here_doc", O_RDONLY);
 	dup2(fd, STDIN_FILENO);
 	close(fd);
-	if (WIFEXITED(g_exit))
-	{
+	if (g_exit == 0)
 		run_cmd(shell, here->cmd);
-		g_exit = WEXITSTATUS(g_exit);
-	}
-	else if (WIFSIGNALED(g_exit))
-		g_exit = WTERMSIG(g_exit) + 128;
 	dup2(here->fdin, STDIN_FILENO);
 	unlink("here_doc");
 }

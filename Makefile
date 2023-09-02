@@ -62,7 +62,7 @@ clean:
 	$(MAKE) clean $(MK) -C $(LIBFT_PATH)
 
 	echo "[$(RED) Deleted $(RESET)] $(GREEN)$(OBJ_DIR)$(RESET)"
-	$(RM) $(OBJ_DIR)
+	$(RM) $(OBJ_DIR) output.log
 
 fclean: clean
 	$(MAKE) fclean $(MK) -C $(LIBFT_PATH)
@@ -79,7 +79,7 @@ run:
 r: re run
 
 leaks:
-	valgrind --leak-check=full --show-leak-kinds=all --log-file=output.log ./minishell
+	valgrind --suppressions=readline.supp --leak-check=full --show-leak-kinds=all --log-file=output.log ./minishell
 
 .SILENT:
 

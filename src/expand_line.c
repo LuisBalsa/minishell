@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 18:45:50 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/28 18:13:19 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/02 16:57:28 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static int	point_to_expand(int point, char *tmp, t_shell *sh)
 	}
 	else if (*tmp == '$' && tmp[1] == '?')
 		return (expand_free(ft_itoa(g_exit), point, point + 2, &sh->line));
-	else if (*tmp == '$' && (ft_isalpha(tmp[1]) || tmp[1] == '_'))
+	else if (*tmp == '$' && tmp[1])
 	{
 		len = 1;
 		while (ft_isalnum(tmp[len]) || tmp[len] == '_')

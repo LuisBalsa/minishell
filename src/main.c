@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:12:03 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/01 14:36:51 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/03 14:53:30 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,8 @@ static int	run_command_line(t_shell *shell)
 		trim_line(shell);
 		if (parser(shell) && shell->status == CONTINUE)
 		{
-			sig_handler(SIGPIPE);
+			sig_handler(SIGIGNORE);
 			run_cmd(shell, shell->cmd);
-			wait_children(shell);
 			if (g_exit == 130)
 				ft_putstr_fd("\n", 1);
 		}

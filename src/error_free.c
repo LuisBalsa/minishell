@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 19:15:18 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/19 22:41:35 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/03 15:14:17 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ void	free_exit(t_shell *shell)
 		free(shell->line);
 	free_cmd(shell->cmd);
 	envp_destroy(shell->env);
+	if (shell->envp)
+		ft_free_array(shell->envp);
 	exit(g_exit);
 }
 

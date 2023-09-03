@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 13:49:21 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/31 00:27:12 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/02 17:05:43 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,11 +114,11 @@ void	expand_wildcard(t_shell *shell)
 	while (shell->line[i])
 	{
 		j = 0;
-		while (shell->line[i] && ft_strchr(OP_AND_SP, shell->line[i]))
+		while (shell->line[i] && ft_strchr(OPANDSP, shell->line[i]))
 			i++;
 		if (!shell->line[i])
 			break ;
-		while (shell->line[i + j] && !ft_strchr(OP_AND_SP, shell->line[i + j]))
+		while (shell->line[i + j] && !ft_strchr(OPANDSP, shell->line[i + j]))
 			j++;
 		tmp = ft_substr(shell->line, i, j);
 		point_to_expand_wildcard(&i, j, tmp, shell);

@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/13 12:52:02 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/30 18:52:53 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/03 11:58:29 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,11 @@ static t_cmd	*parseredir(t_cmd *cmd, t_shell *shell)
 		type = gettoken(shell, NULL);
 		if (gettoken(shell, &token) != 'a')
 		{
-			print_error_syntax(shell, token, 2);
-			return (cmd);
+			if (type != '<' || (type == '<' && ft_strcmp(token, ">")))
+				return (print_error_syntax(shell, token, 2), cmd);
+			else
+				if (gettoken(shell, &token) != 'a')
+					return (print_error_syntax(shell, token, 2), cmd);
 		}
 		if (type == '<')
 			cmd = redir_cmd(cmd, token, O_RDONLY, 0);

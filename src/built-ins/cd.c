@@ -6,13 +6,12 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 12:05:42 by achien-k          #+#    #+#             */
-/*   Updated: 2023/08/30 09:58:06 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/09/04 17:33:59 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "../../include/minishell.h"
 
-bool	ms_chdir(t_shell *shell, char *path)
+static bool	ms_chdir(t_shell *shell, char *path)
 {
 	char	*tmp_pwd;
 
@@ -30,7 +29,7 @@ bool	ms_chdir(t_shell *shell, char *path)
 	return (true);
 }
 
-char	*path_slash(char *cdpath, char **path)
+static char	*path_slash(char *cdpath, char **path)
 {
 	char	*tmp;
 
@@ -56,11 +55,29 @@ char	*path_slash(char *cdpath, char **path)
 	}
 }
 
-bool	cdpath(t_shell *shell, char *path)
+static bool cdpath_try(t_shell *shell, char **cdpath, char *path, int index)
 {
-	char	**cdpath;
 	char	*tmp;
 	char	*tmp_path;
+	
+	tmp_path = path_slash(cdpath[index], &path);
+	tmp = ft_strjoin(cdpath[index], tmp_path);
+	free(tmp_path);
+	if (ms_chdir(shell, tmp))
+	{
+		tmp[ft_strlen(tmp) - 1] = '\0';
+		ft_putendl_fd(tmp, STDOUT_FILENO);
+		ft_free_array(cdpath);
+		free(tmp);
+		return (true);
+	}
+	free(tmp);
+	return (false);
+}
+
+static bool	cdpath(t_shell *shell, char *path)
+{
+	char	**cdpath;
 	int		i;
 
 	if (!get_env("CDPATH", shell) || path[0] == '/')
@@ -69,22 +86,14 @@ bool	cdpath(t_shell *shell, char *path)
 	i = 0;
 	while (cdpath[i])
 	{
-		tmp_path = path_slash(cdpath[i], &path);
-		tmp = ft_strjoin(cdpath[i++], tmp_path);
-		if (ms_chdir(shell, tmp))
-		{
-			ft_free_array(cdpath);
-			free(tmp);
+		if (cdpath_try(shell, cdpath, path, i++))
 			return (true);
-		}
-		free(tmp);
-		free(tmp_path);
 	}
 	ft_free_array(cdpath);
 	return (false);
 }
 
-void	hyphen_cd_print(t_shell *shell, char *pwd)
+static void	hyphen_cd_print(t_shell *shell, char *pwd)
 {
 	char	*str;
 

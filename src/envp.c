@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 12:23:47 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/29 11:19:17 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/09/04 18:36:01 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,6 +160,7 @@ bool	mod_env(t_shell *shell, char *target, char *new_value)
 		{
 			free(tmp->value);
 			tmp->value = ft_strdup(new_value);
+			update_envp(shell);
 			return (true);
 		}
 		tmp = tmp->next;

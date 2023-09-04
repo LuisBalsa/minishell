@@ -6,13 +6,13 @@
 /*   By: achien-k <achien-k@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 12:21:23 by achien-k          #+#    #+#             */
-/*   Updated: 2023/09/04 18:38:36 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/09/04 18:44:08 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-static bool	isnumber(char *str)
+static bool	ft_isnumber(char *str)
 {
 	int	i;
 

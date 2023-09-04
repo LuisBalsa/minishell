@@ -6,7 +6,7 @@
 /*   By: achien-k <achien-k@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 12:21:23 by achien-k          #+#    #+#             */
-/*   Updated: 2023/08/30 11:55:50 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/09/04 18:38:36 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	ms_exit(t_shell *shell, t_exec *cmd)
 	err = NULL;
 	if (cmd->argv[1])
 	{
-		if (!islonglong(cmd->argv[1]))
+		if (!islonglong(cmd->argv[1]) && ft_strcmp(cmd->argv[1], "-") != 0)
 		{
 			err = ft_strjoin(cmd->argv[1], ": numeric argument required");
 			print_error(shell, cmd->argv[0], err, 2);

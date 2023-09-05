@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:12:03 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/05 23:20:39 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/06 00:19:32 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ int	main(int argc, char **argv, char **envp)
 	envp_destroy(shell.env);
 	if (shell.envp)
 		ft_free_array(shell.envp);
-	ft_putendl_fd("exit", 1);
+	if (isatty(STDIN_FILENO))
+		ft_putendl_fd("exit", 2);
 	return (g_exit);
 }

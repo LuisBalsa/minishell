@@ -6,14 +6,16 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 17:32:04 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/01 14:35:09 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/05 19:06:29 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include	"../include/minishell.h"
 
-static void	close_fds(int fd[2])
+static void	close_fds_and_sig_handler(int fd[2], int sig)
 {
+	if (sig)
+		sig_handler(sig);
 	check(close(fd[0]), "close error", 127);
 	check(close(fd[1]), "close error", 127);
 }
@@ -27,7 +29,7 @@ static void	run_pipe(t_shell *shell, t_pipe *cmd)
 	if (shell->pid == 0)
 	{
 		check(dup2(fd[1], STDOUT_FILENO), "dup2 error", 127);
-		close_fds(fd);
+		close_fds_and_sig_handler(fd, SIGIGNORE);
 		run_cmd(shell, cmd->left);
 		free_exit(shell);
 	}
@@ -37,13 +39,12 @@ static void	run_pipe(t_shell *shell, t_pipe *cmd)
 		shell->pid = check_fork();
 	if (shell->pid == 0)
 	{
-		sig_handler(SIGIGNORE);
 		check(dup2(fd[0], STDIN_FILENO), "dup2 error", 127);
-		close_fds(fd);
+		close_fds_and_sig_handler(fd, SIGIGNORE);
 		run_cmd(shell, cmd->right);
 		free_exit(shell);
 	}
-	close_fds(fd);
+	close_fds_and_sig_handler(fd, 0);
 	wait_children(shell);
 }
 

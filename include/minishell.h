@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:04:57 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/02 17:04:55 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/05 19:52:57 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@
 # include <ncurses.h>
 # include <term.h>
 
-# define PROMPT_BEGIN "\033[97m┎─── \033[4m\033[1m\033[96m"
-# define PROMPT_END "\n\033[0m\033[97m┖─❯ \033[0m"
+# define PROMPT_BEGIN "┎─── "
+# define PROMPT_END "\n┖─❯ "
 
 # define STOP 0
 # define CONTINUE 1

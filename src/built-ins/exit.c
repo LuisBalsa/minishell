@@ -6,7 +6,7 @@
 /*   By: achien-k <achien-k@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 12:21:23 by achien-k          #+#    #+#             */
-/*   Updated: 2023/09/04 18:44:08 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/09/05 17:12:11 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static bool islonglong(char *str)
 	}
 	while (*str == '0')
 		str++;
-	if (!isnumber(str))
+	if (!ft_isnumber(str))
 		return (false);
 	len = ft_strlen(str);
 	if (len > 19)

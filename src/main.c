@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:12:03 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/05 19:11:35 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/05 21:33:01 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ static int	run_command_line(t_shell *shell)
 	shell->status = STOP;
 	shell->prompt = get_prompt();
 	shell->line = readline(shell->prompt);
-	rl_set_prompt(shell->prompt);
 	free(shell->prompt);
 	if (!shell->line)
 		g_exit = 0;

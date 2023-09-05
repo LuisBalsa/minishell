@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 17:04:28 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/05 19:10:54 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/05 21:31:38 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static void	sigrestore(int sig)
 	write(1, "\n", 1);
 	rl_on_new_line();
 	rl_replace_line("", 0);
-	rl_forced_update_display();
+	rl_redisplay();
 }
 
 static void	sig_here_doc(int sig)

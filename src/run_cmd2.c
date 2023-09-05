@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 11:29:10 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/31 16:12:57 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/05 23:59:15 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,14 @@ static char	*get_path(t_shell *shell, char *cmd)
 	return (ft_strdup(cmd));
 }
 
+static void	check_exit_status(void)
+{
+	if (g_exit == 11 || g_exit == 139)
+		ft_putendl_fd("Segmentation fault (core dumped)", STDERR_FILENO);
+	else if (g_exit == 8 || g_exit == 136)
+		ft_putendl_fd("Floating point exception (core dumped)", STDERR_FILENO);
+}
+
 void	run_exec(t_shell *shell, t_exec *cmd)
 {
 	pid_t	pid;
@@ -94,26 +102,9 @@ void	run_exec(t_shell *shell, t_exec *cmd)
 			g_exit = WEXITSTATUS(g_exit);
 		else if (WIFSIGNALED(g_exit))
 			g_exit = 128 + WTERMSIG(g_exit);
+		check_exit_status();
 		sig_handler(SIGRESTORE);
 	}
 	else
 		run_builtin(shell, cmd);
-}
-
-void	run_redir(t_shell *shell, t_redir *cmd)
-{
-	int		fd;
-	int		original_fd;
-
-	original_fd = dup(cmd->fd);
-	fd = open(cmd->file, cmd->mode, 0644);
-	if (fd == -1)
-		print_error(shell, cmd->file, strerror(errno), 1);
-	else
-	{
-		dup2(fd, cmd->fd);
-		close(fd);
-		run_cmd(shell, cmd->cmd);
-	}
-	check(dup2(original_fd, cmd->fd), "dup2 error", 1);
 }

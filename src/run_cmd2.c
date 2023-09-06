@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 11:29:10 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/05 23:59:15 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/06 18:35:35 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static char	*get_path(t_shell *shell, char *cmd)
 	i = 0;
 	path = NULL;
 	path2 = NULL;
-	if (ft_strchr(cmd, '/') || !get_env("PATH", shell))
+	if (ft_strchr(cmd, '/') || !get_env("PATH", shell) || !ft_strcmp(cmd, ""))
 		return (ft_strdup(cmd));
 	paths = ft_split(get_env("PATH", shell), ':');
 	while (paths[i])

@@ -6,9 +6,10 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 12:05:42 by achien-k          #+#    #+#             */
-/*   Updated: 2023/09/04 17:33:59 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/09/06 02:04:05 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "../../include/minishell.h"
 
 static bool	ms_chdir(t_shell *shell, char *path)
@@ -55,11 +56,11 @@ static char	*path_slash(char *cdpath, char **path)
 	}
 }
 
-static bool cdpath_try(t_shell *shell, char **cdpath, char *path, int index)
+static bool	cdpath_try(t_shell *shell, char **cdpath, char *path, int index)
 {
 	char	*tmp;
 	char	*tmp_path;
-	
+
 	tmp_path = path_slash(cdpath[index], &path);
 	tmp = ft_strjoin(cdpath[index], tmp_path);
 	free(tmp_path);
@@ -112,23 +113,24 @@ void	ms_cd(t_shell *shell, t_exec *cmd)
 	if (!cmd->argv[1])
 	{
 		if (!ms_chdir(shell, get_env("HOME", shell)))
-			print_error(shell, "cd", "HOME variable", 2);
+			print_error(shell, "cd", "HOME variable", 1);
 	}
 	else
 	{
 		if (cmd->argv[2])
-			print_error(shell, "cd", "too many arguments", 2);
+			print_error(shell, "cd", "too many arguments", 1);
 		else if (ft_strcmp(cmd->argv[1], "-") == 0)
 		{
 			if (!ms_chdir(shell, get_env("OLDPWD", shell)))
 			{
-				print_error(shell, "cd", "OLDPWD variable", 2);
+				print_error(shell, "cd", "OLDPWD variable", 1);
 				return ;
 			}
 			hyphen_cd_print(shell, get_env("PWD", shell));
 		}
 		else if (!ms_chdir(shell, cmd->argv[1]) && !cdpath(shell, cmd->argv[1]))
-			print_error(shell, "cd: no such file or directory", cmd->argv[1], 2);
+			print_error(shell, "cd: no such file or directory",
+				cmd->argv[1], 1);
 	}
 }
 /*

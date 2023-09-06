@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 18:45:50 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/06 02:17:01 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/06 02:51:48 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,17 +67,15 @@ static int	expand_tilde(t_shell *shell)
 	return (0);
 }
 
-static void	expand_env(t_shell *shell)
+static void	expand_env(t_shell *shell, char *tmp)
 {
 	int		dquote;
 	int		squote;
 	int		here;
-	char	*tmp;
 
 	dquote = 0;
 	squote = 0;
 	here = 0;
-	tmp = shell->line - 1;
 	while (*(++tmp))
 	{
 		if (*tmp == '"' && !squote)
@@ -90,7 +88,8 @@ static void	expand_env(t_shell *shell)
 			here = 2;
 		if (*tmp == ' ' && here == 2 && !dquote && !squote)
 			here = 0;
-		if (*tmp == '$' && !ft_strchr(NOT_EXP, *(tmp + 1)) && !squote && !here)
+		if (*tmp == '$' && !ft_strchr(NOT_EXP, *(tmp + 1)) && !squote && !here
+			&& (!dquote || *(tmp + 1) != '"'))
 			if (point_to_expand(tmp - shell->line, tmp, shell))
 				tmp = shell->line - 1;
 	}
@@ -128,7 +127,7 @@ int	expand_line(t_shell *shell)
 {
 	if (expand_tilde(shell))
 		return (0);
-	expand_env(shell);
+	expand_env(shell, shell->line - 1);
 	expand_wildcard(shell);
 	expand_space_operators(shell, shell->line - 1);
 	shell->line_len = ft_strlen(shell->line);

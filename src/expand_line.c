@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 18:45:50 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/02 17:05:09 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/06 02:17:01 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@ static int	point_to_expand(int point, char *tmp, t_shell *sh)
 
 	if (*tmp == '~')
 	{
-		if (!tmp[1] || ft_strchr(TILDE_EXP, tmp[1]))
+		if (!tmp[1] || ft_strchr(NOT_EXP, tmp[1]))
 			return (expand(get_env("HOME", sh), point, point + 1, &sh->line));
-		else if (tmp[1] == '+' && (!tmp[2] || ft_strchr(TILDE_EXP, tmp[2])))
+		else if (tmp[1] == '+' && (!tmp[2] || ft_strchr(NOT_EXP, tmp[2])))
 			return (expand(get_env("PWD", sh), point, point + 2, &sh->line));
-		else if (tmp[1] == '-' && (!tmp[2] || ft_strchr(TILDE_EXP, tmp[2])))
+		else if (tmp[1] == '-' && (!tmp[2] || ft_strchr(NOT_EXP, tmp[2])))
 			return (expand(get_env("OLDPWD", sh), point, point + 2, &sh->line));
 	}
 	else if (*tmp == '$' && tmp[1] == '?')
@@ -90,7 +90,7 @@ static void	expand_env(t_shell *shell)
 			here = 2;
 		if (*tmp == ' ' && here == 2 && !dquote && !squote)
 			here = 0;
-		if (*tmp == '$' && !ft_strchr(OPANDSP, *(tmp + 1)) && !squote && !here)
+		if (*tmp == '$' && !ft_strchr(NOT_EXP, *(tmp + 1)) && !squote && !here)
 			if (point_to_expand(tmp - shell->line, tmp, shell))
 				tmp = shell->line - 1;
 	}

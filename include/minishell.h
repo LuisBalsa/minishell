@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:04:57 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/05 19:52:57 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/06 02:16:51 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@
 
 # define SPACES " \t\n\v\f\r"
 # define OPERATORS "|><&()"
-# define TILDE_EXP "|><&();/ \t\n\v\f\r"
+# define NOT_EXP "|><&();/ \t\n\v\f\r"
 # define OPANDSP "|><&(); \t\n\v\f\r"
 
 # define ERROR_TITLE "minishell: "

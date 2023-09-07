@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 11:29:10 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/07 13:13:12 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/09/07 15:11:01 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void	run_exec(t_shell *shell, t_exec *cmd)
 	char	*path;
 
 	if (!cmd->argv[0])
-		return ;
+		return (g_exit = 0, (void)0);
 	if (!is_builtin(cmd->argv[0]))
 	{
 		sig_handler(SIGCHILD);

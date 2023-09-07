@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/13 12:52:02 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/07 13:13:42 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/09/07 16:42:02 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ static t_cmd	*parseexec(t_shell *shell)
 		type = gettoken(shell, &token);
 		if (!type)
 			break ;
-		if (type != 'a')
+		if (type != 'a' && shell->status == CONTINUE)
 			return (print_error_syntax(shell, token, 2), ret);
 		cmd->argv[argc++] = token;
 		if (argc >= MAXARGS)
@@ -95,7 +95,7 @@ static t_cmd	*parsepipeline(t_shell *shell)
 {
 	t_cmd	*cmd;
 
-	if (peek(shell, "|&", 1))
+	if (peek(shell, "|&", 1) && shell->status == CONTINUE)
 		return (print_error_syntax(shell, shell->ps, 2), NULL);
 	cmd = parseexec(shell);
 	if (cmd && peek(shell, "|", 1))

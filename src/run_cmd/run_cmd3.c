@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 16:42:00 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/07 13:13:02 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/09/07 23:14:00 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	run_block(t_shell *shell, t_block *cmd)
 		print_error(shell, "fork error", NULL, 127);
 	if (pid == 0)
 	{
-		run_cmd(shell, cmd->block);
+		run_cmd(shell, cmd->cmd);
 		wait_children(shell);
 		exit(g_exit);
 	}

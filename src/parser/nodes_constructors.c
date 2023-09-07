@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 14:53:28 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/07 13:13:56 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/09/07 23:37:32 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,12 @@ t_cmd	*redir_cmd(t_cmd *cmd, char *file, int mode, int fd)
 	redir->file = file;
 	redir->mode = mode;
 	redir->fd = fd;
-	if (cmd->type == EXEC)
+	if (cmd->type == EXEC || cmd->type == BLOCK)
 		redir->cmd = cmd;
 	else
 	{
 		tmp = cmd;
-		while (tmp->type != EXEC)
+		while (tmp->type != EXEC && tmp->type != BLOCK)
 		{
 			tmp2 = tmp;
 			tmp = ((t_redir *)tmp)->cmd;

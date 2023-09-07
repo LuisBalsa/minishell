@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:04:57 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/07 13:06:04 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/09/07 23:12:57 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ typedef struct s_pipe
 typedef struct s_block
 {
 	int		type;
-	t_cmd	*block;
+	t_cmd	*cmd;
 }			t_block;
 
 typedef struct s_shell

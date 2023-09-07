@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 16:33:34 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/07 13:13:48 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/09/07 23:37:00 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,6 @@ t_cmd	*block_cmd(t_cmd *cmd)
 		return (NULL);
 	new = (t_block *)ft_calloc(1, sizeof(t_block));
 	new->type = BLOCK;
-	new->block = cmd;
+	new->cmd = cmd;
 	return ((t_cmd *)new);
 }

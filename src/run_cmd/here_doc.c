@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 15:42:13 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/07 13:13:28 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/09/07 23:43:22 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,12 +103,12 @@ t_cmd	*here_cmd(t_cmd *cmd, char *eof)
 	here->mode = O_WRONLY | O_CREAT | O_TRUNC;
 	here->fdin = dup(STDIN_FILENO);
 	here->fdout = dup(STDOUT_FILENO);
-	if (cmd->type == EXEC || cmd->type == REDIR)
+	if (cmd->type == EXEC || cmd->type == REDIR || cmd->type == BLOCK)
 		here->cmd = cmd;
 	else
 	{
 		tmp = cmd;
-		while (tmp->type != EXEC && tmp->type != REDIR)
+		while (tmp->type != EXEC && tmp->type != REDIR && tmp->type != BLOCK)
 		{
 			tmp2 = tmp;
 			tmp = ((t_redir *)tmp)->cmd;

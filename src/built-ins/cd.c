@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 12:05:42 by achien-k          #+#    #+#             */
-/*   Updated: 2023/09/06 02:04:05 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/07 12:28:29 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ void	ms_cd(t_shell *shell, t_exec *cmd)
 	if (!cmd->argv[1])
 	{
 		if (!ms_chdir(shell, get_env("HOME", shell)))
-			print_error(shell, "cd", "HOME variable", 1);
+			print_error(shell, "cd", "HOME not set", 1);
 	}
 	else
 	{
@@ -123,12 +123,13 @@ void	ms_cd(t_shell *shell, t_exec *cmd)
 		{
 			if (!ms_chdir(shell, get_env("OLDPWD", shell)))
 			{
-				print_error(shell, "cd", "OLDPWD variable", 1);
+				print_error(shell, "cd", "OLDPWD not set", 1);
 				return ;
 			}
 			hyphen_cd_print(shell, get_env("PWD", shell));
 		}
-		else if (!ms_chdir(shell, cmd->argv[1]) && !cdpath(shell, cmd->argv[1]))
+		else if (cmd->argv[1][0]
+			&& !ms_chdir(shell, cmd->argv[1]) && !cdpath(shell, cmd->argv[1]))
 			print_error(shell, "cd: no such file or directory",
 				cmd->argv[1], 1);
 	}

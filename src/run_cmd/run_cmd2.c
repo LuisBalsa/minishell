@@ -6,11 +6,11 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 11:29:10 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/06 18:35:35 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/07 13:13:12 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "../../include/minishell.h"
 
 static int	is_builtin(char *argv)
 {
@@ -53,9 +53,9 @@ static char	*get_path(t_shell *shell, char *cmd)
 	i = 0;
 	path = NULL;
 	path2 = NULL;
-	if (ft_strchr(cmd, '/') || !get_env("PATH", shell) || !ft_strcmp(cmd, ""))
+	if (ft_strchr(cmd, '/') || !env_get("PATH", shell) || !ft_strcmp(cmd, ""))
 		return (ft_strdup(cmd));
-	paths = ft_split(get_env("PATH", shell), ':');
+	paths = ft_split(env_get("PATH", shell), ':');
 	while (paths[i])
 	{
 		path = ft_strjoin(paths[i], "/");

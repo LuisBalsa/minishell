@@ -6,11 +6,11 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/12 04:13:24 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/17 00:21:13 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/07 13:14:23 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "../../include/minishell.h"
 
 int	expand(char *key, int i, int j, char **line)
 {

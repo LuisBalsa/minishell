@@ -6,11 +6,11 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 11:07:22 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/07 12:40:29 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/07 13:14:18 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "../../include/minishell.h"
 
 static int	only_spaces(char *line)
 {
@@ -26,7 +26,7 @@ static int	only_spaces(char *line)
 	return (1);
 }
 
-void	trim_spaces(char **line)
+static void	trim_spaces(char **line)
 {
 	char	*tmp;
 

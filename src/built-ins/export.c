@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 09:57:30 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/06 01:50:46 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/07 13:05:27 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,45 +81,12 @@ void	ms_export(t_shell *shell, t_exec *cmd)
 			{
 				split = ft_split(cmd->argv[i], '=');
 				value = ft_strdup(ft_strchr(cmd->argv[i], '=') + 1);
-				export_env(shell, split[0], value, 1);
+				env_export(shell, split[0], value, 1);
 				ft_free_array(split);
 				free(value);
 			}
 			else
-				export_env(shell, cmd->argv[i], "", 0);
+				env_export(shell, cmd->argv[i], "", 0);
 		}
 	}
 }
-/*
- static void	init_shell(t_shell *shell, char **envp)
-{
-	[>g_exit = 0;<]
-	shell->cmd = NULL;
-	shell->line = NULL;
-	shell->envp_size = 0;
-	envp_to_list(envp, shell);
-}
-
-[>cc -o export export.c ../envp.c ../libft_obj/libft.a -g<]
-int	main(int argc, char **argv, char **envp)
-{
-	t_shell shell;
-	t_exec	cmd;
-	int		i = 0;
-	int		j = 1;
-
-	(void)argc;
-	init_shell(&shell, envp);
-	cmd.argv[i] = "export";
-	while (argv[j])
-		cmd.argv[++i] = argv[j++];
-	cmd.argv[i + 1] = NULL;
-	printf("ENV:\n");
-	print_envp(&shell);
-	printf("\n---------------------\nrunning export...\n");
-	ms_export(&shell, &cmd);
-	printf("\n---------------------\nNEW ENV:\n");
-	print_envp(&shell);
-	envp_destroy(shell.env);
-	return (0);
-} */

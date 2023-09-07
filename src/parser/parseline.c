@@ -6,11 +6,11 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/13 12:52:02 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/07 12:40:53 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/07 13:13:42 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "../../include/minishell.h"
 
 static t_cmd	*parseredir(t_cmd *cmd, t_shell *shell)
 {

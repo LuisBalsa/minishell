@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:04:57 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/06 02:16:51 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/07 13:06:04 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,16 +141,17 @@ typedef struct s_shell
 	char	**envp;
 }			t_shell;
 
-t_env	*add_env(t_shell *shell, char *key, char *value, int visible);
-bool	mod_env(t_shell *shell, char *target, char *new_value);
-void	export_env(t_shell *shell, char *key, char *value, int visible);
-bool	rm_env(char *key, t_shell *shell);
+char	*env_get(char *key, t_shell *shell);
+t_env	*env_add(t_shell *shell, char *key, char *value, int visible);
+bool	env_mod(t_shell *shell, char *target, char *new_value);
+void	env_export(t_shell *shell, char *key, char *value, int visible);
+bool	env_rm(char *key, t_shell *shell);
+
 void	envp_to_list(char **envp, t_shell *shell);
 void	envp_destroy(t_env *env);
-char	*get_env(char *key, t_shell *shell);
-void	print_envp(t_shell *shell);
-void	update_envp(t_shell *shell);
-void	wait_children(t_shell *shell);
+void	envp_sort(t_shell *shell);
+void	envp_print(t_shell *shell);
+void	envp_update(t_shell *shell);
 
 void	sig_handler(int sig);
 void	pipe_continuation_signal(int sig);
@@ -176,25 +177,27 @@ t_cmd	*parseline(t_shell *shell);
 void	free_cmd(t_cmd *cmd);
 void	free_block(t_block *block);
 
+void	wait_children(t_shell *shell);
+t_cmd	*exec_cmd(void);
 t_cmd	*or_cmd(t_cmd *left, t_cmd *right, t_cmd *next);
 t_cmd	*and_cmd(t_cmd *left, t_cmd *right, t_cmd *next);
 t_cmd	*pipe_cmd(t_cmd *left, t_cmd *right);
 t_cmd	*redir_cmd(t_cmd *cmd, char *file, int mode, int fd);
 t_cmd	*here_cmd(t_cmd *cmd, char *eof);
-t_cmd	*exec_cmd(void);
 t_cmd	*block_cmd(t_cmd *cmd);
 
+void	run_builtin(t_shell *shell, t_exec *cmd);
 void	run_cmd(t_shell *shell, t_cmd *cmd);
 void	run_exec(t_shell *shell, t_exec *cmd);
 void	run_redir(t_shell *shell, t_redir *cmd);
 void	run_heredoc(t_shell *shell, t_here *here);
 void	run_block(t_shell *shell, t_block *cmd);
 
-void	run_builtin(t_shell *shell, t_exec *cmd);
 void	ms_echo(t_exec *cmd);
 void	ms_pwd(t_shell *shell, t_exec *cmd);
 void	ms_export(t_shell *shell, t_exec *cmd);
 void	ms_cd(t_shell *shell, t_exec *cmd);
+bool	ms_chdir(t_shell *shell, char *path);
 void	ms_unset(t_shell *shell, t_exec *cmd);
 void	ms_env(t_shell *shell, t_exec *cmd);
 void	ms_exit(t_shell *shell, t_exec *cmd);

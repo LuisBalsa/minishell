@@ -6,7 +6,7 @@
 /*   By: achien-k <achien-k@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 12:21:23 by achien-k          #+#    #+#             */
-/*   Updated: 2023/09/07 11:51:17 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/09/07 12:49:57 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,10 @@ static bool	ft_isnumber(char *str)
 	return (true);
 }
 
-static bool islonglong(char *str)
+static bool	islonglong(char *str)
 {
 	int	is_negative;
-	int len;
+	int	len;
 
 	if (*str == '-')
 	{

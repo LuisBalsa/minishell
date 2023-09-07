@@ -6,13 +6,25 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 12:23:47 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/04 18:36:01 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/09/07 13:20:41 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "../../include/minishell.h"
 
-void	update_envp(t_shell *shell)
+static void	zero_index(t_shell *shell)
+{
+	t_env	*tmp;
+
+	tmp = shell->env;
+	while (tmp)
+	{
+		tmp->index = 0;
+		tmp = tmp->next;
+	}
+}
+
+void	envp_update(t_shell *shell)
 {
 	t_env	*tmp;
 	char	*env;
@@ -40,7 +52,7 @@ void	update_envp(t_shell *shell)
 	}
 }
 
-void	print_envp(t_shell *shell)
+void	envp_print(t_shell *shell)
 {
 	t_env	*tmp;
 
@@ -53,19 +65,7 @@ void	print_envp(t_shell *shell)
 	}
 }
 
-static void	zero_index(t_shell *shell)
-{
-	t_env	*tmp;
-
-	tmp = shell->env;
-	while (tmp)
-	{
-		tmp->index = 0;
-		tmp = tmp->next;
-	}
-}
-
-void	sort_envp(t_shell *shell)
+void	envp_sort(t_shell *shell)
 {
 	t_env	*tmp;
 	t_env	*max;
@@ -107,104 +107,6 @@ void	envp_destroy(t_env *env)
 	}
 }
 
-char	*get_env(char *key, t_shell *shell)
-{
-	t_env	*tmp;
-
-	tmp = shell->env;
-	while (tmp)
-	{
-		if (!ft_strcmp(tmp->key, key))
-			return (tmp->value);
-		tmp = tmp->next;
-	}
-	return (NULL);
-}
-
-t_env	*add_env(t_shell *shell, char *key, char *value, int visible)
-{
-	t_env	*new;
-	t_env	*tmp;
-
-	new = malloc(sizeof(t_env));
-	if (!new)
-		return (NULL);
-	shell->envp_size++;
-	new->key = ft_strdup(key);
-	if (value)
-		new->value = ft_strdup(value);
-	else
-		new->value = NULL;
-	new->index = 0;
-	new->visible = visible;
-	new->next = NULL;
-	if (!shell->env)
-		return (new);
-	tmp = shell->env;
-	while (tmp->next)
-		tmp = tmp->next;
-	tmp->next = new;
-	sort_envp(shell);
-	update_envp(shell);
-	return (shell->env);
-}
-
-bool	mod_env(t_shell *shell, char *target, char *new_value)
-{
-	t_env	*tmp;
-	
-	tmp = shell->env;
-	while (tmp)
-	{
-		if (ft_strcmp(target, tmp->key) == 0)
-		{
-			free(tmp->value);
-			tmp->value = ft_strdup(new_value);
-			update_envp(shell);
-			return (true);
-		}
-		tmp = tmp->next;
-	}
-	return (false);
-}
-
-void	export_env(t_shell *shell, char *key, char *value, int visible)
-{
-	if (get_env(key, shell))
-		mod_env(shell, key, value);
-	else
-		add_env(shell, key, value, visible);
-}
-
-bool	rm_env(char *key, t_shell *shell)
-{
-	t_env	*tmp;
-	t_env	*tmp_last;
-
-	tmp = shell->env;
-	tmp_last = tmp;
-	while (tmp)
-	{
-		if (!ft_strcmp(tmp->key, key))
-		{
-			tmp_last->next = tmp->next;
-			if (tmp == shell->env)
-				shell->env = tmp->next;
-			free(tmp->key);
-			if (tmp->value)
-				free(tmp->value);
-			free(tmp);
-			shell->envp_size--;
-			sort_envp(shell);
-			update_envp(shell);
-			return (true);
-		}
-		tmp_last = tmp;
-		tmp = tmp->next;
-	}
-	return (false);
-}
-
 void	envp_to_list(char **envp, t_shell *shell)
 {
 	int		i;
@@ -221,11 +123,11 @@ void	envp_to_list(char **envp, t_shell *shell)
 		else
 			value = NULL;
 		if (split && split[0])
-			shell->env = add_env(shell, split[0], value, 1);
+			shell->env = env_add(shell, split[0], value, 1);
 		ft_free_array(split);
 		if (value)
 			free (value);
 		i++;
 	}
-	sort_envp(shell);
+	envp_sort(shell);
 }

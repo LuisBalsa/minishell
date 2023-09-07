@@ -6,11 +6,11 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 13:49:21 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/02 17:05:43 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/07 13:14:28 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "../../include/minishell.h"
 
 static bool	match_wildcard(char *pattern, char *text, int squote, int dquote)
 {

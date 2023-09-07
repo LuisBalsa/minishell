@@ -6,11 +6,11 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 14:53:28 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/30 18:44:22 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/07 13:13:56 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "../../include/minishell.h"
 
 t_cmd	*redir_cmd(t_cmd *cmd, char *file, int mode, int fd)
 {

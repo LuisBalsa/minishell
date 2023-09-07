@@ -6,11 +6,11 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 16:42:00 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/05 23:54:00 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/07 13:13:02 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "../../include/minishell.h"
 
 void	run_block(t_shell *shell, t_block *cmd)
 {

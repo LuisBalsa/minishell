@@ -6,11 +6,11 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 12:10:13 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/20 23:41:59 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/07 13:13:37 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "../../include/minishell.h"
 
 static void	trim_quotes_and_advance(char **ps, t_shell *shell)
 {

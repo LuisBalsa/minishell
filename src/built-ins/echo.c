@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 12:05:22 by achien-k          #+#    #+#             */
-/*   Updated: 2023/08/29 12:22:15 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/09/07 12:49:16 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,19 +61,3 @@ void	ms_echo(t_exec *cmd)
 	if (!flag)
 		ft_putchar_fd('\n', STDOUT_FILENO);
 }
-/*
-//cc -o echo echo.c ../Libft_obj/libft.a -g
-int	main(int argc, char **argv)
-{
-	t_exec	cmd;
-	int		i = 0;
-	int		j = 1;
-
-	(void)argc;
-	cmd.argv[i] = "echo";
-	while (argv[j])
-		cmd.argv[++i] = argv[j++];
-	cmd.argv[i + 1] = 0;
-	ms_echo(cmd);
-	return (0);
-}*/

@@ -1,25 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   nodes_constructors2.c                              :+:      :+:    :+:   */
+/*   trim_line.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/29 16:33:34 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/07 12:39:24 by luide-so         ###   ########.fr       */
+/*   Created: 2023/08/11 10:48:06 by luide-so          #+#    #+#             */
+/*   Updated: 2023/09/07 13:14:13 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "../../include/minishell.h"
 
-t_cmd	*block_cmd(t_cmd *cmd)
+void	trim_line(t_shell *shell)
 {
-	t_block	*new;
+	char	*tmp;
+	int		squote;
+	int		dquote;
 
-	if (!cmd)
-		return (NULL);
-	new = (t_block *)ft_calloc(1, sizeof(t_block));
-	new->type = BLOCK;
-	new->block = cmd;
-	return ((t_cmd *)new);
+	dquote = 0;
+	squote = 0;
+	tmp = shell->line;
+	while (*tmp)
+	{
+		if (*tmp == '"' && !squote)
+			dquote = !dquote;
+		if (*tmp == '\'' && !dquote)
+			squote = !squote;
+		if (ft_strchr(SPACES, *tmp) && !squote && !dquote)
+			*tmp = '\0';
+		tmp++;
+	}
 }

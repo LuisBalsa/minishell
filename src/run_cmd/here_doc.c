@@ -6,11 +6,11 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 15:42:13 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/07 12:39:59 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/07 13:13:28 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "../../include/minishell.h"
 
 static void	expand_heredoc(t_shell *shell, char **line)
 {
@@ -33,7 +33,7 @@ static void	expand_heredoc(t_shell *shell, char **line)
 			while (ft_isalnum((*line)[j]) || (*line)[j] == '_')
 				j++;
 			tmp = ft_substr(*line, i + 1, j - i - 1);
-			expand(get_env(tmp, shell), i, j, line);
+			expand(env_get(tmp, shell), i, j, line);
 			free(tmp);
 		}
 		i++;

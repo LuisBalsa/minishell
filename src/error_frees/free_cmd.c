@@ -6,11 +6,11 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 23:32:58 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/29 16:51:39 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/07 13:14:44 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "../../include/minishell.h"
 
 static void	free_redir(t_redir *redir)
 {

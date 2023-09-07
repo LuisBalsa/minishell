@@ -6,11 +6,11 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 18:45:50 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/06 03:02:00 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/07 13:17:02 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "../../include/minishell.h"
 
 static int	point_to_expand(int point, char *tmp, t_shell *sh)
 {
@@ -20,11 +20,11 @@ static int	point_to_expand(int point, char *tmp, t_shell *sh)
 	if (*tmp == '~')
 	{
 		if (!tmp[1] || ft_strchr(NOT_EXP, tmp[1]))
-			return (expand(get_env("HOME", sh), point, point + 1, &sh->line));
+			return (expand(env_get("HOME", sh), point, point + 1, &sh->line));
 		else if (tmp[1] == '+' && (!tmp[2] || ft_strchr(NOT_EXP, tmp[2])))
-			return (expand(get_env("PWD", sh), point, point + 2, &sh->line));
+			return (expand(env_get("PWD", sh), point, point + 2, &sh->line));
 		else if (tmp[1] == '-' && (!tmp[2] || ft_strchr(NOT_EXP, tmp[2])))
-			return (expand(get_env("OLDPWD", sh), point, point + 2, &sh->line));
+			return (expand(env_get("OLDPWD", sh), point, point + 2, &sh->line));
 	}
 	else if (*tmp == '$' && tmp[1] == '?')
 		return (expand_free(ft_itoa(g_exit), point, point + 2, &sh->line));
@@ -34,7 +34,7 @@ static int	point_to_expand(int point, char *tmp, t_shell *sh)
 		while (ft_isalnum(tmp[len]) || tmp[len] == '_')
 			len++;
 		key = ft_substr(tmp, 1, len - 1);
-		expand(get_env(key, sh), point, point + len, &sh->line);
+		expand(env_get(key, sh), point, point + len, &sh->line);
 		return (free(key), 1);
 	}
 	return (0);
@@ -67,7 +67,7 @@ static int	expand_tilde(t_shell *shell)
 	return (0);
 }
 
-static void	expand_env(t_shell *shell, char *tmp)
+static void	env_expand(t_shell *shell, char *tmp)
 {
 	int		dquote;
 	int		squote;
@@ -128,7 +128,7 @@ int	expand_line(t_shell *shell)
 {
 	if (expand_tilde(shell))
 		return (0);
-	expand_env(shell, shell->line - 1);
+	env_expand(shell, shell->line - 1);
 	expand_wildcard(shell);
 	expand_space_operators(shell, shell->line - 1);
 	shell->line_len = ft_strlen(shell->line);

@@ -6,11 +6,11 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 17:32:04 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/05 19:06:29 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/07 13:13:21 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include	"../include/minishell.h"
+#include "../../include/minishell.h"
 
 static void	close_fds_and_sig_handler(int fd[2], int sig)
 {

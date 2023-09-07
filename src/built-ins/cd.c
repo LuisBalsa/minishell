@@ -6,29 +6,11 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 12:05:42 by achien-k          #+#    #+#             */
-/*   Updated: 2023/09/07 12:28:29 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/07 13:02:30 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-
-static bool	ms_chdir(t_shell *shell, char *path)
-{
-	char	*tmp_pwd;
-
-	tmp_pwd = getcwd(NULL, 0);
-	if (chdir(path) != 0)
-	{
-		free(tmp_pwd);
-		return (false);
-	}
-	export_env(shell, "OLDPWD", tmp_pwd, 1);
-	free(tmp_pwd);
-	tmp_pwd = getcwd(NULL, 0);
-	export_env(shell, "PWD", tmp_pwd, 1);
-	free(tmp_pwd);
-	return (true);
-}
 
 static char	*path_slash(char *cdpath, char **path)
 {
@@ -81,9 +63,9 @@ static bool	cdpath(t_shell *shell, char *path)
 	char	**cdpath;
 	int		i;
 
-	if (!get_env("CDPATH", shell) || path[0] == '/')
+	if (!env_get("CDPATH", shell) || path[0] == '/')
 		return (false);
-	cdpath = ft_split(get_env("CDPATH", shell), ':');
+	cdpath = ft_split(env_get("CDPATH", shell), ':');
 	i = 0;
 	while (cdpath[i])
 	{
@@ -102,7 +84,7 @@ static void	hyphen_cd_print(t_shell *shell, char *pwd)
 		ft_putendl_fd(pwd, STDOUT_FILENO);
 	else
 	{
-		str = ft_strjoin(get_env("HOME", shell), &pwd[1]);
+		str = ft_strjoin(env_get("HOME", shell), &pwd[1]);
 		ft_putendl_fd(str, STDOUT_FILENO);
 		free(str);
 	}
@@ -112,7 +94,7 @@ void	ms_cd(t_shell *shell, t_exec *cmd)
 {
 	if (!cmd->argv[1])
 	{
-		if (!ms_chdir(shell, get_env("HOME", shell)))
+		if (!ms_chdir(shell, env_get("HOME", shell)))
 			print_error(shell, "cd", "HOME not set", 1);
 	}
 	else
@@ -121,12 +103,12 @@ void	ms_cd(t_shell *shell, t_exec *cmd)
 			print_error(shell, "cd", "too many arguments", 1);
 		else if (ft_strcmp(cmd->argv[1], "-") == 0)
 		{
-			if (!ms_chdir(shell, get_env("OLDPWD", shell)))
+			if (!ms_chdir(shell, env_get("OLDPWD", shell)))
 			{
 				print_error(shell, "cd", "OLDPWD not set", 1);
 				return ;
 			}
-			hyphen_cd_print(shell, get_env("PWD", shell));
+			hyphen_cd_print(shell, env_get("PWD", shell));
 		}
 		else if (cmd->argv[1][0]
 			&& !ms_chdir(shell, cmd->argv[1]) && !cdpath(shell, cmd->argv[1]))
@@ -134,67 +116,3 @@ void	ms_cd(t_shell *shell, t_exec *cmd)
 				cmd->argv[1], 1);
 	}
 }
-/*
-static void	ms_cd_test(t_shell *shell, t_exec *cmd)
-{
-	char	*err;
-
-	if (!cmd->argv[1])
-	{
-		if (!ms_chdir(shell, get_env("HOME", shell)))
-			ft_putstr_fd("cd: HOME variable", STDERR_FILENO);
-	}
-	else
-	{
-		if (cmd->argv[2])
-			ft_putstr_fd("cd: too many arguments", STDERR_FILENO);
-		else if (ft_strcmp(cmd->argv[1], "-") == 0)
-		{
-			if (!ms_chdir(shell, get_env("OLDPWD", shell)))
-				ft_putstr_fd("cd: OLDPWD variable", STDERR_FILENO);
-			hyphen_cd_print(shell, get_env("PWD", shell));
-		}
-		else if (!ms_chdir(shell, cmd->argv[1]) && !cdpath(shell, cmd->argv[1]))
-		{
-			err = ft_strjoin("cd: no such file or directory: ", cmd->argv[1]);
-			ft_putstr_fd(err, STDERR_FILENO);
-			free(err);
-		}
-	}
-	ft_putchar_fd('\n', STDOUT_FILENO);
-	printf("Moved from\n%s\nto\n%s\n", get_env("OLDPWD", shell), get_env("PWD", shell));
-}
-
-static void	init_shell(t_shell *shell, char **envp)
-{
-	shell->cmd = NULL;
-	shell->line = NULL;
-	shell->envp = NULL;
-	shell->envp_size = 0;
-	envp_to_list(envp, shell);
-}
-
-int	main(int argc, char **argv, char **envp)
-{
-	t_shell shell;
-	t_exec	cmd;
-	int		i = 0;
-	int		j = 1;
-	char	*cdpath = ft_strdup("/nfs/homes/achien-k");
-
-	(void)argc;
-	init_shell(&shell, envp);
-	mod_env(&shell, "CDPATH", cdpath);
-	cmd.argv[i] = ft_strdup("pwd");
-	while (argv[j])
-		cmd.argv[++i] = ft_strdup(argv[j++]);
-	cmd.argv[i + 1] = 0;
-	ms_cd_test(&shell, &cmd);
-	envp_destroy(shell.env);
-	i = 0;
-	while (cmd.argv[i])
-		free(cmd.argv[i++]);
-	ft_free_array(shell.envp);
-	free(cdpath);
-	return (0);
-}*/

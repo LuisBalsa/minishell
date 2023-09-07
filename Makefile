@@ -24,7 +24,7 @@ DEPS		= inc
 SRCS		= src
 #SRCS_BONUS	= srcs_bonus
 LIBFT_PATH	= Libft
-_SUBFOLDERS	= built-ins
+_SUBFOLDERS	= built-ins envp error_frees line parser run_cmd
 VPATH		= $(SRCS) $(addprefix $(SRCS)/, $(_SUBFOLDERS))
 OBJ_DIR		= bin
 #OBJ_DIR_BONUS	= objs_bonus
@@ -34,7 +34,7 @@ NAME		= minishell
 _FILES		= main envp signals init_line expand_line expand_wildcard expand trim_line parser \
 			parseline here_doc nodes_constructors nodes_constructors2 \
 			free_cmd free_cmd2 error_free run_cmd run_cmd2 run_cmd3 \
-			run_builtin pwd echo export cd unset env exit
+			run_builtin pwd echo export cd unset env exit envp_utils chdir
 OBJS		= $(_FILES:%=%.o)
 TARGET		= $(addprefix $(OBJ_DIR)/, $(OBJS))
 

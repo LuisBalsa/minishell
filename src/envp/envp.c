@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 12:23:47 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/07 13:20:41 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/09/07 13:40:30 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,20 +90,6 @@ void	envp_sort(t_shell *shell)
 		}
 		if (max)
 			max->index = i + 1;
-	}
-}
-
-void	envp_destroy(t_env *env)
-{
-	t_env	*tmp;
-
-	while (env)
-	{
-		tmp = env->next;
-		free(env->key);
-		free(env->value);
-		free(env);
-		env = tmp;
 	}
 }
 

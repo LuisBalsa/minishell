@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 19:15:18 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/07 13:14:51 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/09/07 13:40:15 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,30 +21,6 @@ void	free_exit(t_shell *shell)
 	if (shell->envp)
 		ft_free_array(shell->envp);
 	exit(g_exit);
-}
-
-int	check_fork(void)
-{
-	int	pid;
-
-	pid = fork();
-	if (pid == -1)
-	{
-		ft_putstr_fd(ERROR_TITLE, STDERR_FILENO);
-		perror("fork");
-		g_exit = 127;
-	}
-	return (pid);
-}
-
-void	check(int result, char *msg, int exit)
-{
-	if (result == -1)
-	{
-		ft_putstr_fd(ERROR_TITLE, STDERR_FILENO);
-		perror(msg);
-		g_exit = exit;
-	}
 }
 
 int	print_error_syntax(t_shell *shell, char *msg, int exit)
@@ -78,4 +54,18 @@ int	print_error(t_shell *shell, char *msg, char *msg2, int exit)
 	shell->status = RESTORE;
 	g_exit = exit;
 	return (1);
+}
+
+void	envp_destroy(t_env *env)
+{
+	t_env	*tmp;
+
+	while (env)
+	{
+		tmp = env->next;
+		free(env->key);
+		free(env->value);
+		free(env);
+		env = tmp;
+	}
 }

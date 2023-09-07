@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 16:33:34 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/30 18:34:23 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/07 12:39:24 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,4 +23,3 @@ t_cmd	*block_cmd(t_cmd *cmd)
 	new->block = cmd;
 	return ((t_cmd *)new);
 }
-

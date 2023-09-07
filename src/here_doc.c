@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 15:42:13 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/05 18:49:57 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/07 12:39:59 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,6 @@ void	run_heredoc(t_shell *shell, t_here *here)
 	int		fd;
 	pid_t	pid;
 
-//	sig_handler(SIGPIPE);
 	pid = check_fork();
 	if (pid == 0)
 	{

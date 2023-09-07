@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/13 12:52:02 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/03 11:58:29 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/07 12:40:53 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,6 @@ t_cmd	*parseline(t_shell *shell)
 {
 	t_cmd	*cmd;
 	int		type;
-
 
 	cmd = parsepipeline(shell);
 	if (cmd && peek(shell, "&|", 2))

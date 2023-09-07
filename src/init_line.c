@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 11:07:22 by luide-so          #+#    #+#             */
-/*   Updated: 2023/08/30 22:32:10 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/07 12:40:29 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,28 +64,6 @@ static int	syntax_error(t_shell *shell)
 	return (0);
 }
 
-/* static int	pipe_continuation(t_shell *shell)
-{
-	char	*tmp;
-	char	*tmp2;
-
-	if (shell->line[ft_strlen(shell->line) - 1] == '|'
-		|| ft_strcmp(shell->line + ft_strlen(shell->line) - 2, "||") == 0
-		|| ft_strcmp(shell->line + ft_strlen(shell->line) - 2, "&&") == 0)
-	{
-		tmp = readline("> ");
-		if (!tmp)
-			return (shell->status = STOP, g_exit = 2, 1);
-		tmp2 = ft_strjoin(shell->line, tmp);
-		free(shell->line);
-		trim_spaces(&tmp2);
-		shell->line = tmp2;
-		free(tmp);
-		pipe_continuation(shell);
-	}
-	return (0);
-} */
-
 int	init_line(t_shell *shell)
 {
 	shell->status = CONTINUE;
@@ -95,7 +73,5 @@ int	init_line(t_shell *shell)
 	trim_spaces(&shell->line);
 	if (syntax_error(shell))
 		return (0);
-/* 	if (pipe_continuation(shell))
-		return (add_history(shell->line), 0); */
 	return (1);
 }

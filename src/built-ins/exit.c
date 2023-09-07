@@ -6,7 +6,7 @@
 /*   By: achien-k <achien-k@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 12:21:23 by achien-k          #+#    #+#             */
-/*   Updated: 2023/09/05 17:12:11 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/09/07 11:51:17 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,10 @@ static bool	ft_isnumber(char *str)
 	int	i;
 
 	i = 0;
+	if (!str[i])
+		return (false);
+	if (str[i] == '+')
+		i++;
 	while (str[i])
 	{
 		if (!ft_isdigit(str[i++]))
@@ -35,7 +39,7 @@ static bool islonglong(char *str)
 		is_negative = 1;
 		str++;
 	}
-	while (*str == '0')
+	while (*str == '0' || *str == ' ')
 		str++;
 	if (!ft_isnumber(str))
 		return (false);
@@ -53,9 +57,11 @@ void	ms_exit(t_shell *shell, t_exec *cmd)
 	char	*err;
 
 	err = NULL;
+	if (cmd->argv[2])
+		print_error(shell, cmd->argv[0], "too many arguments", 2);
 	if (cmd->argv[1])
 	{
-		if (!islonglong(cmd->argv[1]) && ft_strcmp(cmd->argv[1], "-") != 0)
+		if (!islonglong(cmd->argv[1]))
 		{
 			err = ft_strjoin(cmd->argv[1], ": numeric argument required");
 			print_error(shell, cmd->argv[0], err, 2);

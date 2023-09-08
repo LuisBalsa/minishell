@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:12:03 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/07 13:01:18 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/09/08 10:08:30 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ static int	run_command_line(t_shell *shell)
 {
 	sig_handler(SIGRESTORE);
 	shell->status = STOP;
+	shell->exec_cmd = true;
 	shell->prompt = get_prompt();
 	shell->line = readline(shell->prompt);
 	free(shell->prompt);

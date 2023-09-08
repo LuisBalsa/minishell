@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:04:57 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/07 23:12:57 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/08 10:12:17 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,6 +136,7 @@ typedef struct s_shell
 	t_env	*env;
 	t_cmd	*cmd;
 	int		status;
+	int		exec_cmd;
 	int		envp_size;
 	int		pid;
 	char	**envp;
@@ -179,8 +180,8 @@ void	free_block(t_block *block);
 
 void	wait_children(t_shell *shell);
 t_cmd	*exec_cmd(void);
-t_cmd	*or_cmd(t_cmd *left, t_cmd *right, t_cmd *next);
-t_cmd	*and_cmd(t_cmd *left, t_cmd *right, t_cmd *next);
+t_cmd	*or_cmd(t_cmd *left, t_cmd *right);
+t_cmd	*and_cmd(t_cmd *left, t_cmd *right);
 t_cmd	*pipe_cmd(t_cmd *left, t_cmd *right);
 t_cmd	*redir_cmd(t_cmd *cmd, char *file, int mode, int fd);
 t_cmd	*here_cmd(t_cmd *cmd, char *eof);

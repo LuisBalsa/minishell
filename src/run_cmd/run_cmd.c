@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 17:32:04 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/07 13:13:21 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/09/08 10:26:54 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,9 @@ static void	run_and(t_shell *shell, t_lrn *cmd)
 	sig_handler(SIGCHILD);
 	run_cmd(shell, cmd->left);
 	wait_children(shell);
-	if (!g_exit)
-		run_cmd(shell, cmd->right);
+	shell->exec_cmd = !g_exit;
+	run_cmd(shell, cmd->right);
 	wait_children(shell);
-	run_cmd(shell, cmd->next);
 }
 
 static void	run_or(t_shell *shell, t_lrn *cmd)
@@ -64,15 +63,14 @@ static void	run_or(t_shell *shell, t_lrn *cmd)
 	sig_handler(SIGCHILD);
 	run_cmd(shell, cmd->left);
 	wait_children(shell);
-	if (g_exit && g_exit != 130)
-		run_cmd(shell, cmd->right);
+	shell->exec_cmd = (g_exit && g_exit != 130);
+	run_cmd(shell, cmd->right);
 	wait_children(shell);
-	run_cmd(shell, cmd->next);
 }
 
 void	run_cmd(t_shell *shell, t_cmd *cmd)
 {
-	if (cmd->type == EXEC)
+	if (cmd->type == EXEC && shell->exec_cmd == true)
 		run_exec(shell, (t_exec *)cmd);
 	else if (cmd->type == REDIR)
 		run_redir(shell, (t_redir *)cmd);
@@ -84,6 +82,6 @@ void	run_cmd(t_shell *shell, t_cmd *cmd)
 		run_and(shell, (t_lrn *)cmd);
 	else if (cmd->type == OR_OP)
 		run_or(shell, (t_lrn *)cmd);
-	else if (cmd->type == BLOCK)
+	else if (cmd->type == BLOCK && shell->exec_cmd == true)
 		run_block(shell, (t_block *)cmd);
 }

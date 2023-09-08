@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:04:57 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/08 10:12:17 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/08 12:08:12 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,6 +159,7 @@ void	pipe_continuation_signal(int sig);
 
 void	check(int result, char *msg, int exit);
 int		check_fork(void);
+int		error_inside(t_shell *shell, char *cmd, char *arg, int error_code);
 int		print_error(t_shell *shell, char *msg, char *msg2, int exit);
 int		print_error_syntax(t_shell *shell, char *msg, int exit);
 void	free_exit(t_shell *shell);

@@ -69,3 +69,13 @@ void	envp_destroy(t_env *env)
 		env = tmp;
 	}
 }
+
+int	error_inside(t_shell *shell, char *cmd, char *arg, int error_code)
+{
+	char	*err;
+
+	err = ft_strjoin(cmd, arg);
+	print_error(shell, err, "not a valid identifier", error_code);
+	free(err);
+	return (0);
+}

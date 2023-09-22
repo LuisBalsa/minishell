@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:04:57 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/08 12:08:12 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/09/13 12:02:11 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,6 @@ typedef struct s_lrn
 	int		type;
 	t_cmd	*left;
 	t_cmd	*right;
-	t_cmd	*next;
 }			t_lrn;
 
 typedef struct s_pipe
@@ -165,11 +164,13 @@ int		print_error_syntax(t_shell *shell, char *msg, int exit);
 void	free_exit(t_shell *shell);
 
 int		init_line(t_shell *shell);
-int		expand_line(t_shell *shell);
 int		expand(char *key, int i, int j, char **line);
 int		expand_free(char *key, int i, int j, char **line);
-void	expand_wildcard(t_shell *shell);
-void	trim_line(t_shell *shell);
+void	expand_arg(t_shell *shell, char **line);
+void	expand_wildcard(char **line);
+
+void	trim_arg(char *arg);
+void	trim_quotes(char *arg, int *len);
 
 int		parser(t_shell *shell);
 int		peek(t_shell *shell, char *op, int mode);
@@ -178,6 +179,7 @@ t_cmd	*parseline(t_shell *shell);
 
 void	free_cmd(t_cmd *cmd);
 void	free_block(t_block *block);
+void	free_exec(t_exec *exec);
 
 void	wait_children(t_shell *shell);
 t_cmd	*exec_cmd(void);
@@ -188,7 +190,7 @@ t_cmd	*redir_cmd(t_cmd *cmd, char *file, int mode, int fd);
 t_cmd	*here_cmd(t_cmd *cmd, char *eof);
 t_cmd	*block_cmd(t_cmd *cmd);
 
-void	run_builtin(t_shell *shell, t_exec *cmd);
+int		run_builtin(t_shell *shell, t_exec *cmd);
 void	run_cmd(t_shell *shell, t_cmd *cmd);
 void	run_exec(t_shell *shell, t_exec *cmd);
 void	run_redir(t_shell *shell, t_redir *cmd);

@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 12:05:42 by achien-k          #+#    #+#             */
-/*   Updated: 2023/09/08 11:39:15 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/09/14 12:05:13 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ static void	hyphen_cd_print(t_shell *shell, char *pwd)
 
 void	ms_cd(t_shell *shell, t_exec *cmd)
 {
-	if (!cmd->argv[1])
+	if (!cmd->argv[1] || !*cmd->argv[1])
 	{
 		if (!ms_chdir(shell, env_get("HOME", shell)))
 			print_error(shell, "cd", "HOME not set", 1);
@@ -115,4 +115,6 @@ void	ms_cd(t_shell *shell, t_exec *cmd)
 			print_error(shell, "cd: no such file or directory",
 				cmd->argv[1], 1);
 	}
+	if (shell->status == CONTINUE)
+		g_exit = 0;
 }

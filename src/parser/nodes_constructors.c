@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 14:53:28 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/08 10:11:58 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/09 14:42:55 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ t_cmd	*redir_cmd(t_cmd *cmd, char *file, int mode, int fd)
 
 	redir = (t_redir *)ft_calloc(1, sizeof(t_redir));
 	redir->type = REDIR;
-	redir->file = file;
+	redir->file = ft_strdup(file);
 	redir->mode = mode;
 	redir->fd = fd;
 	if (cmd->type == EXEC || cmd->type == BLOCK)

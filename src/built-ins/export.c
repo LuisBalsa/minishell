@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 09:57:30 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/08 11:57:25 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/09/12 15:01:15 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,20 +56,37 @@ static bool	valid_var(t_shell *shell, char *arg)
 	return (true);
 }
 
-void	ms_export(t_shell *shell, t_exec *cmd)
+static bool	valid_args(char **argv)
+{
+	int		i;
+	bool	flag;
+
+	if (!argv[1])
+		return (false);
+	i = 0;
+	flag = false;
+	while (argv[++i])
+	{
+		if (*argv[i])
+			flag = true;
+	}
+	return (flag);
+}
+
+static void	run_export(t_shell *shell, t_exec *cmd)
 {
 	int		i;
 	char	*value;
 	char	**split;
 
-	if (!cmd->argv[1])
+	if (!valid_args(cmd->argv))
 		print_envp_sorted(shell, 1);
 	else
 	{
 		i = 0;
 		while (cmd->argv[++i])
 		{
-			if (!valid_var(shell, cmd->argv[i]))
+			if (!*cmd->argv[i] || !valid_var(shell, cmd->argv[i]))
 				continue ;
 			if (ft_strchr(cmd->argv[i], '='))
 			{
@@ -83,4 +100,11 @@ void	ms_export(t_shell *shell, t_exec *cmd)
 				env_export(shell, cmd->argv[i], "", 0);
 		}
 	}
+}
+
+void	ms_export(t_shell *shell, t_exec *cmd)
+{
+	run_export(shell, cmd);
+	if (shell->status == CONTINUE)
+		g_exit = 0;
 }

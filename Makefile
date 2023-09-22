@@ -24,30 +24,52 @@ DEPS		= inc
 SRCS		= src
 #SRCS_BONUS	= srcs_bonus
 LIBFT_PATH	= Libft
-_SUBFOLDERS	= built-ins envp error_frees line parser run_cmd
-VPATH		= $(SRCS) $(addprefix $(SRCS)/, $(_SUBFOLDERS))
+_SUBFOLDERS	= built-ins envp error_frees line parser run_cmd expand
+VPATH		= $(SRCS) $(addprefix $(SRCS)/, $(_SUBFOLDERS)) bonus/$(SRCS) $(addprefix bonus/$(SRCS)/, $(_SUBFOLDERS))
 OBJ_DIR		= bin
 #OBJ_DIR_BONUS	= objs_bonus
 
 #_/=\_/=\_/=\_/=\_/=\_/=\_/=\_/=\_/=\_/=\_ FILES _/=\_/=\_/=\_/=\_/=\_/=\_/=\_/=\_/=\_/=\_
 NAME		= minishell
-_FILES		= main envp signals init_line expand_line expand_wildcard expand trim_line parser \
+RULE 		= .all
+RULE_BONUS 	= .bonus
+_FILES		= main envp signals init_line parser expand_arg expand_utils expand_wildcard trim \
 			parseline here_doc nodes_constructors nodes_constructors2 \
 			free_cmd free_cmd2 error_free run_cmd run_cmd2 run_cmd3 \
-			run_builtin pwd echo export cd unset env exit envp_utils chdir checks env_utils
+			run_builtin pwd echo export cd unset env exit env_utils chdir checks
+_FILES_BONUS= $(_FILES:%=%_bonus)
 OBJS		= $(_FILES:%=%.o)
+OBJS_BONUS	= $(_FILES_BONUS:%=%.o)
 TARGET		= $(addprefix $(OBJ_DIR)/, $(OBJS))
+TARGET_BONUS= $(addprefix $(OBJ_DIR)/, $(OBJS_BONUS))
 
 
 #_/=\_/=\_/=\_/=\_/=\_/=\_/=\_/=\_/=\_/=\_ RULES _/=\_/=\_/=\_/=\_/=\_/=\_/=\_/=\_/=\_/=\_
 all: $(NAME)
 
-$(NAME): $(OBJ_DIR) $(TARGET)
+$(NAME): $(RULE) $(OBJ_DIR) $(TARGET)
 	echo "[$(CYAN)Compiling$(RESET)] $(CFLAGS) $(GREEN)libft/*$(RESET)"
 	$(MAKE) $(MK) -C $(LIBFT_PATH)
 
 	echo "[$(CYAN) Linking $(RESET)] $(GREEN)*$(RESET)"
 	$(CC) $(CFLAGS) $(TARGET) -o $(NAME) -I $(DEPS) -lreadline $(LIBFT)
+
+	echo "$(GREEN)Done.$(RESET)"
+
+${RULE}:
+	touch ${RULE}
+	${RM} ${RULE_BONUS}
+
+bonus: ${RULE_BONUS}
+
+${RULE_BONUS}: $(OBJ_DIR) ${TARGET_BONUS}
+	touch ${RULE_BONUS}
+	${RM} ${RULE}
+	echo "[$(CYAN)Compiling$(RESET)] $(CFLAGS) $(GREEN)libft/*$(RESET)"
+	$(MAKE) $(MK) -C $(LIBFT_PATH)
+
+	echo "[$(CYAN) Linking $(RESET)] $(GREEN)*$(RESET)"
+	$(CC) $(CFLAGS) $(TARGET_BONUS) -o $(NAME) -I $(DEPS) -lreadline $(LIBFT)
 
 	echo "$(GREEN)Done.$(RESET)"
 
@@ -62,7 +84,7 @@ clean:
 	$(MAKE) clean $(MK) -C $(LIBFT_PATH)
 
 	echo "[$(RED) Deleted $(RESET)] $(GREEN)$(OBJ_DIR)$(RESET)"
-	$(RM) $(OBJ_DIR) output.log
+	$(RM) $(OBJ_DIR) ${RULE} ${RULE_BONUS} output.log readline.supp
 
 fclean: clean
 	$(MAKE) fclean $(MK) -C $(LIBFT_PATH)
@@ -78,8 +100,22 @@ run:
 
 r: re run
 
-leaks:
+leaks: readline.supp
 	valgrind --suppressions=readline.supp --leak-check=full --show-leak-kinds=all --log-file=output.log ./minishell
+
+readline.supp:
+	echo "{" > readline.supp
+	echo "    leak readline" >> readline.supp
+	echo "    Memcheck:Leak" >> readline.supp
+	echo "    ..." >> readline.supp
+	echo "    fun:readline" >> readline.supp
+	echo "}" >> readline.supp
+	echo "{" >> readline.supp
+	echo "    leak add_history" >> readline.supp
+	echo "    Memcheck:Leak" >> readline.supp
+	echo "    ..." >> readline.supp
+	echo "    fun:add_history" >> readline.supp
+	echo "}" >> readline.supp
 
 .SILENT:
 

@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 15:42:13 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/07 23:43:22 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/12 00:22:08 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,11 @@ static void	heredoc_reader(t_shell *shell, t_here *here, int fd)
 void	run_heredoc(t_shell *shell, t_here *here)
 {
 	int		fd;
+	int		len;
 	pid_t	pid;
 
+	len = ft_strlen(here->eof);
+	trim_quotes(here->eof, &len);
 	pid = check_fork();
 	if (pid == 0)
 	{
@@ -99,7 +102,7 @@ t_cmd	*here_cmd(t_cmd *cmd, char *eof)
 
 	here = (t_here *)ft_calloc(1, sizeof(t_here));
 	here->type = HERE_DOC;
-	here->eof = eof;
+	here->eof = ft_strdup(eof);
 	here->mode = O_WRONLY | O_CREAT | O_TRUNC;
 	here->fdin = dup(STDIN_FILENO);
 	here->fdout = dup(STDOUT_FILENO);

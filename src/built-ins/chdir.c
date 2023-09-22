@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   chdir.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achien-k <achien-k@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/07 12:46:43 by achien-k          #+#    #+#             */
-/*   Updated: 2023/09/07 13:05:22 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/09/12 01:39:59 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ bool	ms_chdir(t_shell *shell, char *path)
 {
 	char	*tmp_pwd;
 
+	if (!path)
+		return (false);
 	tmp_pwd = getcwd(NULL, 0);
 	if (chdir(path) != 0)
 	{

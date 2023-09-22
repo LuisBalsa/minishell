@@ -1,34 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   trim_line.c                                        :+:      :+:    :+:   */
+/*   free_cmd2_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/11 10:48:06 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/07 13:14:13 by achien-k         ###   ########.fr       */
+/*   Created: 2023/08/29 16:50:09 by luide-so          #+#    #+#             */
+/*   Updated: 2023/09/13 11:59:14 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "../../include/minishell_bonus.h"
 
-void	trim_line(t_shell *shell)
+void	free_exec(t_exec *exec)
 {
-	char	*tmp;
-	int		squote;
-	int		dquote;
+	if (!exec)
+		return ;
+	if (exec->argv[0])
+		free(exec->argv[0]);
+	free(exec);
+	exec = NULL;
+}
 
-	dquote = 0;
-	squote = 0;
-	tmp = shell->line;
-	while (*tmp)
-	{
-		if (*tmp == '"' && !squote)
-			dquote = !dquote;
-		if (*tmp == '\'' && !dquote)
-			squote = !squote;
-		if (ft_strchr(SPACES, *tmp) && !squote && !dquote)
-			*tmp = '\0';
-		tmp++;
-	}
+void	free_block(t_block *block)
+{
+	if (!block)
+		return ;
+	free_cmd(block->cmd);
+	free(block);
+	block = NULL;
 }

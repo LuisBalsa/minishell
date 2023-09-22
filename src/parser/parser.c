@@ -6,40 +6,11 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 12:10:13 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/07 13:13:37 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/09/12 14:17:28 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-
-static void	trim_quotes_and_advance(char **ps, t_shell *shell)
-{
-	char	*tmp;
-	int		squote;
-	int		dquote;
-
-	dquote = 0;
-	squote = 0;
-	tmp = *ps;
-	while (*tmp && (!ft_strchr(OPERATORS, *tmp) || squote || dquote))
-	{
-		if ((*tmp == '"' || *tmp == '\'') && !squote && !dquote)
-		{
-			dquote = (*tmp == '"');
-			squote = (*tmp == '\'');
-			memmove(tmp, tmp + 1, shell->line_len - (tmp - shell->line));
-		}
-		else if ((*tmp == '"' && dquote) || (*tmp == '\'' && squote))
-		{
-			dquote -= (*tmp == '"');
-			squote -= (*tmp == '\'');
-			memmove(tmp, tmp + 1, shell->line_len - (tmp - shell->line));
-		}
-		else
-			tmp++;
-	}
-	*ps = tmp;
-}
 
 static int	gettoken_type(t_shell *shell)
 {
@@ -78,8 +49,8 @@ int	gettoken(t_shell *sh, char **token)
 	if (token)
 		*token = sh->ps;
 	type = gettoken_type(sh);
-	if (type == 'a')
-		trim_quotes_and_advance(&sh->ps, sh);
+	while (type == 'a' && sh->ps < sh->es && *sh->ps)
+		sh->ps++;
 	while (sh->ps < sh->es && !*sh->ps)
 		sh->ps++;
 	return (type);
@@ -104,5 +75,5 @@ int	parser(t_shell *shell)
 	peek(shell, "", 0);
 	if (shell->ps != shell->es && shell->status != 2)
 		return (!print_error_syntax(shell, shell->ps, 2));
-	return (1);
+	return (shell->status == CONTINUE);
 }

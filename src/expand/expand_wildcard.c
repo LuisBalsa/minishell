@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 13:49:21 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/08 13:35:11 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/11 23:58:23 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,24 +79,26 @@ static char	*wildcard_match(char *pattern)
 	return (match);
 }
 
-static void	point_to_expand_wildcard(int *i, int j, char *tmp, t_shell *shell)
+static void	point_to_expand_wildcard(int *i, int j, char *tmp, char **line)
 {
 	char	*match;
 	char	*new_line;
 	char	*tmp2;
 
-	match = wildcard_match(tmp);
+	match = NULL;
+	if (ft_strchr(tmp, '*') || ft_strchr(tmp, '?'))
+		match = wildcard_match(tmp);
 	if (match)
 	{
-		new_line = ft_substr(shell->line, 0, *i);
+		new_line = ft_substr(*line, 0, *i);
 		tmp2 = new_line;
 		new_line = ft_strjoin(new_line, match);
 		free(tmp2);
 		tmp2 = new_line;
-		new_line = ft_strjoin(new_line, shell->line + *i + j);
+		new_line = ft_strjoin(new_line, *line + *i + j);
 		free(tmp2);
-		free(shell->line);
-		shell->line = new_line;
+		free(*line);
+		*line = new_line;
 		*i += ft_strlen(match);
 	}
 	else
@@ -105,30 +107,27 @@ static void	point_to_expand_wildcard(int *i, int j, char *tmp, t_shell *shell)
 	free(tmp);
 }
 
-void	expand_wildcard(t_shell *shell)
+void	expand_wildcard(char **line)
 {
 	int		i;
 	int		j;
 	char	quote;
 
 	i = 0;
-	while (shell->line[i])
+	while (line[0][i])
 	{
 		j = 0;
-		while (shell->line[i] && ft_strchr(NOT_EXP, shell->line[i]))
-			i++;
 		quote = '\0';
-		if ((shell->line[i] == '\'' || shell->line[i] == '"')
-			&& shell->line[i + 1] != '*')
-			quote = shell->line[i++];
-		while (quote && shell->line[i] && shell->line[i] != quote)
+		while (line[0][i] && ft_strchr(SPACES, line[0][i]))
 			i++;
-		if (quote && shell->line[i] && !ft_strchr("*?", shell->line[i + 1]))
-			i++;
-		while (shell->line[i] && ft_strchr(NOT_EXP, shell->line[i]))
-			i++;
-		while (shell->line[i + j] && !ft_strchr(NOT_EXP, shell->line[i + j]))
+		while (line[0][i + j] && (!ft_strchr(SPACES, line[0][i + j]) || quote))
+		{
+			if (!quote && (line[0][i + j] == '\'' || line[0][i + j] == '"'))
+				quote = line[0][i + j];
+			else if (quote == line[0][i + j])
+				quote = '\0';
 			j++;
-		point_to_expand_wildcard(&i, j, ft_substr(shell->line, i, j), shell);
+		}
+		point_to_expand_wildcard(&i, j, ft_substr(*line, i, j), line);
 	}
 }

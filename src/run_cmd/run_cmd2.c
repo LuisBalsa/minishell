@@ -6,34 +6,21 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 11:29:10 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/08 11:01:38 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/13 12:52:08 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-static int	is_builtin(char *argv)
-{
-	if (!ft_strcmp(argv, "echo")
-		|| !ft_strcmp(argv, "cd")
-		|| !ft_strcmp(argv, "pwd")
-		|| !ft_strcmp(argv, "export")
-		|| !ft_strcmp(argv, "unset")
-		|| !ft_strcmp(argv, "env")
-		|| !ft_strcmp(argv, "exit"))
-		return (1);
-	return (0);
-}
-
 static void	check_execve(t_shell *shell, char *path)
 {
 	ft_putstr_fd("minishell: ", STDERR_FILENO);
 	ft_putstr_fd(path, STDERR_FILENO);
-	if (!access(path, F_OK) && access(path, X_OK))
+	if (!access(path, F_OK) && access(path, X_OK) && ft_strchr(path, '/'))
 		ft_putendl_fd(": Permission denied", STDERR_FILENO);
-	else if (!access(path, F_OK))
+	else if (!access(path, F_OK) && !access(path, X_OK) && path[0] != '.')
 		ft_putendl_fd(": Is a directory", STDERR_FILENO);
-	else if (ft_strchr(path, '/'))
+	else if (ft_strchr(path, '/') || !env_get("PATH", shell))
 		ft_putendl_fd(": No such file or directory", STDERR_FILENO);
 	else
 		ft_putendl_fd(": command not found", STDERR_FILENO);
@@ -43,7 +30,7 @@ static void	check_execve(t_shell *shell, char *path)
 	free_exit(shell);
 }
 
-static char	*get_path(t_shell *shell, char *cmd)
+static char	*get_path(t_shell *sh, char *cmd)
 {
 	int		i;
 	char	*path;
@@ -53,9 +40,9 @@ static char	*get_path(t_shell *shell, char *cmd)
 	i = 0;
 	path = NULL;
 	path2 = NULL;
-	if (ft_strchr(cmd, '/') || !env_get("PATH", shell) || !ft_strcmp(cmd, ""))
+	if (ft_strchr("/.", cmd[0]) || !env_get("PATH", sh) || !ft_strcmp(cmd, ""))
 		return (ft_strdup(cmd));
-	paths = ft_split(env_get("PATH", shell), ':');
+	paths = ft_split(env_get("PATH", sh), ':');
 	while (paths[i])
 	{
 		path = ft_strjoin(paths[i], "/");
@@ -80,31 +67,58 @@ static void	check_exit_status(void)
 		ft_putendl_fd("Floating point exception (core dumped)", STDERR_FILENO);
 }
 
+static void	expand_argv(t_shell *shell, char **argv)
+{
+	int		len;
+	int		i;
+	int		expanded;
+	char	*tmp;
+
+	if (!argv[0])
+		return ;
+	expanded = (ft_strchr(argv[0], '$') || ft_strchr(argv[0], '*'));
+	expand_arg(shell, &argv[0]);
+	len = ft_strlen(argv[0]);
+	trim_arg(argv[0]);
+	trim_quotes(argv[0], &len);
+	i = 1;
+	tmp = argv[0];
+	while (tmp < argv[0] + len)
+	{
+		if (*tmp == '\0' && (ft_strcmp(argv[0], "printf") || i != 2))
+			argv[i++] = tmp + 1;
+		tmp++;
+	}
+	if (!argv[0][0] && expanded)
+	{
+		free(argv[0]);
+		argv[0] = NULL;
+	}
+}
+
 void	run_exec(t_shell *shell, t_exec *cmd)
 {
 	pid_t	pid;
 	char	*path;
 
+	expand_argv(shell, cmd->argv);
 	if (!cmd->argv[0])
 		return (g_exit = 0, (void)0);
-	if (!is_builtin(cmd->argv[0]))
+	if (run_builtin(shell, cmd))
+		return ;
+	sig_handler(SIGCHILD);
+	pid = check_fork();
+	if (pid == 0)
 	{
-		sig_handler(SIGCHILD);
-		pid = check_fork();
-		if (pid == 0)
-		{
-			path = get_path(shell, cmd->argv[0]);
-			execve(path, cmd->argv, shell->envp);
-			check_execve(shell, path);
-		}
-		waitpid(pid, &g_exit, 0);
-		if (WIFEXITED(g_exit))
-			g_exit = WEXITSTATUS(g_exit);
-		else if (WIFSIGNALED(g_exit))
-			g_exit = 128 + WTERMSIG(g_exit);
-		check_exit_status();
-		sig_handler(SIGRESTORE);
+		path = get_path(shell, cmd->argv[0]);
+		execve(path, cmd->argv, shell->envp);
+		check_execve(shell, path);
 	}
-	else
-		run_builtin(shell, cmd);
+	waitpid(pid, &g_exit, 0);
+	if (WIFEXITED(g_exit))
+		g_exit = WEXITSTATUS(g_exit);
+	else if (WIFSIGNALED(g_exit))
+		g_exit = 128 + WTERMSIG(g_exit);
+	check_exit_status();
+	sig_handler(SIGRESTORE);
 }

@@ -6,28 +6,27 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/18 20:43:31 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/07 12:50:43 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/09/12 15:02:36 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-void	run_builtin(t_shell *shell, t_exec *cmd)
+int	run_builtin(t_shell *shell, t_exec *cmd)
 {
-	if (ft_strcmp(cmd->argv[0], "exit"))
-		g_exit = 0;
 	if (!ft_strcmp(cmd->argv[0], "echo"))
-		ms_echo(cmd);
+		return (ms_echo(cmd), 1);
 	else if (!ft_strcmp(cmd->argv[0], "cd"))
-		ms_cd(shell, cmd);
+		return (ms_cd(shell, cmd), 1);
 	else if (!ft_strcmp(cmd->argv[0], "pwd"))
-		ms_pwd(shell, cmd);
+		return (ms_pwd(shell, cmd), 1);
 	else if (!ft_strcmp(cmd->argv[0], "export"))
-		ms_export(shell, cmd);
+		return (ms_export(shell, cmd), 1);
 	else if (!ft_strcmp(cmd->argv[0], "unset"))
-		ms_unset(shell, cmd);
+		return (ms_unset(shell, cmd), 1);
 	else if (!ft_strcmp(cmd->argv[0], "env"))
-		ms_env(shell, cmd);
+		return (ms_env(shell, cmd), 1);
 	else if (!ft_strcmp(cmd->argv[0], "exit"))
-		ms_exit(shell, cmd);
+		return (ms_exit(shell, cmd), 1);
+	return (0);
 }

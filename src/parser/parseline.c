@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/13 12:52:02 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/08 11:00:34 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/09/14 12:12:47 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static t_cmd	*parseblock(t_shell *shell)
 {
 	t_cmd	*cmd;
 
-	if (!peek(shell, "(", 1))
+	if (!peek(shell, "(", 1) && !peek(shell, "(", 2))
 	{
 		print_error(shell, "parsblock", NULL, 2);
 		return (NULL);
@@ -53,7 +53,8 @@ static t_cmd	*parseblock(t_shell *shell)
 	cmd = block_cmd(parseline(shell));
 	if (!cmd)
 		return (NULL);
-	if (!peek(shell, ")", 1) && shell->status == CONTINUE)
+	if (!peek(shell, ")", 1) && !peek(shell, ")", 2)
+		&& shell->status == CONTINUE)
 	{
 		print_error(shell, "open parenthesis not suported", NULL, 2);
 		return (cmd);
@@ -68,24 +69,22 @@ static t_cmd	*parseexec(t_shell *shell)
 	t_exec	*cmd;
 	char	*token;
 	int		type;
-	int		argc;
 
-	if (peek(shell, "(", 1))
+	if (peek(shell, "(", 1) || peek(shell, "(", 2))
 		return (parseblock(shell));
 	ret = exec_cmd();
 	cmd = (t_exec *)ret;
-	argc = 0;
 	ret = parseredir(ret, shell);
-	while (!peek(shell, "|&)", 1) && !peek(shell, "|&", 2))
+	while (!peek(shell, "|&)", 1) && !peek(shell, "|&)", 2))
 	{
 		type = gettoken(shell, &token);
 		if (!type)
 			break ;
 		if (type != 'a' && shell->status == CONTINUE)
 			return (print_error_syntax(shell, token, 2), ret);
-		cmd->argv[argc++] = token;
-		if (argc >= MAXARGS)
-			return (print_error(shell, "too many arguments", NULL, 2), ret);
+		if (cmd->argv[0])
+			cmd->argv[0] = ft_strjoin_free_s1(cmd->argv[0], " ");
+		cmd->argv[0] = ft_strjoin_free_s1(cmd->argv[0], token);
 		ret = parseredir(ret, shell);
 	}
 	return (ret);
@@ -95,7 +94,8 @@ static t_cmd	*parsepipeline(t_shell *shell)
 {
 	t_cmd	*cmd;
 
-	if (peek(shell, "|&", 1) && shell->status == CONTINUE)
+	if ((peek(shell, "|&", 1) || peek(shell, "|&", 2))
+		&& shell->status == CONTINUE)
 		return (print_error_syntax(shell, shell->ps, 2), NULL);
 	cmd = parseexec(shell);
 	if (cmd && peek(shell, "|", 1))

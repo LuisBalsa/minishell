@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   envp_utils.c                                       :+:      :+:    :+:   */
+/*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: achien-k <achien-k@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/07 12:52:26 by achien-k          #+#    #+#             */
-/*   Updated: 2023/09/07 13:35:51 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/09/12 11:43:49 by achien-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,7 @@ t_env	*env_add(t_shell *shell, char *key, char *value, int visible)
 		return (NULL);
 	shell->envp_size++;
 	new->key = ft_strdup(key);
-	if (value)
-		new->value = ft_strdup(value);
-	else
-		new->value = NULL;
+	new->value = ft_strdup(value);
 	new->index = 0;
 	new->visible = visible;
 	new->next = NULL;
@@ -76,11 +73,9 @@ bool	env_mod(t_shell *shell, char *target, char *new_value)
 
 void	env_export(t_shell *shell, char *key, char *value, int visible)
 {
-	if (!visible && !value[0])
-		return ;
-	if (env_get(key, shell))
+	if (env_get(key, shell) && visible)
 		env_mod(shell, key, value);
-	else
+	else if (!env_get(key, shell))
 		env_add(shell, key, value, visible);
 }
 

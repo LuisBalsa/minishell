@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 09:58:46 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/08 11:58:26 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/09/12 15:02:22 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,12 @@ void	ms_unset(t_shell *shell, t_exec *cmd)
 	i = 0;
 	while (cmd->argv[++i])
 	{
-		if (valid_unset_var(shell, cmd->argv[i]))
+		if (*cmd->argv[i] && valid_unset_var(shell, cmd->argv[i]))
 		{
 			if (get_key(cmd->argv[i], shell))
 				env_rm(cmd->argv[i], shell);
 		}
 	}
+	if (shell->status == CONTINUE)
+		g_exit = 0;
 }

@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 12:05:22 by achien-k          #+#    #+#             */
-/*   Updated: 2023/09/07 12:49:16 by achien-k         ###   ########.fr       */
+/*   Updated: 2023/09/12 14:56:07 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,4 +60,5 @@ void	ms_echo(t_exec *cmd)
 	}
 	if (!flag)
 		ft_putchar_fd('\n', STDOUT_FILENO);
+	g_exit = 0;
 }

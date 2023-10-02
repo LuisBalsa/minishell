@@ -6,7 +6,7 @@
 /*   By: luide-so <luide-so@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 11:29:10 by luide-so          #+#    #+#             */
-/*   Updated: 2023/09/13 20:29:18 by luide-so         ###   ########.fr       */
+/*   Updated: 2023/10/02 18:32:15 by luide-so         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ static void	expand_argv(t_shell *shell, char **argv)
 	trim_quotes(argv[0], &len);
 	i = 1;
 	tmp = argv[0];
-	while (tmp < argv[0] + len)
+	while (tmp < argv[0] + len && i < (MAXARGS - 1))
 	{
 		if (*tmp == '\0' && (ft_strcmp(argv[0], "printf") || i != 2))
 			argv[i++] = tmp + 1;

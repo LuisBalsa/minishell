@@ -35,7 +35,8 @@ Minishell is a command-line shell that replicates some of the functionality of a
 
 ## Authors  - [Luis Balsa](https://github.com/LuisBalsa) - [Adam Kirst](https://github.com/adamckirst)
 
-## Achievement We are proud to announce that we achieved the maximum score of 125 for this project.
+## Achievement
+We are proud to announce that we achieved the maximum score of 125 for this project.
 
 ## Getting Started
 

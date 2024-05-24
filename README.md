@@ -149,6 +149,11 @@ echo ~
 > Print the home directory of the current user
 
 ```bash
+exit > file 123
+```
+> It should create a "file" file and it should exit with a 123 return
+
+```bash
 cat <<e | grep hello | grep hello | grep world | grep -o l | wc -l
 ```
 > A complex pipeline of text processing commands
